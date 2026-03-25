@@ -2,148 +2,210 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>🧙‍♂️ VEIGAR HQ - 170+ Champions Edition [2026]</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧙‍♂️ Veigar HQ — Star Zall Edition [Patch 26.7]</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
 <style>
 :root {
-    --bg: #050508; --card: #0d0d1a; --purple: #a855f7; --gold: #fbbf24;
-    --red: #ff4d4d; --blue: #4d94ff; --border: #1f1f3d;
+  --bg-deep: #05050a; --bg-card: #0f0f1b; --purple: #a855f7; --purple-dark: #6b21a8;
+  --gold: #fbbf24; --red: #ef4444; --green: #22c55e; --cyan: #22d3ee;
+  --text: #f1f5f9; --border: #1e1e35; --font-display: 'Orbitron', sans-serif;
 }
-body { background: var(--bg); color: #e2e8f0; font-family: 'Rajdhani', sans-serif; margin: 0; padding: 15px; }
-.container { max-width: 1200px; margin: 0 auto; }
-header { text-align: center; border-bottom: 2px solid var(--purple); padding: 10px 0; margin-bottom: 20px; }
-h1 { font-family: 'Orbitron'; background: linear-gradient(45deg, var(--purple), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; text-transform: uppercase; }
+body { background: var(--bg-deep); color: var(--text); font-family: 'Rajdhani', sans-serif; margin: 0; padding: 20px; }
+.app { max-width: 1200px; margin: 0 auto; }
+header { text-align: center; border-bottom: 2px solid var(--purple); padding-bottom: 15px; margin-bottom: 25px; }
+h1 { font-family: var(--font-display); font-size: 2rem; background: linear-gradient(to right, var(--purple), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
+.meta-tag { font-size: 0.75rem; color: var(--purple); font-weight: bold; letter-spacing: 2px; }
 
-/* DRAFT SYSTEM */
-.draft-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-bottom: 20px; }
-.slot { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 10px; text-align: center; cursor: pointer; transition: 0.2s; }
-.slot.active { border-color: var(--purple); box-shadow: 0 0 10px var(--purple); }
-.slot.filled { background: #1a1a3a; border-color: var(--gold); }
-.label { display: block; font-size: 0.7rem; color: #94a3b8; margin-bottom: 4px; }
+/* NAVIGATION */
+nav { display: flex; gap: 8px; margin-bottom: 20px; background: var(--bg-card); padding: 5px; border-radius: 12px; }
+.nav-btn { flex: 1; padding: 12px; border: none; background: transparent; color: #64748b; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+.nav-btn.active { background: var(--purple-dark); color: white; box-shadow: 0 0 10px rgba(168,85,247,0.3); }
 
-/* CHAMPION SELECTOR */
-.search-box { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); color: var(--gold); border-radius: 8px; margin-bottom: 10px; font-size: 1rem; }
-.pool { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 5px; max-height: 200px; overflow-y: auto; background: #000; padding: 10px; border-radius: 10px; }
-.p-btn { background: #16162d; border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; cursor: pointer; font-size: 0.8rem; }
-.p-btn:hover { background: var(--purple); }
+/* CONTENT PANELS */
+.panel { display: none; animation: slideUp 0.3s ease-out; }
+.panel.active { display: block; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ANALYSIS DISPLAY */
-.res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-.build-card { background: var(--card); border: 1px solid var(--border); border-radius: 15px; padding: 15px; border-left: 5px solid var(--purple); }
-.item-row { margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid #1a1a3a; }
-.item-name { font-weight: bold; color: var(--gold); }
-.item-why { font-size: 0.85rem; color: #94a3b8; }
+/* CARDS */
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 15px; }
+.card-header { font-family: var(--font-display); font-size: 0.8rem; color: var(--gold); border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; }
 
-.badge { padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; margin-right: 5px; text-transform: uppercase; }
-.b-ad { background: #5a2e17; color: #ff8c4d; }
-.b-ap { background: #172e5a; color: #4d94ff; }
-.b-mob { background: #3a175a; color: #d94dff; }
+/* DRAFT GRID */
+.draft-slots { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 15px; }
+.slot { background: #000; border: 2px dashed var(--border); border-radius: 12px; padding: 15px 5px; text-align: center; cursor: pointer; position: relative; }
+.slot.active { border-color: var(--purple); }
+.slot.filled { border-style: solid; border-color: var(--purple); background: #1e1b4b; }
+.slot-label { font-size: 0.6rem; color: #94a3b8; display: block; margin-bottom: 5px; }
+.slot-name { font-weight: bold; font-size: 0.9rem; }
+
+/* POOL */
+.pool { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; max-height: 250px; overflow-y: auto; background: #000; padding: 15px; border-radius: 12px; border: 1px solid var(--border); }
+.p-btn { background: #1a1a2e; border: 1px solid var(--border); color: var(--text); padding: 8px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+.p-btn:hover { background: var(--purple-dark); }
+.search-in { width: 100%; padding: 12px; background: #000; border: 1px solid var(--border); color: var(--gold); border-radius: 8px; margin-bottom: 10px; font-family: 'JetBrains Mono'; }
+
+/* BUILD RESULT */
+.build-box { border-left: 4px solid var(--purple); padding-left: 15px; margin-bottom: 10px; }
+.item-title { color: var(--gold); font-weight: bold; }
+.item-reason { font-size: 0.85rem; color: #94a3b8; }
+
+/* CALC */
+.calc-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
+.res-card { text-align: center; background: #000; padding: 15px; border-radius: 12px; border: 1px solid var(--purple); }
+.res-val { font-family: var(--font-display); font-size: 1.8rem; color: var(--purple); }
 </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>VEIGAR TACTICAL GRIMOIRE</h1>
-        <div style="font-size: 0.8rem; letter-spacing: 2px; color: var(--purple);">PATCH 26.10 - COMPATIBLE 170+ CHAMPIONS</div>
-    </header>
+<div class="app">
+  <header>
+    <div class="meta-tag">VEIGAR OPT TOOL • SEASON 2026</div>
+    <h1>TACTICAL DASHBOARD</h1>
+  </header>
 
-    <div class="draft-bar">
-        <div class="slot active" onclick="setSlot('mid')"><span class="label">MID (FACE)</span><b id="t-mid">+</b></div>
-        <div class="slot" onclick="setSlot('top')"><span class="label">TOP</span><b id="t-top">+</b></div>
-        <div class="slot" onclick="setSlot('jgl')"><span class="label">JUNGLE</span><b id="t-jgl">+</b></div>
-        <div class="slot" onclick="setSlot('adc')"><span class="label">ADC</span><b id="t-adc">+</b></div>
-        <div class="slot" onclick="setSlot('sup')"><span class="label">SUPPORT</span><b id="t-sup">+</b></div>
+  <nav>
+    <button class="nav-btn active" onclick="tab('draft')">🎯 ANALYSE DRAFT</button>
+    <button class="nav-btn" onclick="tab('matchup')">⚔️ MATCHUPS</button>
+    <button class="nav-btn" onclick="tab('calc')">🧮 CALCULATEUR</button>
+  </nav>
+
+  <section id="p-draft" class="panel active">
+    <div class="card">
+      <div class="card-header"><span>COMPOSITION ENNEMIE</span> <span id="counter-stats" style="color:var(--cyan)"></span></div>
+      <div class="draft-slots">
+        <div class="slot active" id="s-mid" onclick="selSlot('mid')"><span class="slot-label">MID (FACE)</span><span id="t-mid" class="slot-name">+</span></div>
+        <div class="slot" id="s-top" onclick="selSlot('top')"><span class="slot-label">TOP</span><span id="t-top" class="slot-name">+</span></div>
+        <div class="slot" id="s-jgl" onclick="selSlot('jgl')"><span class="slot-label">JUNGLE</span><span id="t-jgl" class="slot-name">+</span></div>
+        <div class="slot" id="s-adc" onclick="selSlot('adc')"><span class="slot-label">ADC</span><span id="t-adc" class="slot-name">+</span></div>
+        <div class="slot" id="s-sup" onclick="selSlot('sup')"><span class="slot-label">SUPPORT</span><span id="t-sup" class="slot-name">+</span></div>
+      </div>
+      <input type="text" id="pSearch" class="search-in" placeholder="🔍 Taper le nom d'un champion..." oninput="drawPool()">
+      <div class="pool" id="p-list"></div>
     </div>
+    <div id="build-res"></div>
+  </section>
 
-    <input type="text" id="cSearch" class="search-box" placeholder="🔍 Taper un nom (ex: Zaahen, Yunara, Yasuo...)" oninput="filterPool()">
-    <div class="pool" id="cPool"></div>
-
-    <div class="res-grid" id="resGrid" style="display:none;">
-        <div class="build-card">
-            <h3 style="margin-top:0; color:var(--purple);">🛠 BUILD ADAPTATIF</h3>
-            <div id="buildList"></div>
-        </div>
-        <div class="build-card" style="border-left-color: var(--gold);">
-            <h3 style="margin-top:0; color:var(--gold);">💡 CONSEILS CHALLENGER</h3>
-            <div id="tipList"></div>
-        </div>
+  <section id="p-matchup" class="panel">
+    <div class="card">
+      <div class="card-header">FICHES DE COMBAT (MAJ 2026.7)</div>
+      <div id="m-list" class="pool" style="max-height: 400px;"></div>
     </div>
+    <div id="m-detail"></div>
+  </section>
+
+  <section id="p-calc" class="panel">
+    <div class="card">
+      <div class="card-header">ESTIMATEUR DE DÉGÂTS (Z + R)</div>
+      <div class="calc-row">
+        <div><label>Stacks Passif</label><input type="number" id="v-st" class="search-in" value="180" oninput="recalc()"></div>
+        <div><label>AP Items</label><input type="number" id="v-it" class="search-in" value="400" oninput="recalc()"></div>
+      </div>
+      <div class="calc-row">
+        <div class="res-card"><div class="res-val" id="r-ap">0</div><div>AP TOTALE</div></div>
+        <div class="res-card"><div class="res-val" id="r-dmg" style="color:var(--red)">0</div><div>ONE-SHOT CAP</div></div>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
-// LA LISTE ROYALE 2026
-const CHAMPIONS = ["Aatrox","Ahri","Akali","Akshan","Alistar","Ambessa","Amumu","Anivia","Annie","Aphelios","Ashe","Aurelion Sol","Aurora","Azir","Bard","Bel'Veth","Blitzcrank","Brand","Braum","Briar","Caitlyn","Camille","Cassiopeia","Cho'Gath","Corki","Darius","Diana","Dr. Mundo","Draven","Ekko","Elise","Evelynn","Ezreal","Fiddlesticks","Fiora","Fizz","Galio","Gangplank","Garen","Gnar","Gragas","Graves","Gwen","Hecarim","Heimerdinger","Hwei","Illaoi","Irelia","Ivern","Janna","Jarvan IV","Jax","Jayce","Jhin","Jinx","K'Santé","Kai'Sa","Kalista","Karma","Karthus","Kassadin","Katarina","Kayle","Kayn","Kennen","Kha'Zix","Kindred","Kled","Kog'Maw","LeBlanc","Lee Sin","Leona","Lillia","Lissandra","Lucian","Lulu","Lux","Malphite","Malzahar","Maokai","Maître Yi","Mel","Milio","Miss Fortune","Mordekaiser","Morgana","Naafiri","Nami","Nasus","Nautilus","Neeko","Nidalee","Nilah","Nocturne","Nunu et Willump","Olaf","Orianna","Ornn","Pantheon","Poppy","Pyke","Qiyana","Quinn","Rakan","Rammus","Rek'Sai","Rell","Renata Glasc","Renekton","Rengar","Riven","Rumble","Ryze","Samira","Sejuani","Senna","Sett","Shaco","Shen","Shyvana","Singed","Sion","Sivir","Skarner","Smolder","Sona","Soraka","Swain","Sylas","Syndra","Séraphine","Tahm Kench","Taliyah","Talon","Taric","Teemo","Thresh","Tristana","Trundle","Tryndamere","Twisted Fate","Twitch","Udyr","Urgot","Varus","Vayne","Veigar","Vel'Koz","Vex","Vi","Viego","Viktor","Vladimir","Volibear","Warwick","Wukong","Xayah","Xerath","Xin Zhao","Yasuo","Yone","Yorick","Yunara","Yuumi","Zaahen","Zac","Zed","Zeri","Ziggs","Zilean","Zoé","Zyra"];
-
-// LOGIQUE DE THÉORYCRAFTING
-const META = {
-    assassins: ["Zed","Talon","Katarina","Fizz","Akali","Qiyana","LeBlanc","Naafiri","Pyke","Yone","Diana","Evelynn","Aurora","Kha'Zix"],
-    tanks: ["K'Santé","Malphite","Ornn","Sion","Dr. Mundo","Cho'Gath","Skarner","Zaahen","Maokai","Alistar","Braum","Nautilus"],
-    mobiles: ["Yasuo","Yone","Ambessa","Lee Sin","Lucian","Ezreal","Zeri","Bel'Veth","Kalista","Kayn","Master Yi","Yunara","Zaahen"]
+/* DATABASE MARS 2026 */
+const DATA = {
+  "Zaahen": {role:"top", dmg:"ad", mob:true, tank:true, tip:"Respecte son E au niveau 3. Cage-toi s'il dash."},
+  "Yunara": {role:"adc", dmg:"ad", mob:true, tank:false, tip:"Ses projectiles ricochent. Ne reste pas près des sbires."},
+  "Mel": {role:"mid", dmg:"ap", mob:false, tank:false, tip:"Garde ta cage pour quand elle canalise son rayon."},
+  "Ambessa": {role:"top", dmg:"ad", mob:true, tank:true, tip:"Joue Fimbulwinter. Elle va te dive sans cesse."},
+  "Aurora": {role:"mid", dmg:"ap", mob:true, tank:false, tip:"Elle peut sauter ta cage. Attends son atterrissage."},
+  "Smolder": {role:"mid", dmg:"mixed", mob:true, tank:false, tip:"Punis son early. Tu outscales ses dégâts de zone."},
+  "Hwei": {role:"mid", dmg:"ap", mob:false, tank:false, tip:"Matchup de skill. Cage-le quand il prépare son livre."},
+  "Yone": {role:"mid", dmg:"mixed", mob:true, tank:false, tip:"Cage son point de retour (E). Bone Plating requis."},
+  "Yasuo": {role:"mid", dmg:"ad", mob:true, tank:false, tip:"Ton Z traverse son mur s'il est au milieu."},
+  "Sylas": {role:"mid", dmg:"ap", mob:true, tank:true, tip:"Rush Banshee. S'il te vole ton R, tu es mort."},
+  "K'Sante": {role:"top", dmg:"mixed", mob:true, tank:true, tip:"Stacke sur lui gratuitement. Il ne peut pas te tuer solo."},
+  "Briar": {role:"jgl", dmg:"ad", mob:true, tank:true, tip:"Cage sur sa trajectoire de frénésie. Elle ne peut pas dévier."},
+  "Naafiri": {role:"mid", dmg:"ad", mob:true, tank:false, tip:"Ses chiens bloquent ton A. Utilise le Z en zone."},
+  "Viktor": {role:"mid", dmg:"ap", mob:false, tank:false, tip:"Post-rework 2026 : son E est plus rapide. Dodge latéralement."},
+  "Zeri": {role:"adc", dmg:"ad", mob:true, tank:false, tip:"Elle va essayer de flank par les murs. Cage le bord du mur."},
+  "Bel'Veth": {role:"jgl", dmg:"ad", mob:true, tank:true, tip:"Ne l'affronte pas dans la rivière. Cage ses 4 dashes."},
+  "Vex": {role:"mid", dmg:"ap", mob:false, tank:false, tip:"Banshee bloque son R. Si elle ne peut pas dash in, elle meurt."}
 };
 
-let selected = {mid:null, top:null, jgl:null, adc:null, sup:null}, activeSlot = 'mid';
+let draft = {mid:null, top:null, jgl:null, adc:null, sup:null}, cur = 'mid';
 
-function setSlot(s) {
-    activeSlot = s;
-    document.querySelectorAll('.slot').forEach(el => el.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+function tab(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-'+id).classList.add('active');
+  event.target.classList.add('active');
 }
 
-function filterPool() {
-    const q = document.getElementById('cSearch').value.toLowerCase();
-    const pool = document.getElementById('cPool');
-    pool.innerHTML = '';
-    CHAMPIONS.forEach(name => {
-        if(name.toLowerCase().includes(q)) {
-            let b = document.createElement('button'); b.className = 'p-btn'; b.textContent = name;
-            b.onclick = () => selectChamp(name);
-            pool.appendChild(b);
-        }
-    });
+function selSlot(s) {
+  cur = s;
+  document.querySelectorAll('.slot').forEach(el => el.classList.remove('active'));
+  document.getElementById('s-'+s).classList.add('active');
 }
 
-function selectChamp(name) {
-    selected[activeSlot] = name;
-    document.getElementById('t-'+activeSlot).textContent = name;
-    document.getElementById('t-'+activeSlot).parentElement.classList.add('filled');
-    analyze();
+function drawPool() {
+  const list = document.getElementById('p-list');
+  const search = document.getElementById('pSearch').value.toLowerCase();
+  list.innerHTML = '';
+  Object.keys(DATA).forEach(name => {
+    if(name.toLowerCase().includes(search)) {
+      let b = document.createElement('button'); b.className = 'p-btn'; b.textContent = name;
+      b.onclick = () => {
+        draft[cur] = name; document.getElementById('t-'+cur).textContent = name;
+        document.getElementById('s-'+cur).classList.add('filled');
+        genBuild();
+      };
+      list.appendChild(b);
+    }
+  });
 }
 
-function analyze() {
-    document.getElementById('resGrid').style.display = 'grid';
-    let build = [], tips = [];
-    let isMobile = 0, isAD = 0, isTank = 0;
+function genBuild() {
+  let mob = 0, ad = 0, tank = 0;
+  Object.values(draft).filter(Boolean).forEach(c => {
+    if(DATA[c].mob) mob++; if(DATA[c].dmg==='ad') ad++; if(DATA[c].tank) tank++;
+  });
+  
+  const res = document.getElementById('build-res');
+  let build = [
+    {n:"Rod of Ages", r:"HP/Mana vital en 2026. Scale avec ton passif."},
+    {n:"Seraph's Embrace", r:"Bouclier indispensable vs burst."}
+  ];
+  if(mob >= 2) build.push({n:"Fimbulwinter", r:"Option Star Zall vs Mobiles : double shield avec la cage."});
+  if(ad >= 3) build.push({n:"Frozen Heart", r:"Armure + Réduction AS ennemie."});
+  if(tank >= 1) build.push({n:"Cryptbloom", r:"Pen + Heal de zone sur kill."});
+  build.push({n:"Rabadon's Deathcap", r:"Multiplicateur x1.35 AP."});
 
-    Object.values(selected).filter(Boolean).forEach(c => {
-        if(META.mobiles.includes(c)) isMobile++;
-        if(META.tanks.includes(c)) isTank++;
-    });
-
-    // BUILD LOGIC
-    build.push({n:"Bâton Séculaire (RoA)", w:"Sustain HP/Mana obligatoire pour survivre aux échanges en 2026."});
-    if(isMobile >= 2) build.push({n:"Fimbulwinter", w:"Beaucoup de dashes en face. Le shield sur ta cage (E) te sauvera."});
-    else build.push({n:"Étreinte du Séraphin", w:"Plus d'AP et bouclier anti-burst standard."});
-    
-    if(isTank >= 1) build.push({n:"Fleur de Crypte (Cryptbloom)", w:"Pénétration magique + soin de zone sur kill."});
-    if(selected.mid && META.assassins.includes(selected.mid)) build.push({n:"Sablier de Zhonya", w:"Contre l'all-in de "+selected.mid});
-    
-    build.push({n:"Coiffe de Rabadon", w:"Multiplicateur final pour le One-Shot."});
-
-    // RENDER
-    document.getElementById('buildList').innerHTML = build.map(i => `<div class="item-row"><div class="item-name">${i.n}</div><div class="item-why">${i.w}</div></div>`).join('');
-    
-    // TIPS LOGIC
-    let t = [];
-    if(selected.mid === "Yasuo") t.push("Z traverse son mur. Cage-le quand il n'a plus de sbires pour dash.");
-    if(selected.mid === "Zaahen") t.push("NOUVEAU COLOSSE : Ne lance pas tes sorts de loin, il gagne de la MS. Cage-le au corps à corps.");
-    if(isMobile >= 3) t.push("Garde ta CAGE (E) uniquement pour la défense. Ne l'utilise pas pour initier.");
-    if(isTank >= 2) t.push("Ne focus pas les tanks avec ton R. Garde-le pour exécuter les carrys à < 40% PV.");
-    
-    document.getElementById('tipList').innerHTML = t.map(i => `<p style="font-size:0.9rem; margin-bottom:8px;">• ${i}</p>`).join('') || "Sélectionne plus de champions pour des conseils précis.";
+  let h = `<div class="card"><div class="card-header">BUILD RECOMMANDÉ (VS DRAFT)</div>`;
+  build.forEach(i => h += `<div class="build-box"><div class="item-title">${i.n}</div><div class="item-reason">${i.r}</div></div>`);
+  res.innerHTML = h + `</div>`;
+  document.getElementById('counter-stats').textContent = `${ad} AD | ${mob} MOB | ${tank} TNK`;
 }
 
-filterPool();
+function drawMatchups() {
+  const m = document.getElementById('m-list'); m.innerHTML = '';
+  Object.keys(DATA).forEach(name => {
+    let b = document.createElement('button'); b.className = 'p-btn'; b.textContent = name;
+    b.onclick = () => {
+      document.getElementById('m-detail').innerHTML = `<div class="card"><div class="card-header">CONSEIL VS ${name}</div><p>${DATA[name].tip}</p></div>`;
+    };
+    m.appendChild(b);
+  });
+}
+
+function recalc() {
+  const s = parseInt(document.getElementById('v-st').value)||0, i = parseInt(document.getElementById('v-it').value)||0;
+  const ap = Math.floor((s + i) * 1.35);
+  document.getElementById('r-ap').textContent = ap;
+  // Formule simplifiée R execute patch 26.7
+  const dmg = Math.floor((320 + (ap * 1.1)) + (650 + (ap * 1.6)));
+  document.getElementById('r-dmg').textContent = dmg;
+}
+
+drawPool(); drawMatchups(); recalc();
 </script>
 </body>
 </html>
