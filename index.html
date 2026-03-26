@@ -337,10 +337,11 @@ function champImg(name) {
 
 // Item name → Data Dragon item ID mapping
 var ITEM_IMG_ID = {
-  "Ionian Boots":3158,"Rod of Ages":4628,"Seraph's Embrace":3040,"Fimbulwinter":3121,
-  "Cryptbloom":4629,"Rabadon's Deathcap":3089,"Zhonya's Hourglass":3157,"Banshee's Veil":3102,
-  "Frozen Heart":3110,"Void Staff":3135,"Blackfire Torch":4630,"Abyssal Mask":8020,
-  "Shadowflame":4645,"Boots of Swiftness":3009,"Doran's Ring":1056,"Tear of the Goddess":3070
+  "Ionian Boots":223158,"Rod of Ages":226657,"Seraph's Embrace":223040,"Fimbulwinter":223121,
+  "Cryptbloom":223137,"Rabadon's Deathcap":223089,"Zhonya's Hourglass":223157,"Banshee's Veil":223102,
+  "Frozen Heart":223110,"Void Staff":223135,"Blackfire Torch":222503,"Abyssal Mask":228020,
+  "Shadowflame":224645,"Boots of Swiftness":223009,"Doran's Ring":1056,"Tear of the Goddess":3070,
+  "Health Potion":2003
 };
 
 function itemImg(name) {
@@ -1015,6 +1016,37 @@ function calc(){
   var el=document.getElementById(id); el.addEventListener('input',calc); el.addEventListener('change',calc);
 });
 calc();
+
+/* ═══════════════════════════════════════
+   INJECT ITEM IMAGES INTO STATIC BUILD PANELS
+   ═══════════════════════════════════════ */
+(function(){
+  var itemNames = {
+    "Doran's Ring":1056,"Health Pot":2003,"Tear of the Goddess":3070,"Tear":3070,
+    "Ionian Boots":223158,"Rod of Ages":226657,"Seraph's Embrace":223040,
+    "Cryptbloom":223137,"Rabadon's Deathcap":223089,"Rabadon's":223089,
+    "Zhonya's":223157,"Zhonya's Hourglass":223157,"Banshee's":223102,"Banshee's Veil":223102,
+    "Fimbulwinter":223121,"Blackfire Torch":222503,"Frozen Heart":223110,
+    "Void Staff":223135,"Abyssal Mask":228020,"Shadowflame":224645,
+    "Boots of Swiftness":223009
+  };
+  document.querySelectorAll('#panel-build .item-chip .emoji').forEach(function(em){
+    var chip = em.parentElement;
+    var text = chip.textContent.trim();
+    var matched = null;
+    Object.keys(itemNames).forEach(function(n){
+      if (text.indexOf(n) !== -1) matched = itemNames[n];
+    });
+    if (matched) {
+      var img = document.createElement('img');
+      img.src = DD_CDN + '/img/item/' + matched + '.png';
+      img.style.cssText = 'width:22px;height:22px;border-radius:4px;border:1px solid var(--border);';
+      img.onerror = function(){ this.style.display='none'; };
+      img.loading = 'lazy';
+      em.replaceWith(img);
+    }
+  });
+})();
 </script>
 </body>
 </html>
