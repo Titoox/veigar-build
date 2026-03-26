@@ -183,8 +183,15 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
 .rune-icon.active .rune-icon__name { color: var(--text-dim); }
 .rune-shards { display: flex; justify-content: center; gap: 16px; margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
 .rune-shard { text-align: center; }
-.rune-shard__circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--purple-mid); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--purple-glow); background: rgba(168,85,247,0.1); margin: 0 auto 3px; }
+.rune-shard__circle { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--purple-mid); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--purple-glow); background: rgba(168,85,247,0.1); margin: 0 auto 3px; overflow: hidden; }
+.rune-shard__circle img { width: 24px; height: 24px; }
 .rune-shard__label { font-size: 0.55rem; color: var(--text-muted); }
+
+/* Rune tooltips */
+.rune-icon, .rune-shard { position: relative; }
+.rune-tip { display: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); background: var(--bg-card); border: 1px solid var(--purple-mid); border-radius: 8px; padding: 8px 12px; font-size: 0.75rem; color: var(--text); line-height: 1.35; white-space: nowrap; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.5); pointer-events: none; max-width: 260px; white-space: normal; }
+.rune-tip::after { content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%); border: 6px solid transparent; border-top-color: var(--purple-mid); }
+.rune-icon:hover .rune-tip, .rune-shard:hover .rune-tip { display: block; }
 </style>
 </head>
 <body>
@@ -717,9 +724,23 @@ document.querySelectorAll('.nav__btn').forEach(function(btn){
     document.querySelectorAll('.nav__btn').forEach(function(b){b.classList.remove('active');});
     document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
     btn.classList.add('active');
-    document.getElementById('panel-'+btn.getAttribute('data-panel')).classList.add('active');
+    var panel = btn.getAttribute('data-panel');
+    document.getElementById('panel-'+panel).classList.add('active');
+    saveTab(panel);
   });
 });
+
+// Restore tab
+(function(){
+  var tab = loadTab();
+  if (tab) {
+    document.querySelectorAll('.nav__btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+    var btn = document.querySelector('.nav__btn[data-panel="'+tab+'"]');
+    var panel = document.getElementById('panel-'+tab);
+    if (btn && panel) { btn.classList.add('active'); panel.classList.add('active'); }
+  }
+})();
 
 
 /* ═══════════════════════════════════════
@@ -802,6 +823,7 @@ function updateDraftUI() {
   } else {
     document.getElementById('draftResult').innerHTML = '';
   }
+  saveDraft();
 }
 
 // Slot click = select that slot + re-render pool for that role
@@ -866,7 +888,15 @@ function renderDraftResult(r) {
   // Build order
   h += '<div class="card">';
   h += '<div class="card__header"><span class="card__icon">🔮</span><span class="card__title">Build Order Recommandé</span></div>';
-  h += '<div class="build-label" style="margin-bottom:4px">Starter : 💍 Doran\'s Ring + 🧪 Pots → 1st back : 💧 Tear</div>';
+  h += '<div class="build-label" style="margin-bottom:4px">Starter</div>';
+  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;">';
+  h += imgTag(itemImg("Doran's Ring"),'item-img') + '<span style="font-weight:600;font-size:.85rem;">Doran\'s Ring</span>';
+  h += '<span style="color:var(--text-muted);font-size:.8rem;">+</span>';
+  h += imgTag(DD_CDN+'/img/item/2003.png','item-img') + '<span style="font-weight:600;font-size:.85rem;">Health Pot ×2</span>';
+  h += '<span style="color:var(--text-muted);font-size:.8rem;margin:0 4px;">→</span>';
+  h += '<span class="build-label" style="margin:0;display:inline">1st Back</span>';
+  h += imgTag(itemImg("Tear of the Goddess"),'item-img') + '<span style="font-weight:600;font-size:.85rem;">Tear</span>';
+  h += '</div>';
   h += '<div class="section-sep" style="margin:12px 0;"></div>';
 
   var tagMap = {core:'tag-core',surv:'tag-surv',dmg:'tag-dmg',pen:'tag-pen',util:'tag-util'};
@@ -923,6 +953,52 @@ function renderDraftResult(r) {
   }
 }
 
+/* ═══════════════════════════════════════
+   PERSISTENCE — localStorage
+   ═══════════════════════════════════════ */
+function saveDraft() {
+  try { localStorage.setItem('veigar_draft', JSON.stringify(draftSlots)); } catch(e) {}
+}
+function loadDraft() {
+  try {
+    var d = JSON.parse(localStorage.getItem('veigar_draft'));
+    if (d && typeof d === 'object') {
+      ['mid','top','jgl','adc','sup'].forEach(function(s) {
+        if (d[s] && CHAMP_DB[d[s]]) draftSlots[s] = d[s];
+      });
+    }
+  } catch(e) {}
+}
+function saveCalc() {
+  try {
+    var data = {};
+    ['stacks','level','itemAP','qRank','rRank'].forEach(function(id) {
+      data[id] = document.getElementById(id).value;
+    });
+    data.rabBonus = document.getElementById('rabBonus').value;
+    localStorage.setItem('veigar_calc', JSON.stringify(data));
+  } catch(e) {}
+}
+function loadCalc() {
+  try {
+    var data = JSON.parse(localStorage.getItem('veigar_calc'));
+    if (data) {
+      ['stacks','level','itemAP','qRank','rRank'].forEach(function(id) {
+        if (data[id] !== undefined) document.getElementById(id).value = data[id];
+      });
+      if (data.rabBonus) document.getElementById('rabBonus').value = data.rabBonus;
+    }
+  } catch(e) {}
+}
+function saveTab(panel) {
+  try { localStorage.setItem('veigar_tab', panel); } catch(e) {}
+}
+function loadTab() {
+  try { return localStorage.getItem('veigar_tab'); } catch(e) { return null; }
+}
+
+// Restore draft
+loadDraft();
 renderDraftPool('');
 updateDraftUI();
 
@@ -1062,11 +1138,60 @@ var RUNE_PATHS = {
   HailOfBlades: 'perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png'
 };
 
+var RUNE_TIPS = {
+  SummonAery:"Tes sorts envoient Aery sur l'ennemi (dégâts) ou l'allié (shield). Poke constant en lane.",
+  ArcaneComet:"Tes sorts lancent une comète. Moins fiable que Aery car ça peut miss.",
+  PhaseRush:"3 attaques/sorts en 4s = burst de vitesse. Pour fuir, pas pour Veigar.",
+  ManaflowBand:"Touche un champion avec un sort → +25 mana max (jusqu'à +250). Puis regen mana.",
+  NullifyingOrb:"Shield magique quand tu descends sous 30% HP. Utile vs burst AP.",
+  NimbusCloak:"Utiliser un Summoner Spell → burst de vitesse.",
+  Transcendence:"Lvl 5: +5 AH. Lvl 8: +5 AH. Lvl 11: reset 20% CD sur takedown.",
+  Celerity:"+1% mouvement. Les bonus de mouvement augmentés de 7%.",
+  AbsoluteFocus:"+1.8-18 AP quand au-dessus de 70% HP.",
+  Scorch:"Tes sorts brûlent l'ennemi pour 15-35 dégâts bonus. Poke early.",
+  Waterwalking:"+25 mouvement et AP adaptative dans la rivière.",
+  GatheringStorm:"+8 AP toutes les 10 min. Scale infini.",
+  FirstStrike:"Toucher un ennemi en premier = 5s de dégâts bonus (+9%) et gold.",
+  GlacialAugment:"Immobiliser un ennemi crée une zone de slow.",
+  UnsealedSpellbook:"Change tes Summoner Spells en jeu.",
+  BiscuitDelivery:"Biscuit gratuit à 2:00, 4:00, 6:00. Heal + mana. +50 mana max permanent.",
+  CosmicInsight:"+18 Summoner Spell Haste. +10 Item Haste.",
+  MagicalFootwear:"Bottes gratuites à 12 min (-45s par takedown). +10 mouvement bonus.",
+  TimeWarpTonic:"Potions et biscuits donnent 50% effet instantanément + mouvement.",
+  HextechFlashtraption:"En channel, flash courte portée. Utile pour engage surprise.",
+  CashBack:"7% du prix de tes items légendaires/mythiques remboursé.",
+  TripleTonicRune:"À lvl 3/6/9, reçois un élixir aléatoire temporaire.",
+  ApproachVelocity:"+7.5% mouvement vers les ennemis en CC.",
+  JackOfAllTrades:"+1 AH par stat unique de tes items (max +10).",
+  BonePlating:"Après avoir été touché, les 3 prochaines attaques/sorts font 30-60 de moins.",
+  SecondWind:"Après avoir pris des dégâts, regen HP sur 10s.",
+  Conditioning:"À 12 min, +8 armure et +8 MR, augmentés de 3%.",
+  Overgrowth:"+3 HP max par 8 mobs qui meurent près de toi. Permanent.",
+  Electrocute:"3 attaques/sorts en 3s = burst de dégâts. Pour assassiner.",
+  DarkHarvest:"Toucher un ennemi sous 50% HP = dégâts bonus + stack permanent.",
+  HailOfBlades:"3 premières auto-attacks = vitesse d'attaque massive."
+};
+
+var SHARD_IMGS = {
+  AH: 'perk-images/StatMods/StatModsCDRScalingIcon.png',
+  AP: 'perk-images/StatMods/StatModsAdaptiveForceIcon.png',
+  HP: 'perk-images/StatMods/StatModsHealthScalingIcon.png',
+  Armor: 'perk-images/StatMods/StatModsArmorIcon.png',
+  MR: 'perk-images/StatMods/StatModsMagicResIcon.png',
+  AS: 'perk-images/StatMods/StatModsAttackSpeedIcon.png'
+};
+
 function runeImg(key) { return DD_RUNE + (RUNE_PATHS[key] || ''); }
+function shardImgUrl(key) { return DD_RUNE + (SHARD_IMGS[key] || ''); }
 
 function renderRuneIcon(key, name, active, isKeystone) {
   var cls = (isKeystone ? 'rune-icon keystone' : 'rune-icon') + (active ? ' active' : ' inactive');
-  return '<div class="'+cls+'"><img src="'+runeImg(key)+'" alt="'+name+'" loading="lazy" onerror="this.style.display=\'none\'"><div class="rune-icon__name">'+name+'</div></div>';
+  var tip = RUNE_TIPS[key] ? '<div class="rune-tip"><strong>'+name+'</strong><br>'+RUNE_TIPS[key]+'</div>' : '';
+  return '<div class="'+cls+'"><img src="'+runeImg(key)+'" alt="'+name+'" loading="lazy" onerror="this.style.display=\'none\'">'+tip+'<div class="rune-icon__name">'+name+'</div></div>';
+}
+
+function renderShard(imgKey, label, desc) {
+  return '<div class="rune-shard"><div class="rune-shard__circle"><img src="'+shardImgUrl(imgKey)+'" alt="'+label+'"></div><div class="rune-tip"><strong>'+label+'</strong><br>'+desc+'</div><div class="rune-shard__label">'+label+'</div></div>';
 }
 
 // Main Rune Page
@@ -1125,9 +1250,9 @@ function renderRuneIcon(key, name, active, isKeystone) {
 
   // Shards
   h += '<div class="rune-shards">';
-  h += '<div class="rune-shard"><div class="rune-shard__circle">⚡</div><div class="rune-shard__label">+8 AH</div></div>';
-  h += '<div class="rune-shard"><div class="rune-shard__circle">🔮</div><div class="rune-shard__label">+9 AP</div></div>';
-  h += '<div class="rune-shard"><div class="rune-shard__circle">❤️</div><div class="rune-shard__label">+65 HP</div></div>';
+  h += renderShard('AH','+8 Ability Haste','Réduit le cooldown de tes sorts. Essentiel pour spam Q et cage E plus souvent.');
+  h += renderShard('AP','+9 Adaptive AP','Force adaptative. Te donne +9 AP au début de la partie.');
+  h += renderShard('HP','+65 Base Health','HP de base bonus. Survie en lane contre les trades early.');
   h += '</div>';
   h += '</div>';
 
@@ -1206,8 +1331,9 @@ function calc(){
   document.getElementById('comboDmg').textContent=Math.floor(Q_BASE[qr]+ap*Q_RATIO[qr])+Math.floor(W_BASE[4]+ap*W_RATIO[4])+Math.floor(R_BASE_MAX[rr]+ap*R_RATIO_MAX[rr]);
 }
 ['stacks','level','itemAP','rabBonus','qRank','rRank'].forEach(function(id){
-  var el=document.getElementById(id); el.addEventListener('input',calc); el.addEventListener('change',calc);
+  var el=document.getElementById(id); el.addEventListener('input',function(){calc();saveCalc();}); el.addEventListener('change',function(){calc();saveCalc();});
 });
+loadCalc();
 calc();
 
 /* ═══════════════════════════════════════
