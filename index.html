@@ -974,13 +974,23 @@ renderChampList('');
 
 /* ═══ SITUATIONAL LIST ═══ */
 var SITUATIONAL_ITEMS=[
-  {name:"⏳ Zhonya's",when:"VS assassins AD. Obligatoire."},{name:"🛡️ Banshee's",when:"VS burst AP / pick unique."},
-  {name:"❄️ Fimbulwinter",when:"VS mobiles. Shield + HP."},{name:"❄️ Frozen Heart",when:"VS auto-attackers AD."},
-  {name:"🔮 Abyssal Mask",when:"VS heavy AP."},{name:"🔥 Blackfire Torch",when:"VS tanks HP."},
-  {name:"👻 Shadowflame",when:"Flat pen VS squishies."},{name:"🌀 Void Staff",when:"2+ ennemis 60+ MR."},
-  {name:"🏃 Boots of Swiftness",when:"VS slows."}
+  {name:"Zhonya's Hourglass",item:"Zhonya's Hourglass",when:"VS assassins AD. Obligatoire."},
+  {name:"Banshee's Veil",item:"Banshee's Veil",when:"VS burst AP / pick unique."},
+  {name:"Fimbulwinter",item:"Fimbulwinter",when:"VS mobiles. Shield + HP."},
+  {name:"Frozen Heart",item:"Frozen Heart",when:"VS auto-attackers AD."},
+  {name:"Abyssal Mask",item:"Abyssal Mask",when:"VS heavy AP."},
+  {name:"Blackfire Torch",item:"Blackfire Torch",when:"VS tanks HP."},
+  {name:"Shadowflame",item:"Shadowflame",when:"Flat pen VS squishies."},
+  {name:"Void Staff",item:"Void Staff",when:"2+ ennemis 60+ MR."},
+  {name:"Boots of Swiftness",item:"Boots of Swiftness",when:"VS slows."}
 ];
-(function(){var c=document.getElementById('situationalList'),h='';SITUATIONAL_ITEMS.forEach(function(it){h+='<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;"><span style="font-weight:700;font-size:.9rem;min-width:160px;color:var(--text);">'+it.name+'</span><span style="font-size:.85rem;color:var(--text-dim);flex:1;min-width:200px;">'+it.when+'</span></div>';});c.innerHTML=h;})();
+(function(){var c=document.getElementById('situationalList'),h='';SITUATIONAL_ITEMS.forEach(function(it){
+  var src=itemImg(it.item);
+  h+='<div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">';
+  if(src) h+=imgTag(src,'item-img');
+  h+='<span style="font-weight:700;font-size:.9rem;min-width:140px;color:var(--text);">'+it.name+'</span>';
+  h+='<span style="font-size:.85rem;color:var(--text-dim);flex:1;min-width:200px;">'+it.when+'</span></div>';
+});c.innerHTML=h;})();
 
 /* ═══ RUNE ADAPTATIONS ═══ */
 var RUNE_ADAPTATIONS=[
