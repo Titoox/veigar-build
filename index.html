@@ -140,6 +140,27 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
 .strat-card { padding: 16px; background: linear-gradient(135deg, rgba(251,191,36,0.05), rgba(168,85,247,0.05)); border: 1px solid rgba(251,191,36,0.2); border-radius: 12px; margin-top: 16px; }
 .strat-card__title { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
 .strat-card__text { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
+
+/* Champion & item images */
+.champ-img { width: 32px; height: 32px; border-radius: 6px; border: 1px solid var(--border); vertical-align: middle; object-fit: cover; }
+.champ-img-sm { width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border); vertical-align: middle; object-fit: cover; }
+.champ-img-lg { width: 40px; height: 40px; border-radius: 8px; border: 2px solid var(--border); vertical-align: middle; object-fit: cover; }
+.item-img { width: 28px; height: 28px; border-radius: 4px; border: 1px solid var(--border); vertical-align: middle; object-fit: cover; }
+.draft-slot__pick img { width: 36px; height: 36px; border-radius: 8px; border: none; }
+.draft-pool__btn { display: inline-flex; align-items: center; gap: 5px; }
+.draft-pool__btn img { width: 22px; height: 22px; border-radius: 4px; }
+.champ-btn { display: inline-flex; align-items: center; gap: 6px; justify-content: flex-start; text-align: left; }
+.champ-btn img { width: 24px; height: 24px; border-radius: 4px; flex-shrink: 0; }
+.build-order-item img.item-img { width: 32px; height: 32px; border-radius: 6px; border: 2px solid var(--border); }
+.item-chip img { width: 22px; height: 22px; border-radius: 4px; border: 1px solid var(--border); }
+
+/* Reset & copy buttons */
+.draft-reset { padding: 8px 16px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; color: var(--red); font-family: var(--font-body); font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.draft-reset:hover { background: rgba(239,68,68,0.2); }
+.copy-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.25); border-radius: 8px; color: var(--cyan); font-family: var(--font-body); font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 12px; }
+.copy-btn:hover { background: rgba(34,211,238,0.15); }
+.copy-btn.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
+.draft-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
 </style>
 </head>
 <body>
@@ -162,7 +183,10 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
   <section class="panel active" id="panel-draft">
     <div class="card">
       <div class="card__header"><span class="card__icon">🎯</span><span class="card__title">Draft Analyzer — Compo ennemie</span></div>
-      <p style="font-size:0.85rem;color:var(--text-dim);margin-bottom:16px;">Clique sur un slot puis choisis le champion. <strong style="color:var(--red);">Mid</strong> = ton matchup direct. Les 4 autres = le reste de l'équipe ennemie.</p>
+      <div class="draft-top-bar">
+        <p style="font-size:0.85rem;color:var(--text-dim);margin:0;">Clique un slot → choisis le champion. Le build se calcule en temps réel.</p>
+        <button class="draft-reset" id="draftReset">🗑️ Reset tout</button>
+      </div>
 
       <div class="draft-slots" id="draftSlots">
         <div class="draft-slot" data-slot="mid">
@@ -194,8 +218,6 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
 
       <input type="text" class="draft-search" id="draftSearch" placeholder="🔍 Cherche un champion..." autocomplete="off">
       <div class="draft-pool" id="draftPool"></div>
-
-      <button class="draft-go" id="draftGo" disabled>⚡ Analyser la compo → Build optimal</button>
     </div>
 
     <div id="draftResult"></div>
@@ -287,6 +309,51 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
 </div>
 
 <script>
+/* ═══════════════════════════════════════
+   DATA DRAGON — Champion & Item Images
+   ═══════════════════════════════════════ */
+var DD_VER = '16.6.1';
+var DD_CDN = 'https://ddragon.leagueoflegends.com/cdn/' + DD_VER;
+
+// Map display names → Data Dragon IDs (only special cases)
+var DD_ID = {
+  "Aurelion Sol":"AurelionSol","Bel'Veth":"Belveth","Cho'Gath":"Chogath","Dr. Mundo":"DrMundo",
+  "Jarvan IV":"JarvanIV","K'Sante":"KSante","Kai'Sa":"Kaisa","Kha'Zix":"Khazix","Kog'Maw":"KogMaw",
+  "Lee Sin":"LeeSin","Master Yi":"MasterYi","Miss Fortune":"MissFortune","Nunu":"Nunu",
+  "Rek'Sai":"RekSai","Renata Glasc":"Renata","Tahm Kench":"TahmKench","Twisted Fate":"TwistedFate",
+  "Vel'Koz":"Velkoz","Xin Zhao":"XinZhao","Wukong":"MonkeyKing","Nunu et Willump":"Nunu",
+  "Maître Yi":"MasterYi"
+};
+
+function champId(name) {
+  if (DD_ID[name]) return DD_ID[name];
+  // Remove spaces, apostrophes, dots for default mapping
+  return name.replace(/[\s'.]/g, '');
+}
+
+function champImg(name) {
+  return DD_CDN + '/img/champion/' + champId(name) + '.png';
+}
+
+// Item name → Data Dragon item ID mapping
+var ITEM_IMG_ID = {
+  "Ionian Boots":3158,"Rod of Ages":4628,"Seraph's Embrace":3040,"Fimbulwinter":3121,
+  "Cryptbloom":4629,"Rabadon's Deathcap":3089,"Zhonya's Hourglass":3157,"Banshee's Veil":3102,
+  "Frozen Heart":3110,"Void Staff":3135,"Blackfire Torch":4630,"Abyssal Mask":8020,
+  "Shadowflame":4645,"Boots of Swiftness":3009,"Doran's Ring":1056,"Tear of the Goddess":3070
+};
+
+function itemImg(name) {
+  var id = ITEM_IMG_ID[name];
+  if (id) return DD_CDN + '/img/item/' + id + '.png';
+  return '';
+}
+
+function imgTag(src, cls) {
+  if (!src) return '';
+  return '<img src="'+src+'" class="'+(cls||'champ-img')+'" onerror="this.style.display=\'none\'" loading="lazy">';
+}
+
 /* ═══════════════════════════════════════
    CHAMPION DATABASE
    ═══════════════════════════════════════ */
@@ -430,7 +497,45 @@ var CHAMP_DB = {
   "Bard":{dmg:"ap",style:"enchanter",mobile:true,tanky:false,mr:false,ranged:true,roles:["sup"]},
   "Morgana":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["sup","mid"]},
   "Pantheon":{dmg:"ad",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["sup","mid","top"]},
-  "Poppy":{dmg:"ad",style:"tank",mobile:true,tanky:true,mr:true,ranged:false,roles:["sup","jgl","top"]}
+  "Poppy":{dmg:"ad",style:"tank",mobile:true,tanky:true,mr:true,ranged:false,roles:["sup","jgl","top"]},
+  // ── Missing champions added ──
+  "Akshan":{dmg:"ad",style:"assassin",mobile:true,tanky:false,mr:false,ranged:true,roles:["mid","top"]},
+  "Cassiopeia":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["mid"]},
+  "Fiddlesticks":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["jgl","sup"]},
+  "Gangplank":{dmg:"ad",style:"bruiser",mobile:false,tanky:false,mr:false,ranged:false,roles:["top","mid"]},
+  "Heimerdinger":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["top","mid","sup"]},
+  "Illaoi":{dmg:"ad",style:"bruiser",mobile:false,tanky:true,mr:false,ranged:false,roles:["top"]},
+  "Ivern":{dmg:"ap",style:"enchanter",mobile:false,tanky:false,mr:false,ranged:true,roles:["jgl"]},
+  "Jayce":{dmg:"ad",style:"bruiser",mobile:true,tanky:false,mr:false,ranged:true,roles:["top","mid"]},
+  "Kalista":{dmg:"ad",style:"adc",mobile:true,tanky:false,mr:false,ranged:true,roles:["adc"]},
+  "Karthus":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["jgl","mid","adc"]},
+  "Kayle":{dmg:"mixed",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["top"]},
+  "Kled":{dmg:"ad",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["top"]},
+  "Lissandra":{dmg:"ap",style:"mage",mobile:true,tanky:false,mr:false,ranged:true,roles:["mid"]},
+  "Mel":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["mid","sup"]},
+  "Neeko":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["mid","sup","top"]},
+  "Nunu":{dmg:"ap",style:"tank",mobile:true,tanky:true,mr:true,ranged:false,roles:["jgl"]},
+  "Olaf":{dmg:"ad",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["jgl","top"]},
+  "Quinn":{dmg:"ad",style:"adc",mobile:true,tanky:false,mr:false,ranged:true,roles:["top"]},
+  "Rammus":{dmg:"mixed",style:"tank",mobile:true,tanky:true,mr:true,ranged:false,roles:["jgl"]},
+  "Ryze":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["mid","top"]},
+  "Seraphine":{dmg:"ap",style:"enchanter",mobile:false,tanky:false,mr:false,ranged:true,roles:["sup","adc","mid"]},
+  "Shyvana":{dmg:"mixed",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["jgl"]},
+  "Singed":{dmg:"ap",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["top"]},
+  "Sion":{dmg:"ad",style:"tank",mobile:false,tanky:true,mr:true,ranged:false,roles:["top"]},
+  "Sivir":{dmg:"ad",style:"adc",mobile:false,tanky:false,mr:false,ranged:true,roles:["adc"]},
+  "Sona":{dmg:"ap",style:"enchanter",mobile:false,tanky:false,mr:false,ranged:true,roles:["sup"]},
+  "Swain":{dmg:"ap",style:"mage",mobile:false,tanky:true,mr:false,ranged:true,roles:["sup","mid","adc"]},
+  "Tahm Kench":{dmg:"mixed",style:"tank",mobile:false,tanky:true,mr:true,ranged:false,roles:["top","sup"]},
+  "Taliyah":{dmg:"ap",style:"mage",mobile:true,tanky:false,mr:false,ranged:true,roles:["jgl","mid"]},
+  "Taric":{dmg:"mixed",style:"tank",mobile:false,tanky:true,mr:true,ranged:false,roles:["sup"]},
+  "Trundle":{dmg:"ad",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["jgl","top"]},
+  "Vladimir":{dmg:"ap",style:"mage",mobile:false,tanky:true,mr:false,ranged:true,roles:["mid","top"]},
+  "Yorick":{dmg:"ad",style:"bruiser",mobile:false,tanky:true,mr:false,ranged:false,roles:["top"]},
+  "Yunara":{dmg:"ap",style:"mage",mobile:true,tanky:false,mr:false,ranged:true,roles:["mid","sup"]},
+  "Zaahen":{dmg:"ad",style:"bruiser",mobile:true,tanky:true,mr:false,ranged:false,roles:["top","jgl"]},
+  "Zoe":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["mid"]},
+  "Zyra":{dmg:"ap",style:"mage",mobile:false,tanky:false,mr:false,ranged:true,roles:["sup"]}
 };
 
 var MATCHUPS={
@@ -641,7 +746,7 @@ function renderDraftPool(filter) {
     var btn = document.createElement('button');
     btn.className = 'draft-pool__btn';
     if (used.indexOf(name)!==-1) btn.classList.add('used');
-    btn.textContent = name;
+    btn.innerHTML = imgTag(champImg(name),'champ-img-sm') + ' ' + name;
     btn.addEventListener('click', function(){
       if (!activeSlot) return;
       draftSlots[activeSlot] = name;
@@ -668,17 +773,22 @@ function updateDraftUI() {
       el.style.boxShadow = 'none';
     }
     if (draftSlots[slot]) {
-      el.textContent = draftSlots[slot];
+      el.innerHTML = imgTag(champImg(draftSlots[slot]),'champ-img') + ' ' + draftSlots[slot];
       el.classList.add('filled');
       if (slot==='mid') el.classList.add('mid-slot'); else el.classList.remove('mid-slot');
     } else {
       var labels = {mid:'+ Mid',top:'+ Top',jgl:'+ Jgl',adc:'+ ADC',sup:'+ Sup'};
-      el.textContent = labels[slot];
+      el.innerHTML = labels[slot];
       el.classList.remove('filled','mid-slot');
     }
   });
-  // Enable go button if at least mid is filled
-  document.getElementById('draftGo').disabled = !draftSlots.mid;
+  // Real-time analysis
+  if (draftSlots.mid) {
+    var result = analyzeDraft(draftSlots.mid, draftSlots.top, draftSlots.jgl, draftSlots.adc, draftSlots.sup);
+    renderDraftResult(result);
+  } else {
+    document.getElementById('draftResult').innerHTML = '';
+  }
 }
 
 // Slot click = select that slot + re-render pool for that role
@@ -710,10 +820,14 @@ document.getElementById('draftSearch').addEventListener('input', function(){
   renderDraftPool(this.value);
 });
 
-// GO button
-document.getElementById('draftGo').addEventListener('click', function(){
-  var result = analyzeDraft(draftSlots.mid, draftSlots.top, draftSlots.jgl, draftSlots.adc, draftSlots.sup);
-  renderDraftResult(result);
+// RESET button
+document.getElementById('draftReset').addEventListener('click', function(){
+  ['mid','top','jgl','adc','sup'].forEach(function(s){ draftSlots[s] = ''; });
+  activeSlot = 'mid';
+  document.getElementById('draftSearch').value = '';
+  updateDraftUI();
+  renderDraftPool('');
+  document.getElementById('draftResult').innerHTML = '';
 });
 
 function renderDraftResult(r) {
@@ -746,10 +860,12 @@ function renderDraftResult(r) {
   var tagLabels = {core:'Core',surv:'Survie',dmg:'Dégâts',pen:'Pen',util:'Utilité'};
   r.build.forEach(function(b, i){
     var nc = 'n'+(i+1);
+    var iSrc = itemImg(b.item);
     h += '<div class="build-order-item">';
     h += '<div class="build-order-num '+nc+'">'+(i+1)+'</div>';
+    if (iSrc) h += imgTag(iSrc, 'item-img');
     h += '<div class="build-order-info">';
-    h += '<div class="build-order-name">'+b.emoji+' '+b.item+'</div>';
+    h += '<div class="build-order-name">'+b.item+'</div>';
     h += '<div class="build-order-why">'+b.reason+'</div>';
     h += '<div class="build-order-tags">';
     (b.tags||[]).forEach(function(t){
@@ -757,6 +873,10 @@ function renderDraftResult(r) {
     });
     h += '</div></div></div>';
   });
+
+  // Copy button
+  var copyText = r.build.map(function(b){ return b.item; }).join(' → ');
+  h += '<button class="copy-btn" id="copyBuild" data-text="'+copyText.replace(/"/g,'&quot;')+'">📋 Copier le build pour le chat</button>';
   h += '</div>';
 
   // Strategy card
@@ -772,7 +892,22 @@ function renderDraftResult(r) {
   h += '</div>';
 
   document.getElementById('draftResult').innerHTML = h;
-  document.getElementById('draftResult').scrollIntoView({behavior:'smooth',block:'start'});
+
+  // Copy button handler
+  var copyBtn = document.getElementById('copyBuild');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function(){
+      var text = copyBtn.getAttribute('data-text');
+      navigator.clipboard.writeText(text).then(function(){
+        copyBtn.classList.add('copied');
+        copyBtn.innerHTML = '✅ Copié !';
+        setTimeout(function(){ copyBtn.classList.remove('copied'); copyBtn.innerHTML = '📋 Copier le build pour le chat'; }, 2000);
+      }).catch(function(){
+        // Fallback
+        prompt('Copie ce build :', text);
+      });
+    });
+  }
 }
 
 renderDraftPool('');
@@ -798,7 +933,7 @@ function renderChampList(filter){
   names.forEach(function(name){
     var btn=document.createElement('button');btn.className='champ-btn';
     var te={extreme:'🔴',hard:'🟠',even:'🟡',easy:'🟢'};
-    btn.textContent=(te[MATCHUPS[name].threat]||'⚪')+' '+name;
+    btn.innerHTML=imgTag(champImg(name),'champ-img-sm')+' '+(te[MATCHUPS[name].threat]||'⚪')+' '+name;
     btn.addEventListener('click',function(){
       document.querySelectorAll('.champ-btn').forEach(function(b){b.classList.remove('active');});
       btn.classList.add('active'); showMatchup(name);
@@ -812,6 +947,7 @@ function showMatchup(name){
   var tl={extreme:'EXTREME',hard:'HARD',even:'EVEN',easy:'EASY'};
   var tc={extreme:'var(--red)',hard:'var(--orange)',even:'var(--gold)',easy:'var(--green)'};
   var h='<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">';
+  h+=imgTag(champImg(name),'champ-img-lg');
   h+='<span style="font-size:1.4rem;font-family:var(--font-display);font-weight:900;">'+name+'</span>';
   h+='<span style="padding:4px 12px;border-radius:6px;font-family:var(--font-display);font-size:.65rem;font-weight:700;letter-spacing:1px;background:'+tc[m.threat]+'20;color:'+tc[m.threat]+';border:1px solid '+tc[m.threat]+'40;">'+tl[m.threat]+'</span></div>';
   h+='<div class="threat-bar"><span class="threat-label" style="color:'+tc[m.threat]+'">Menace</span><div class="threat-track"><div class="threat-fill '+m.threat+'"></div></div></div>';
