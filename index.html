@@ -161,6 +161,30 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
 .copy-btn:hover { background: rgba(34,211,238,0.15); }
 .copy-btn.copied { background: rgba(34,197,94,0.15); border-color: rgba(34,197,94,0.3); color: var(--green); }
 .draft-top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+
+/* ═══ LoL-style Rune Display ═══ */
+.rune-page { display: flex; gap: 20px; flex-wrap: wrap; }
+@media (max-width: 700px) { .rune-page { flex-direction: column; } }
+.rune-tree { flex: 1; min-width: 220px; background: var(--bg-deep); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+.rune-tree.primary { border-color: rgba(168,85,247,0.3); }
+.rune-tree.secondary { border-color: rgba(251,191,36,0.2); }
+.rune-tree__header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.rune-tree__header img { width: 28px; height: 28px; filter: brightness(1.2); }
+.rune-tree__header span { font-family: var(--font-display); font-size: 0.7rem; font-weight: 700; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+.rune-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+.rune-row:last-child { margin-bottom: 0; }
+.rune-icon { position: relative; width: 48px; text-align: center; }
+.rune-icon img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); background: rgba(0,0,0,0.3); transition: all 0.2s; }
+.rune-icon.active img { border-color: var(--purple-bright); box-shadow: 0 0 12px rgba(168,85,247,0.4); filter: brightness(1.2); }
+.rune-icon.inactive img { opacity: 0.25; filter: grayscale(1); }
+.rune-icon.keystone img { width: 56px; height: 56px; border-width: 3px; }
+.rune-icon.keystone.active img { border-color: var(--gold); box-shadow: 0 0 20px rgba(251,191,36,0.3); }
+.rune-icon__name { font-size: 0.6rem; color: var(--text-muted); margin-top: 3px; line-height: 1.1; }
+.rune-icon.active .rune-icon__name { color: var(--text-dim); }
+.rune-shards { display: flex; justify-content: center; gap: 16px; margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--border); }
+.rune-shard { text-align: center; }
+.rune-shard__circle { width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--purple-mid); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; color: var(--purple-glow); background: rgba(168,85,247,0.1); margin: 0 auto 3px; }
+.rune-shard__label { font-size: 0.55rem; color: var(--text-muted); }
 </style>
 </head>
 <body>
@@ -266,21 +290,9 @@ body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-i
 
   <!-- ═══════ RUNES ═══════ -->
   <section class="panel" id="panel-runes">
-    <div class="card">
-      <div class="card__header"><span class="card__icon">💎</span><span class="card__title">Setup Principal — Aery</span></div>
-      <div class="rune-grid">
-        <div class="rune-slot keystone"><div class="rune-slot__label">Keystone — Sorcery</div><div class="rune-slot__name">☄️ Summon Aery</div><div class="rune-slot__desc">Poke constant + shield alliés. Le choix safe de Star Zall.</div></div>
-        <div class="rune-slot"><div class="rune-slot__label">Sorcery 1</div><div class="rune-slot__name">Manaflow Band</div><div class="rune-slot__desc">Sustain mana + synergise Tear</div></div>
-        <div class="rune-slot"><div class="rune-slot__label">Sorcery 2</div><div class="rune-slot__name">Transcendence</div><div class="rune-slot__desc">CDR gratuit pour spam Q</div></div>
-        <div class="rune-slot"><div class="rune-slot__label">Sorcery 3</div><div class="rune-slot__name">Scorch</div><div class="rune-slot__desc">Poke additionnel early</div></div>
-        <div class="rune-slot"><div class="rune-slot__label">Secondary — Inspiration</div><div class="rune-slot__name">Biscuit Delivery</div><div class="rune-slot__desc">Sustain + mana permanent</div></div>
-        <div class="rune-slot"><div class="rune-slot__label">Inspiration 2</div><div class="rune-slot__name">Cosmic Insight</div><div class="rune-slot__desc">CDR Summoners + items actifs</div></div>
-      </div>
-      <div class="build-label">Shards</div>
-      <div class="build-row"><span class="item-chip"><span class="emoji">⚡</span> +8 AH</span><span class="item-chip"><span class="emoji">🔮</span> +9 AP</span><span class="item-chip"><span class="emoji">❤️</span> +65 HP</span></div>
-    </div>
+    <div class="card" id="runesMainCard"></div>
     <div class="card"><div class="card__header"><span class="card__icon">🔄</span><span class="card__title">Adaptations par Matchup</span></div><div id="runeAdaptations"></div></div>
-    <div class="card"><div class="card__header"><span class="card__icon">🎯</span><span class="card__title">Alternative : First Strike</span></div><div class="rune-note"><strong>Quand ?</strong> Matchup facile. Gold bonus + scale. Secondaire Sorcery.</div><div class="rune-note" style="margin-top:8px"><strong>Electrocute</strong> aussi viable pour burst, surtout Support Veigar.</div></div>
+    <div class="card" id="runesAltCard"></div>
   </section>
 
   <!-- ═══════ CALC ═══════ -->
@@ -1002,6 +1014,177 @@ var RUNE_ADAPTATIONS=[
   {matchup:"VS Kassadin",swap:"Build AD = runes totalement différentes",color:"var(--orange)"}
 ];
 (function(){var c=document.getElementById('runeAdaptations'),h='';RUNE_ADAPTATIONS.forEach(function(r){h+='<div style="padding:12px;background:var(--bg-deep);border-left:3px solid '+r.color+';border-radius:0 8px 8px 0;margin-bottom:10px;"><div style="font-weight:700;font-size:.85rem;color:'+r.color+';margin-bottom:4px;">'+r.matchup+'</div><div style="font-size:.85rem;color:var(--text-dim);">'+r.swap+'</div></div>';});c.innerHTML=h;})();
+
+/* ═══ RUNE PAGE RENDERER ═══ */
+var DD_RUNE = 'https://ddragon.leagueoflegends.com/cdn/img/';
+
+var RUNE_PATHS = {
+  // Trees
+  Sorcery: 'perk-images/Styles/7202_Sorcery.png',
+  Inspiration: 'perk-images/Styles/7203_Whimsy.png',
+  Resolve: 'perk-images/Styles/7204_Resolve.png',
+  Domination: 'perk-images/Styles/7200_Domination.png',
+  Precision: 'perk-images/Styles/7201_Precision.png',
+  // Sorcery
+  SummonAery: 'perk-images/Styles/Sorcery/SummonAery/SummonAery.png',
+  ArcaneComet: 'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png',
+  PhaseRush: 'perk-images/Styles/Sorcery/PhaseRush/PhaseRush.png',
+  ManaflowBand: 'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png',
+  NullifyingOrb: 'perk-images/Styles/Sorcery/NullifyingOrb/Pokeshield.png',
+  NimbusCloak: 'perk-images/Styles/Sorcery/NimbusCloak/6361.png',
+  Transcendence: 'perk-images/Styles/Sorcery/Transcendence/Transcendence.png',
+  Celerity: 'perk-images/Styles/Sorcery/Celerity/CelerityTemp.png',
+  AbsoluteFocus: 'perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png',
+  Scorch: 'perk-images/Styles/Sorcery/Scorch/Scorch.png',
+  Waterwalking: 'perk-images/Styles/Sorcery/Waterwalking/Waterwalking.png',
+  GatheringStorm: 'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png',
+  // Inspiration
+  FirstStrike: 'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png',
+  GlacialAugment: 'perk-images/Styles/Inspiration/GlacialAugment/GlacialAugment.png',
+  UnsealedSpellbook: 'perk-images/Styles/Inspiration/UnsealedSpellbook/UnsealedSpellbook.png',
+  HextechFlashtraption: 'perk-images/Styles/Inspiration/HextechFlashtraption/HextechFlashtraption.png',
+  MagicalFootwear: 'perk-images/Styles/Inspiration/MagicalFootwear/MagicalFootwear.png',
+  CashBack: 'perk-images/Styles/Inspiration/CashBack/CashBack.png',
+  TripleTonicRune: 'perk-images/Styles/Inspiration/TripleTonic/TripleTonic.png',
+  TimeWarpTonic: 'perk-images/Styles/Inspiration/TimeWarpTonic/TimeWarpTonic.png',
+  BiscuitDelivery: 'perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png',
+  CosmicInsight: 'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png',
+  ApproachVelocity: 'perk-images/Styles/Inspiration/ApproachVelocity/ApproachVelocity.png',
+  JackOfAllTrades: 'perk-images/Styles/Inspiration/JackOfAllTrades/JackOfAllTrades.png',
+  // Resolve
+  BonePlating: 'perk-images/Styles/Resolve/BonePlating/BonePlating.png',
+  SecondWind: 'perk-images/Styles/Resolve/SecondWind/SecondWind.png',
+  Conditioning: 'perk-images/Styles/Resolve/Conditioning/Conditioning.png',
+  Overgrowth: 'perk-images/Styles/Resolve/Overgrowth/Overgrowth.png',
+  // Domination
+  Electrocute: 'perk-images/Styles/Domination/Electrocute/Electrocute.png',
+  DarkHarvest: 'perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
+  HailOfBlades: 'perk-images/Styles/Domination/HailOfBlades/HailOfBlades.png'
+};
+
+function runeImg(key) { return DD_RUNE + (RUNE_PATHS[key] || ''); }
+
+function renderRuneIcon(key, name, active, isKeystone) {
+  var cls = (isKeystone ? 'rune-icon keystone' : 'rune-icon') + (active ? ' active' : ' inactive');
+  return '<div class="'+cls+'"><img src="'+runeImg(key)+'" alt="'+name+'" loading="lazy" onerror="this.style.display=\'none\'"><div class="rune-icon__name">'+name+'</div></div>';
+}
+
+// Main Rune Page
+(function(){
+  var h = '';
+  h += '<div class="card__header"><span class="card__icon">💎</span><span class="card__title">Setup Principal — Star Zall</span></div>';
+  h += '<div class="rune-page">';
+
+  // Primary: Sorcery
+  h += '<div class="rune-tree primary">';
+  h += '<div class="rune-tree__header"><img src="'+runeImg('Sorcery')+'"><span>Sorcery</span></div>';
+  // Keystones
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('SummonAery','Aery',true,true);
+  h += renderRuneIcon('ArcaneComet','Comet',false,true);
+  h += renderRuneIcon('PhaseRush','Phase Rush',false,true);
+  h += '</div>';
+  // Row 1
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('NullifyingOrb','Nullifying',false,false);
+  h += renderRuneIcon('ManaflowBand','Manaflow',true,false);
+  h += renderRuneIcon('NimbusCloak','Nimbus',false,false);
+  h += '</div>';
+  // Row 2
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('Transcendence','Transcend.',true,false);
+  h += renderRuneIcon('Celerity','Celerity',false,false);
+  h += renderRuneIcon('AbsoluteFocus','Abs. Focus',false,false);
+  h += '</div>';
+  // Row 3
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('Scorch','Scorch',true,false);
+  h += renderRuneIcon('Waterwalking','Waterw.',false,false);
+  h += renderRuneIcon('GatheringStorm','Gathering',false,false);
+  h += '</div>';
+  h += '</div>';
+
+  // Secondary: Inspiration
+  h += '<div class="rune-tree secondary">';
+  h += '<div class="rune-tree__header"><img src="'+runeImg('Inspiration')+'"><span>Inspiration</span></div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('HextechFlashtraption','Hexflash',false,false);
+  h += renderRuneIcon('MagicalFootwear','Footwear',false,false);
+  h += renderRuneIcon('CashBack','Cash Back',false,false);
+  h += '</div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('BiscuitDelivery','Biscuit',true,false);
+  h += renderRuneIcon('TimeWarpTonic','Time Warp',false,false);
+  h += renderRuneIcon('TripleTonicRune','Triple Tonic',false,false);
+  h += '</div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('CosmicInsight','Cosmic',true,false);
+  h += renderRuneIcon('ApproachVelocity','Approach',false,false);
+  h += renderRuneIcon('JackOfAllTrades','Jack of All',false,false);
+  h += '</div>';
+
+  // Shards
+  h += '<div class="rune-shards">';
+  h += '<div class="rune-shard"><div class="rune-shard__circle">⚡</div><div class="rune-shard__label">+8 AH</div></div>';
+  h += '<div class="rune-shard"><div class="rune-shard__circle">🔮</div><div class="rune-shard__label">+9 AP</div></div>';
+  h += '<div class="rune-shard"><div class="rune-shard__circle">❤️</div><div class="rune-shard__label">+65 HP</div></div>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '</div>'; // end rune-page
+  document.getElementById('runesMainCard').innerHTML = h;
+})();
+
+// Alt Rune Page
+(function(){
+  var h = '';
+  h += '<div class="card__header"><span class="card__icon">🎯</span><span class="card__title">Alternative : First Strike</span></div>';
+  h += '<div class="rune-page">';
+
+  // Primary: Inspiration
+  h += '<div class="rune-tree primary">';
+  h += '<div class="rune-tree__header"><img src="'+runeImg('Inspiration')+'"><span>Inspiration</span></div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('FirstStrike','First Strike',true,true);
+  h += renderRuneIcon('GlacialAugment','Glacial',false,true);
+  h += renderRuneIcon('UnsealedSpellbook','Spellbook',false,true);
+  h += '</div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('MagicalFootwear','Footwear',true,false);
+  h += renderRuneIcon('HextechFlashtraption','Hexflash',false,false);
+  h += renderRuneIcon('CashBack','Cash Back',false,false);
+  h += '</div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('BiscuitDelivery','Biscuit',true,false);
+  h += renderRuneIcon('TimeWarpTonic','Time Warp',false,false);
+  h += renderRuneIcon('TripleTonicRune','Triple Tonic',false,false);
+  h += '</div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('CosmicInsight','Cosmic',true,false);
+  h += renderRuneIcon('ApproachVelocity','Approach',false,false);
+  h += renderRuneIcon('JackOfAllTrades','Jack of All',false,false);
+  h += '</div>';
+  h += '</div>';
+
+  // Secondary: Sorcery
+  h += '<div class="rune-tree secondary">';
+  h += '<div class="rune-tree__header"><img src="'+runeImg('Sorcery')+'"><span>Sorcery</span></div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('NullifyingOrb','Nullifying',false,false);
+  h += renderRuneIcon('ManaflowBand','Manaflow',true,false);
+  h += renderRuneIcon('NimbusCloak','Nimbus',false,false);
+  h += '</div>';
+  h += '<div class="rune-row">';
+  h += renderRuneIcon('Transcendence','Transcend.',true,false);
+  h += renderRuneIcon('Celerity','Celerity',false,false);
+  h += renderRuneIcon('AbsoluteFocus','Abs. Focus',false,false);
+  h += '</div>';
+  h += '</div>';
+
+  h += '</div>'; // end rune-page
+  h += '<div class="rune-note" style="margin-top:14px"><strong>Quand ?</strong> Matchup facile (mages immobiles). Tu poke librement → gold bonus. <strong>Electrocute</strong> aussi viable pour burst early-mid, surtout en Support Veigar.</div>';
+  document.getElementById('runesAltCard').innerHTML = h;
+})();
 
 /* ═══ CALCULATOR ═══ */
 var Q_BASE=[80,120,160,200,240],Q_RATIO=[.50,.55,.60,.65,.70];
