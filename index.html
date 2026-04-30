@@ -380,6 +380,70 @@ body::before{
 .filter-btn.active,.filter-btn:hover{
   border-color:var(--accent);color:var(--accent);background:var(--accent-dim);
 }
+/* ---- GAME PLAN ---- */
+.timeline{
+  position:relative;padding-left:36px;margin-top:8px;
+}
+.timeline::before{
+  content:'';position:absolute;left:14px;top:0;bottom:0;
+  width:2px;background:linear-gradient(180deg,var(--accent),rgba(168,85,247,0.1));
+}
+.tl-item{
+  position:relative;margin-bottom:24px;
+}
+.tl-dot{
+  position:absolute;left:-29px;top:4px;
+  width:16px;height:16px;border-radius:50%;
+  border:2px solid var(--accent);background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:8px;font-weight:700;color:var(--accent);
+  box-shadow:0 0 10px var(--accent-glow);
+}
+.tl-dot.gold{border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(251,191,36,0.4)}
+.tl-dot.green{border-color:var(--green);color:var(--green);box-shadow:0 0 10px rgba(34,197,94,0.4)}
+.tl-dot.cyan{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 10px rgba(34,211,238,0.4)}
+.tl-dot.red{border-color:var(--red);color:var(--red);box-shadow:0 0 10px rgba(239,68,68,0.4)}
+.tl-label{
+  font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:var(--accent);
+  margin-bottom:4px;
+}
+.tl-label.gold{color:var(--gold)}
+.tl-label.green{color:var(--green)}
+.tl-label.cyan{color:var(--cyan)}
+.tl-label.red{color:var(--red)}
+.tl-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.tl-body{font-size:13px;color:var(--text-mid);line-height:1.6}
+.phase-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;
+  font-family:'JetBrains Mono',monospace;margin-bottom:10px;
+}
+.phase-badge.purple{background:rgba(168,85,247,0.12);border:1px solid var(--accent);color:var(--accent)}
+.phase-badge.gold{background:rgba(251,191,36,0.12);border:1px solid var(--gold);color:var(--gold)}
+.phase-badge.green{background:rgba(34,197,94,0.12);border:1px solid var(--green);color:var(--green)}
+.phase-badge.red{background:rgba(239,68,68,0.12);border:1px solid var(--red);color:var(--red)}
+.gp-schema{
+  background:rgba(0,0,0,0.3);border:1px solid var(--border2);
+  border-radius:10px;padding:2px;margin:12px 0;overflow:hidden;
+}
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.do-card{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:12px}
+.dont-card{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px}
+.do-card .label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.dont-card .label{font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.do-card li,.dont-card li{font-size:12px;color:var(--text-mid);margin-left:14px;margin-bottom:4px;line-height:1.4}
+.priority-bar{display:flex;gap:4px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.prio-chip{
+  padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;
+  font-family:'JetBrains Mono',monospace;
+}
+.prio-1{background:rgba(239,68,68,0.15);border:1px solid var(--red);color:var(--red)}
+.prio-2{background:rgba(249,115,22,0.15);border:1px solid var(--orange);color:var(--orange)}
+.prio-3{background:rgba(251,191,36,0.15);border:1px solid var(--gold);color:var(--gold)}
+.prio-4{background:rgba(34,197,94,0.15);border:1px solid var(--green);color:var(--green)}
+.prio-arrow{color:var(--text-dim);font-size:12px}
+@media(max-width:640px){.do-dont{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -404,6 +468,7 @@ body::before{
   <button class="tab-btn" onclick="switchTab('runes')">💎 Runes</button>
   <button class="tab-btn" onclick="switchTab('calc')">🧮 Calculateur</button>
   <button class="tab-btn" onclick="switchTab('combos')">🎮 Combos</button>
+  <button class="tab-btn" onclick="switchTab('gameplan')">🗺️ Game Plan</button>
 </div>
 
 <!-- CONTENT -->
@@ -468,6 +533,11 @@ body::before{
   <!-- COMBOS -->
   <div class="tab-panel" id="panel-combos">
     <div id="combos-content"></div>
+  </div>
+
+  <!-- GAME PLAN -->
+  <div class="tab-panel" id="panel-gameplan">
+    <div id="gameplan-content"></div>
   </div>
 </div>
 
@@ -1228,7 +1298,7 @@ function selectChampion(name, doSave=true){
 function switchTab(id, doSave=true){
   activeTab = id;
   document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    const ids=['draft','matchups','build','runes','calc','combos'];
+    const ids=['draft','matchups','build','runes','calc','combos','gameplan'];
     b.classList.toggle('active', ids[i]===id);
   });
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -1243,6 +1313,7 @@ function renderTab(id){
   if(id==='runes') renderRunes();
   if(id==='calc') renderCalc();
   if(id==='combos') renderCombos();
+  if(id==='gameplan') renderGamePlan();
 }
 
 // ================================================================
@@ -1885,6 +1956,325 @@ function renderCombos(){
         </div>
       </div>`;
   }
+}
+
+// ================================================================
+//  GAME PLAN
+// ================================================================
+function renderGamePlan(){
+  const el = document.getElementById('gameplan-content');
+
+  // Schéma SVG — timeline de game par phase (commun aux 2 champs)
+  const timelineSVG = `
+<svg viewBox="0 0 700 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+  <defs>
+    <linearGradient id="tl-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8"/>
+      <stop offset="35%" stop-color="#f97316" stop-opacity="0.8"/>
+      <stop offset="65%" stop-color="#a855f7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+  <!-- barre principale -->
+  <rect x="20" y="34" width="660" height="6" rx="3" fill="url(#tl-grad)" opacity="0.5"/>
+  <!-- zones -->
+  <rect x="20" y="30" width="200" height="14" rx="7" fill="#ef4444" opacity="0.12"/>
+  <rect x="230" y="30" width="200" height="14" rx="7" fill="#a855f7" opacity="0.12"/>
+  <rect x="440" y="30" width="240" height="14" rx="7" fill="#22d3ee" opacity="0.12"/>
+  <!-- labels niveaux -->
+  <text x="20" y="22" font-family="JetBrains Mono" font-size="9" fill="#ef4444" opacity="0.9">Niv 1</text>
+  <text x="95" y="22" font-family="JetBrains Mono" font-size="9" fill="#f97316" opacity="0.9">Niv 6</text>
+  <text x="175" y="22" font-family="JetBrains Mono" font-size="9" fill="#fbbf24" opacity="0.9">1er item</text>
+  <text x="300" y="22" font-family="JetBrains Mono" font-size="9" fill="#a855f7" opacity="0.9">Mid-game</text>
+  <text x="470" y="22" font-family="JetBrains Mono" font-size="9" fill="#22d3ee" opacity="0.9">Late / TF</text>
+  <!-- points marqueurs -->
+  <circle cx="20" cy="37" r="5" fill="#ef4444"/>
+  <circle cx="120" cy="37" r="5" fill="#f97316"/>
+  <circle cx="220" cy="37" r="5" fill="#fbbf24"/>
+  <circle cx="430" cy="37" r="5" fill="#a855f7"/>
+  <circle cx="680" cy="37" r="5" fill="#22d3ee"/>
+  <!-- labels phases sous la barre -->
+  <text x="60" y="62" text-anchor="middle" font-family="Rajdhani" font-size="10" fill="#ef4444" font-weight="700">EARLY — FARM</text>
+  <text x="320" y="62" text-anchor="middle" font-family="Rajdhani" font-size="10" fill="#a855f7" font-weight="700">MID — SIDE / ROTATION</text>
+  <text x="570" y="62" text-anchor="middle" font-family="Rajdhani" font-size="10" fill="#22d3ee" font-weight="700">LATE — TEAMFIGHT</text>
+</svg>`;
+
+  // Schéma SVG — side vs group decision
+  const sideSVG = `
+<svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+  <!-- carte simplifiée -->
+  <rect width="500" height="120" fill="rgba(0,0,0,0.2)" rx="8"/>
+  <!-- mid lane -->
+  <line x1="250" y1="0" x2="250" y2="120" stroke="#2a2a45" stroke-width="2" stroke-dasharray="4,4"/>
+  <!-- bot lane -->
+  <line x1="250" y1="90" x2="500" y2="90" stroke="#2a2a45" stroke-width="2" stroke-dasharray="4,4"/>
+  <!-- top lane -->
+  <line x1="250" y1="30" x2="0" y2="30" stroke="#2a2a45" stroke-width="2" stroke-dasharray="4,4"/>
+  <!-- labels -->
+  <text x="125" y="20" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#6b6b9a">TOP LANE</text>
+  <text x="375" y="105" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#6b6b9a">BOT LANE</text>
+  <text x="255" y="60" font-family="Rajdhani" font-size="9" fill="#6b6b9a">MID</text>
+  <!-- MAGE position en side -->
+  <circle cx="370" cy="60" r="12" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
+  <text x="370" y="64" text-anchor="middle" font-family="Orbitron" font-size="8" fill="#a855f7" font-weight="700">M</text>
+  <text x="370" y="85" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#a855f7">SIDE → push</text>
+  <!-- flèche vers mid pour rotation -->
+  <path d="M355 60 Q300 55 265 60" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-dasharray="3,3" marker-end="url(#arr)"/>
+  <defs>
+    <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#a855f7"/>
+    </marker>
+  </defs>
+  <!-- team groupée mid -->
+  <circle cx="210" cy="58" r="8" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="210" y="62" text-anchor="middle" font-family="Orbitron" font-size="7" fill="#22d3ee">T</text>
+  <!-- objectif -->
+  <rect x="460" y="40" width="30" height="30" rx="4" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1"/>
+  <text x="475" y="58" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#fbbf24">OBJ</text>
+  <!-- hover zone -->
+  <circle cx="140" cy="58" r="10" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="140" y="62" text-anchor="middle" font-family="Orbitron" font-size="7" fill="#22c55e">H</text>
+  <text x="140" y="78" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#22c55e">HOVER JGL</text>
+</svg>`;
+
+  // Schéma trade en lane (punir lastit)
+  const tradeSVG = `
+<svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+  <rect width="400" height="90" fill="rgba(0,0,0,0.2)" rx="8"/>
+  <!-- minions -->
+  <rect x="160" y="38" width="10" height="10" rx="2" fill="#6b6b9a" opacity="0.5"/>
+  <rect x="175" y="38" width="10" height="10" rx="2" fill="#6b6b9a" opacity="0.5"/>
+  <rect x="190" y="38" width="10" height="10" rx="2" fill="#6b6b9a" opacity="0.5"/>
+  <!-- adversaire qui lastit -->
+  <circle cx="240" cy="43" r="12" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="240" y="47" text-anchor="middle" font-family="Orbitron" font-size="8" fill="#ef4444">ADV</text>
+  <text x="240" y="65" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#ef4444">last-hits</text>
+  <!-- toi qui punish -->
+  <circle cx="80" cy="43" r="12" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
+  <text x="80" y="47" text-anchor="middle" font-family="Orbitron" font-size="8" fill="#a855f7">TOI</text>
+  <!-- spell/poke -->
+  <path d="M95 43 Q160 30 225 43" stroke="#a855f7" stroke-width="2" fill="none" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
+  <defs>
+    <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#a855f7"/>
+    </marker>
+  </defs>
+  <!-- recul -->
+  <path d="M60 50 Q40 60 35 55" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-dasharray="3,3" marker-end="url(#arr3)"/>
+  <defs>
+    <marker id="arr3" markerWidth="5" markerHeight="5" refX="2" refY="2" orient="auto">
+      <path d="M0,0 L5,2 L0,5 Z" fill="#22c55e"/>
+    </marker>
+  </defs>
+  <text x="25" y="80" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#22c55e">recul + CD</text>
+  <text x="200" y="15" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#fbbf24" font-weight="600">→ poke court, puis reculer attendre CD</text>
+  <!-- label ressources CD -->
+  <text x="80" y="80" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#a855f7">attendre CD</text>
+  <!-- légende -->
+  <rect x="300" y="10" width="90" height="70" rx="4" fill="rgba(255,255,255,0.02)" stroke="#1e1e35" stroke-width="1"/>
+  <text x="345" y="25" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#a0a0cc" font-weight="600">TRADE COURT</text>
+  <line x1="310" y1="35" x2="380" y2="35" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <text x="345" y="47" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#a0a0cc">poke spell</text>
+  <line x1="310" y1="57" x2="380" y2="57" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <text x="345" y="70" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#a0a0cc">recul</text>
+</svg>`;
+
+  // Spécifique par champion pour les tips de patience en teamfight
+  const champTips = {
+    Veigar: {
+      patience: [
+        'Garde ta cage E pour le moment DÉCISIF — pas pour poke',
+        'R uniquement quand 2+ ennemis sont dans la cage ou en fuite',
+        'Reste derrière ton frontline — tu es une tourelle de DPS fixe',
+        'Si tu rates ta cage, joue 17 secondes safe jusqu\'au CD'
+      ],
+      spike: 'Niv 11 (Transcendence) + Rod of Ages + Seraph\'s → game-changing spike',
+      fantasy: 'Mage de scaling pur — plus la game dure, plus tu es OP'
+    },
+    Syndra: {
+      patience: [
+        'Garde ton E pour te DÉFENDRE — c\'est ta seule échappatoire',
+        'R+E en TF : R d\'abord pour poser les sphères, puis E pour stun de zone',
+        'Positionne-toi dans un bush AVANT que le fight commence',
+        'Si tu as utilisé E pour poke, joue ultra safe 17 secondes'
+      ],
+      spike: 'Niv 7-8 (40 stacks passif = 2 charges Q) → transformation radicale',
+      fantasy: 'Mix mage/assassin — crée du jeu seule + devastating teamfight'
+    }
+  };
+  const tips = champTips[currentChamp];
+
+  el.innerHTML = `
+<div class="sec-title">GAME PLAN — MAGE MID (SOURCE : CHAMBLES GM)</div>
+
+<!-- TIMELINE VISUELLE -->
+<div class="card">
+  <div class="card-title">TIMELINE DE GAME</div>
+  <div class="gp-schema">${timelineSVG}</div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+    <span class="phase-badge red">1–6 : Farm</span>
+    <span class="prio-arrow">→</span>
+    <span class="phase-badge purple">7–13 : Side + Roam</span>
+    <span class="prio-arrow">→</span>
+    <span class="phase-badge" style="background:rgba(34,211,238,0.12);border:1px solid var(--cyan);color:var(--cyan)">14+ : Teamfight</span>
+  </div>
+  <div class="flashcard" style="margin-top:10px">
+    <div class="flashcard-badge badge-gold">🎯</div>
+    <div class="flashcard-text"><strong>Objectif à 10 minutes :</strong> 0-1 mort, 85-90 CS/min, 0-1 kill. Pas d'avance en kills = normal. L'avance en farm et XP suffit.</div>
+  </div>
+</div>
+
+<!-- 5 POINTS CHAMBLES -->
+<div class="timeline mt-16">
+
+  <!-- POINT 1 -->
+  <div class="tl-item">
+    <div class="tl-dot red">1</div>
+    <div class="tl-label red">POINT 1 — EARLY GAME</div>
+    <div class="tl-title">Priorise le farm, pas les kills</div>
+    <div class="tl-body">
+      Tu n'es pas là pour tuer en early — tu es là pour scaler. Les mages scalent sur l'XP et deviennent forts à 1-2-3 items, alors que les assassins sont forts dès le niveau 2-3. Accepte ça et farm intelligemment.
+    </div>
+    <div class="do-dont" style="margin-top:10px">
+      <div class="do-card">
+        <div class="label">✅ FAIRE</div>
+        <ul>
+          <li>Farm avec Q en priorité absolue</li>
+          <li>Autoattaque sur les derniers CS</li>
+          <li>Forcer de mauvais resets adverses</li>
+          <li>Rester en XP range même sans CS</li>
+        </ul>
+      </div>
+      <div class="dont-card">
+        <div class="label">❌ NE PAS FAIRE</div>
+        <ul>
+          <li>Sacrifier un CS pour une auto sur l'ennemi</li>
+          <li>Chasser les kills en 1v1</li>
+          <li>Roam seul avant niv 6-7</li>
+          <li>Mourir pour rien — c'est catastrophique</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- POINT 2 -->
+  <div class="tl-item">
+    <div class="tl-dot gold">2</div>
+    <div class="tl-label gold">POINT 2 — PUNIR LA LASTITE</div>
+    <div class="tl-title">Trade court sur chaque last-hit adverse</div>
+    <div class="gp-schema">${tradeSVG}</div>
+    <div class="tl-body">
+      À chaque fois que l'ennemi doit s'approcher pour last-hit, tu le punis. Tu as des cooldowns courts et tu es distance. Mettre un poke = forcer un reset = différentiel de farm + XP = scaling accéléré.
+    </div>
+    <div class="flashcard" style="margin-top:8px">
+      <div class="flashcard-badge badge-purple">📐</div>
+      <div class="flashcard-text"><strong>Mécanique clé :</strong> Tu veux être <strong>à portée de spell</strong> quand l'ennemi arrive sur le minion. Poke → recule → attends CD → recommence. Jamais de trade long.</div>
+    </div>
+  </div>
+
+  <!-- POINT 3 -->
+  <div class="tl-item">
+    <div class="tl-dot" style="border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 10px rgba(34,211,238,0.4)">3</div>
+    <div class="tl-label cyan">POINT 3 — PRIORITÉ DE LANE</div>
+    <div class="tl-title">Hover et couvrir — pas roamer</div>
+    <div class="tl-body">
+      Quand tu as le push niv 7-8, tu utilises ta priorité DIFFÉREMMENT d'un assassin. Pas de kills en roam solo. Tu hoveres du côté de ton jungle pour qu'il puisse jouer gros — tu fais de la vision, tu sécurises.
+    </div>
+    <div class="gp-schema">${sideSVG}</div>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">PRIORITÉS :</span>
+      <span class="prio-chip prio-1">Vision mid</span>
+      <span class="prio-arrow">→</span>
+      <span class="prio-chip prio-2">Hover JGL</span>
+      <span class="prio-arrow">→</span>
+      <span class="prio-chip prio-3">Cover objectif</span>
+      <span class="prio-arrow">→</span>
+      <span class="prio-chip prio-4">Roam si safe</span>
+    </div>
+  </div>
+
+  <!-- POINT 4 -->
+  <div class="tl-item">
+    <div class="tl-dot green">4</div>
+    <div class="tl-label green">POINT 4 — MID GAME : ALLER EN SIDE</div>
+    <div class="tl-title">Side pour l'XP et l'or — rota au mid ensuite</div>
+    <div class="tl-body">
+      Dès qu'une tour tombe (mid ou bot), swap avec ta bot lane. Prends la wave de côté, puis rota au mid <em>après</em> avoir pris la wave. Tu n'enfondes pas le side seul — tu prends l'or, tu cours au mid pour le fight.
+    </div>
+    <div class="do-dont" style="margin-top:10px">
+      <div class="do-card">
+        <div class="label">✅ SEQUENCE CORRECTE</div>
+        <ul>
+          <li>Push la wave bot/top jusqu'à la tour</li>
+          <li>Prendre les 6-8 minions = or + XP</li>
+          <li>Rota au mid immédiatement après</li>
+          <li>Créer surnombre mid sur l'objectif</li>
+        </ul>
+      </div>
+      <div class="dont-card">
+        <div class="label">❌ ERREURS CLASSIQUES</div>
+        <ul>
+          <li>Over-group mid sans items → irrelevant</li>
+          <li>Essayer d'enfoncer le side seul (tu 1v1 mal)</li>
+          <li>Abandonner la wave pour aider sans raison</li>
+          <li>Skip wave pour un fight qui peut attendre</li>
+        </ul>
+      </div>
+    </div>
+    <div class="flashcard" style="margin-top:8px">
+      <div class="flashcard-badge badge-cyan">⚠️</div>
+      <div class="flashcard-text"><strong>Exception :</strong> Si l'ADC ennemi est très fed (6-0), reste mid pour neutraliser le swap. Tu clear les vagues → ils ne peuvent pas snowball → ta bot lane se refait.</div>
+    </div>
+  </div>
+
+  <!-- POINT 5 -->
+  <div class="tl-item">
+    <div class="tl-dot" style="border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(251,191,36,0.4)">5</div>
+    <div class="tl-label gold">POINT 5 — PATIENCE</div>
+    <div class="tl-title">La patience à tous les stages — surtout en teamfight</div>
+    <div class="tl-body">
+      Tu es la pierre angulaire de ta team. Si tu rates ton gros spell, ta team perd le fight. Attends le moment parfait. Ne te précipite jamais.
+    </div>
+    <div style="margin-top:10px">
+      ${tips.patience.map(t=>`
+      <div class="flashcard">
+        <div class="flashcard-badge badge-gold">⏳</div>
+        <div class="flashcard-text">${t}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+</div>
+
+<!-- SPIKE / FANTASY -->
+<div class="grid-2 mt-16">
+  <div class="card">
+    <div class="card-title">POWER SPIKE — ${currentChamp.toUpperCase()}</div>
+    <div class="flashcard">
+      <div class="flashcard-badge badge-purple">⚡</div>
+      <div class="flashcard-text">${tips.spike}</div>
+    </div>
+    <p style="font-size:13px;color:var(--text-dim);margin-top:10px;line-height:1.5">${tips.fantasy}</p>
+  </div>
+  <div class="card">
+    <div class="card-title">OBJECTIFS PAR PHASE</div>
+    <div class="tl-body">
+      <div style="margin-bottom:10px">
+        <span class="phase-badge red" style="margin-bottom:6px;display:inline-flex">EARLY</span><br>
+        <span style="font-size:12px">≤1 mort · 85-90 CS/min · 1er item enclenché · Vision posée</span>
+      </div>
+      <div style="margin-bottom:10px">
+        <span class="phase-badge purple" style="margin-bottom:6px;display:inline-flex">MID</span><br>
+        <span style="font-size:12px">2ème item rush · Side efficace · 0 wave perdue · Rota mid sur objectifs</span>
+      </div>
+      <div>
+        <span class="phase-badge" style="background:rgba(34,211,238,0.12);border:1px solid var(--cyan);color:var(--cyan);margin-bottom:6px;display:inline-flex">LATE</span><br>
+        <span style="font-size:12px">3-4 items · Derrière frontline · E/Cage gardé pour le moment clé · Patience absolue</span>
+      </div>
+    </div>
+  </div>
+</div>
+`;
 }
 
 // ================================================================
