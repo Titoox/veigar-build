@@ -6,449 +6,164 @@
 <title>Tactical Dashboard — Veigar & Syndra</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --accent: #a855f7;
-  --accent-dim: rgba(168,85,247,0.15);
-  --accent-glow: rgba(168,85,247,0.4);
-  --bg: #0a0a14;
-  --card: #12121f;
-  --card2: #16162a;
-  --border: #1e1e35;
-  --border2: #2a2a45;
-  --gold: #fbbf24;
-  --red: #ef4444;
-  --orange: #f97316;
-  --green: #22c55e;
-  --cyan: #22d3ee;
-  --text: #e2e2f0;
-  --text-dim: #6b6b9a;
-  --text-mid: #a0a0cc;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Rajdhani',sans-serif;
-  font-size:16px;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(168,85,247,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 30% at 80% 90%, rgba(99,102,241,0.05) 0%, transparent 60%);
-  pointer-events:none;
-  z-index:0;
-}
-/* ---- CHAMPION SELECTOR ---- */
-#champion-selector{
-  position:relative;z-index:10;
-  display:flex;gap:16px;align-items:center;justify-content:center;
-  padding:24px 20px 0;
-}
-.champ-btn{
-  display:flex;align-items:center;gap:12px;
-  background:var(--card);border:2px solid var(--border2);
-  border-radius:12px;padding:12px 24px;cursor:pointer;
-  transition:all .25s ease;font-family:'Orbitron',sans-serif;
-  font-size:14px;font-weight:700;letter-spacing:1px;
-  text-transform:uppercase;color:var(--text-mid);
-}
+
+:root{--accent:#a855f7;--accent-dim:rgba(168,85,247,0.15);--accent-glow:rgba(168,85,247,0.4);--bg:#0a0a14;--card:#12121f;--card2:#16162a;--border:#1e1e35;--border2:#2a2a45;--gold:#fbbf24;--red:#ef4444;--orange:#f97316;--green:#22c55e;--cyan:#22d3ee;--text:#e2e2f0;--text-dim:#6b6b9a;--text-mid:#a0a0cc;}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Rajdhani",sans-serif;font-size:16px;min-height:100vh;overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 10%,rgba(168,85,247,.06) 0%,transparent 60%),radial-gradient(ellipse 50% 30% at 80% 90%,rgba(99,102,241,.05) 0%,transparent 60%);pointer-events:none;z-index:0}
+#champion-selector{position:relative;z-index:10;display:flex;gap:16px;align-items:center;justify-content:center;padding:24px 20px 0}
+.champ-btn{display:flex;align-items:center;gap:12px;background:var(--card);border:2px solid var(--border2);border-radius:12px;padding:12px 24px;cursor:pointer;transition:all .25s;font-family:"Orbitron",sans-serif;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text-mid)}
 .champ-btn img{width:48px;height:48px;border-radius:8px;object-fit:cover}
 .champ-btn:hover{border-color:var(--accent);color:var(--text)}
-.champ-btn.active{
-  border-color:var(--accent);color:var(--accent);
-  box-shadow:0 0 20px var(--accent-glow),inset 0 0 20px var(--accent-dim);
-}
-/* ---- TABS ---- */
-#tabs{
-  position:relative;z-index:10;
-  display:flex;gap:4px;padding:20px 20px 0;
-  overflow-x:auto;scrollbar-width:none;
-}
+.champ-btn.active{border-color:var(--accent);color:var(--accent);box-shadow:0 0 20px var(--accent-glow),inset 0 0 20px var(--accent-dim)}
+#tabs{position:relative;z-index:10;display:flex;gap:4px;padding:20px 20px 0;overflow-x:auto;scrollbar-width:none}
 #tabs::-webkit-scrollbar{display:none}
-.tab-btn{
-  flex-shrink:0;background:transparent;border:1px solid var(--border);
-  border-radius:8px 8px 0 0;padding:10px 18px;cursor:pointer;
-  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;
-  color:var(--text-dim);transition:all .2s ease;white-space:nowrap;
-}
+.tab-btn{flex-shrink:0;background:transparent;border:1px solid var(--border);border-radius:8px 8px 0 0;padding:10px 18px;cursor:pointer;font-family:"Rajdhani",sans-serif;font-weight:600;font-size:14px;color:var(--text-dim);transition:all .2s;white-space:nowrap}
 .tab-btn:hover{color:var(--text);border-color:var(--border2)}
-.tab-btn.active{
-  background:var(--card);border-color:var(--accent);
-  border-bottom:1px solid var(--card);color:var(--accent);
-  box-shadow:0 0 10px var(--accent-glow);
-}
-/* ---- MAIN CONTENT ---- */
-#content{
-  position:relative;z-index:10;
-  background:var(--card);border:1px solid var(--border);
-  border-radius:0 12px 12px 12px;margin:0 20px 20px;
-  padding:24px;min-height:500px;
-}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
-/* ---- CARDS ---- */
-.card{
-  background:var(--card2);border:1px solid var(--border);
-  border-radius:14px;padding:20px;
-  transition:border-color .2s,box-shadow .2s;
-}
+.tab-btn.active{background:var(--card);border-color:var(--accent);border-bottom:1px solid var(--card);color:var(--accent);box-shadow:0 0 10px var(--accent-glow)}
+#content{position:relative;z-index:10;background:var(--card);border:1px solid var(--border);border-radius:0 12px 12px 12px;margin:0 20px 20px;padding:24px;min-height:500px}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.card{background:var(--card2);border:1px solid var(--border);border-radius:14px;padding:20px;transition:border-color .2s,box-shadow .2s}
 .card:hover{border-color:var(--accent);box-shadow:0 0 16px var(--accent-dim)}
-.card-title{
-  font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;color:var(--accent);
-  margin-bottom:14px;
-}
-/* ---- GRID UTILS ---- */
+.card-title{font-family:"Orbitron",sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.flex{display:flex}
-.flex-col{flex-direction:column}
-.gap-8{gap:8px}
-.gap-12{gap:12px}
-.gap-16{gap:16px}
-.mt-16{margin-top:16px}
-.mt-12{margin-top:12px}
-/* ---- ITEM CHIP ---- */
-.item-chip{
-  display:flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,0.03);border:1px solid var(--border);
-  border-radius:8px;padding:6px 10px;
-  font-size:13px;font-weight:500;
-}
+.mt-16{margin-top:16px}.mt-12{margin-top:12px}
+.item-chip{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:500}
 .item-chip img{width:28px;height:28px;border-radius:4px;flex-shrink:0}
 .item-chip-name{color:var(--text-mid);font-size:12px}
-/* ---- RUNE ICON ---- */
-.rune-icon{
-  position:relative;cursor:pointer;
-  width:48px;height:48px;border-radius:50%;
-  border:2px solid transparent;
-  transition:all .2s;
-}
-.rune-icon.active{
-  border-color:var(--accent);
-  filter:brightness(1.1);
-  box-shadow:0 0 12px var(--accent-glow);
-}
+.rune-icon{position:relative;cursor:pointer;width:48px;height:48px;border-radius:50%;border:2px solid transparent;transition:all .2s}
+.rune-icon.active{border-color:var(--accent);filter:brightness(1.1);box-shadow:0 0 12px var(--accent-glow)}
 .rune-icon.inactive{opacity:.25;filter:grayscale(1)}
 .rune-icon img{width:100%;height:100%;border-radius:50%;object-fit:cover}
-.rune-icon .tooltip{
-  position:absolute;bottom:110%;left:50%;transform:translateX(-50%);
-  background:#1a1a30;border:1px solid var(--accent);
-  border-radius:8px;padding:8px 12px;white-space:nowrap;
-  font-size:12px;pointer-events:none;opacity:0;
-  transition:opacity .2s;z-index:100;min-width:160px;white-space:normal;
-  max-width:220px;text-align:center;
-}
+.rune-icon .tooltip{position:absolute;bottom:110%;left:50%;transform:translateX(-50%);background:#1a1a30;border:1px solid var(--accent);border-radius:8px;padding:8px 12px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .2s;z-index:100;min-width:160px;max-width:220px;text-align:center;white-space:normal}
 .rune-icon:hover .tooltip{opacity:1}
 .tooltip-name{font-weight:700;color:var(--accent);margin-bottom:4px;display:block}
 .tooltip-desc{color:var(--text-mid);font-size:11px;line-height:1.4}
-/* ---- FLASHCARD ---- */
-.flashcard{
-  display:flex;align-items:flex-start;gap:12px;
-  background:rgba(255,255,255,0.02);border:1px solid var(--border);
-  border-radius:10px;padding:12px;margin-top:8px;
-}
-.flashcard-badge{
-  flex-shrink:0;width:32px;height:32px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;
-}
-.badge-purple{background:rgba(168,85,247,0.2);border:1px solid var(--accent);color:var(--accent)}
-.badge-gold{background:rgba(251,191,36,0.2);border:1px solid var(--gold);color:var(--gold)}
-.badge-green{background:rgba(34,197,94,0.2);border:1px solid var(--green);color:var(--green)}
-.badge-red{background:rgba(239,68,68,0.2);border:1px solid var(--red);color:var(--red)}
-.badge-cyan{background:rgba(34,211,238,0.2);border:1px solid var(--cyan);color:var(--cyan)}
+.flashcard{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:12px;margin-top:8px}
+.flashcard-badge{flex-shrink:0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.badge-purple{background:rgba(168,85,247,.2);border:1px solid var(--accent);color:var(--accent)}
+.badge-gold{background:rgba(251,191,36,.2);border:1px solid var(--gold);color:var(--gold)}
+.badge-green{background:rgba(34,197,94,.2);border:1px solid var(--green);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.2);border:1px solid var(--red);color:var(--red)}
+.badge-cyan{background:rgba(34,211,238,.2);border:1px solid var(--cyan);color:var(--cyan)}
 .flashcard-text{font-size:13px;color:var(--text-mid);line-height:1.5}
 .flashcard-text strong{color:var(--text);font-weight:600}
-/* ---- THREAT BAR ---- */
-.threat-row{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--border);
-}
-.threat-row:last-child{border-bottom:none}
-.threat-row img{width:40px;height:40px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0}
-.threat-name{font-weight:600;font-size:14px;min-width:90px}
-.threat-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden}
-.threat-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.threat-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.threat-fill{height:100%;border-radius:3px;transition:width .6s}
 .threat-fill.extreme{background:linear-gradient(90deg,#ef4444,#b91c1c)}
 .threat-fill.hard{background:linear-gradient(90deg,#f97316,#ea580c)}
 .threat-fill.even{background:linear-gradient(90deg,#eab308,#ca8a04)}
 .threat-fill.easy{background:linear-gradient(90deg,#22c55e,#16a34a)}
-.threat-badge{
-  padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;
-  font-family:'JetBrains Mono',monospace;flex-shrink:0;
-}
-.badge-extreme{background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid #ef4444}
-.badge-hard{background:rgba(249,115,22,0.2);color:#f97316;border:1px solid #f97316}
-.badge-even{background:rgba(234,179,8,0.2);color:#eab308;border:1px solid #eab308}
-.badge-easy{background:rgba(34,197,94,0.2);color:#22c55e;border:1px solid #22c55e}
-/* ---- BUILD ORDER ---- */
-.build-order-item{
-  display:flex;align-items:flex-start;gap:12px;
-  background:rgba(255,255,255,0.02);border:1px solid var(--border);
-  border-radius:10px;padding:12px;margin-bottom:8px;
-}
-.build-num{
-  flex-shrink:0;width:28px;height:28px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;
-  border:2px solid var(--accent);color:var(--accent);
-  background:var(--accent-dim);
-}
+.threat-badge{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;font-family:"JetBrains Mono",monospace;flex-shrink:0}
+.badge-extreme{background:rgba(239,68,68,.2);color:#ef4444;border:1px solid #ef4444}
+.badge-hard{background:rgba(249,115,22,.2);color:#f97316;border:1px solid #f97316}
+.badge-even{background:rgba(234,179,8,.2);color:#eab308;border:1px solid #eab308}
+.badge-easy{background:rgba(34,197,94,.2);color:#22c55e;border:1px solid #22c55e}
+.build-order-item{display:flex;align-items:flex-start;gap:12px;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:8px}
+.build-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-weight:700;font-size:13px;border:2px solid var(--accent);color:var(--accent);background:var(--accent-dim)}
 .build-item-img{width:36px;height:36px;border-radius:6px;flex-shrink:0}
 .build-item-info{flex:1}
 .build-item-name{font-weight:600;font-size:14px;color:var(--text)}
 .build-item-reason{font-size:12px;color:var(--text-dim);margin-top:2px;line-height:1.4}
 .build-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
-.build-tag{
-  padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;
-  background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.3);
-  color:var(--accent);font-family:'JetBrains Mono',monospace;
-}
-/* ---- COMBO DISPLAY ---- */
-.combo-card{
-  background:var(--card2);border:1px solid var(--border);
-  border-radius:12px;padding:16px;margin-bottom:12px;
-}
-.combo-name{
-  font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;
-  letter-spacing:1.5px;color:var(--gold);margin-bottom:6px;text-transform:uppercase;
-}
+.build-tag{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:var(--accent);font-family:"JetBrains Mono",monospace}
+.combo-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:12px}
+.combo-name{font-family:"Orbitron",sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--gold);margin-bottom:6px;text-transform:uppercase}
 .combo-when{font-size:12px;color:var(--text-dim);margin-bottom:10px;line-height:1.4}
 .combo-seq{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.spell-icon{
-  width:36px;height:36px;border-radius:8px;
-  border:2px solid var(--border2);object-fit:cover;
-  background:#1a1a30;
-}
-.spell-letter{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:20px;height:20px;border-radius:50%;
-  background:var(--accent-dim);border:1px solid var(--accent);
-  font-size:10px;font-weight:700;color:var(--accent);
-  font-family:'JetBrains Mono',monospace;
-}
+.spell-icon{width:36px;height:36px;border-radius:8px;border:2px solid var(--border2);object-fit:cover;background:#1a1a30}
 .combo-arrow{color:var(--text-dim);font-size:14px;font-weight:700}
-/* ---- CALCULATOR ---- */
-.calc-input{
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  border-radius:8px;padding:10px 14px;width:100%;
-  color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;
-  outline:none;transition:border-color .2s;
-}
+.combo-badge{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;font-family:"JetBrains Mono",monospace}
+.cb-easy{background:rgba(34,197,94,.15);color:var(--green)}
+.cb-mid{background:rgba(234,179,8,.15);color:var(--gold)}
+.cb-hard{background:rgba(239,68,68,.15);color:var(--red)}
+.cb-key{background:rgba(168,85,247,.2);border:1px solid var(--accent);color:var(--accent)}
+.calc-input{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;width:100%;color:var(--text);font-family:"JetBrains Mono",monospace;font-size:14px;outline:none;transition:border-color .2s}
 .calc-input:focus{border-color:var(--accent)}
 .calc-label{font-size:13px;color:var(--text-mid);margin-bottom:6px;display:block;font-weight:500}
-.calc-result-row{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-bottom:1px solid var(--border);
-}
+.calc-result-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
 .calc-result-row:last-child{border-bottom:none}
-.calc-dmg{
-  font-family:'JetBrains Mono',monospace;font-size:16px;
-  font-weight:700;color:var(--gold);margin-left:auto;
-}
+.calc-dmg{font-family:"JetBrains Mono",monospace;font-size:16px;font-weight:700;color:var(--gold);margin-left:auto}
 .calc-label-sm{font-size:13px;color:var(--text-mid)}
-/* ---- DRAFT ANALYZER ---- */
 .slot-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
-.draft-slot{
-  background:var(--card2);border:2px solid var(--border);
-  border-radius:10px;padding:10px;text-align:center;cursor:pointer;
-  transition:all .2s;min-height:90px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:4px;
-}
+.draft-slot{background:var(--card2);border:2px solid var(--border);border-radius:10px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
 .draft-slot:hover{border-color:var(--accent-glow)}
 .draft-slot.filled{border-color:var(--accent)}
-.draft-slot.mid-slot{border-color:rgba(239,68,68,0.4)}
+.draft-slot.mid-slot{border-color:rgba(239,68,68,.4)}
 .draft-slot.mid-slot.filled{border-color:#ef4444}
 .draft-slot img{width:44px;height:44px;border-radius:50%;border:2px solid var(--border2)}
 .draft-slot-label{font-size:10px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:1px}
 .draft-slot-name{font-size:12px;font-weight:600;color:var(--text);margin-top:2px}
-/* ---- CHAMPION POOL ---- */
-.pool-overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;
-  display:flex;align-items:center;justify-content:center;
-}
-.pool-modal{
-  background:var(--card);border:1px solid var(--border2);
-  border-radius:16px;padding:20px;width:90%;max-width:600px;max-height:80vh;
-  display:flex;flex-direction:column;gap:12px;
-}
-.pool-search{
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  border-radius:8px;padding:10px 14px;width:100%;
-  color:var(--text);font-family:'Rajdhani',sans-serif;font-size:15px;
-  outline:none;
-}
+.pool-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:1000;display:flex;align-items:center;justify-content:center}
+.pool-modal{background:var(--card);border:1px solid var(--border2);border-radius:16px;padding:20px;width:90%;max-width:600px;max-height:80vh;display:flex;flex-direction:column;gap:12px}
+.pool-search{background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;width:100%;color:var(--text);font-family:"Rajdhani",sans-serif;font-size:15px;outline:none}
 .pool-search:focus{border-color:var(--accent)}
-.pool-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));
-  gap:8px;overflow-y:auto;max-height:400px;padding-right:4px;
-}
+.pool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px;overflow-y:auto;max-height:400px;padding-right:4px}
 .pool-grid::-webkit-scrollbar{width:4px}
-.pool-grid::-webkit-scrollbar-track{background:transparent}
 .pool-grid::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.pool-champ{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  background:rgba(255,255,255,0.03);border:1px solid var(--border);
-  border-radius:8px;padding:8px 4px;cursor:pointer;transition:all .15s;
-  text-align:center;
-}
+.pool-champ{display:flex;flex-direction:column;align-items:center;gap:4px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 4px;cursor:pointer;transition:all .15s;text-align:center}
 .pool-champ:hover{border-color:var(--accent);background:var(--accent-dim)}
 .pool-champ img{width:44px;height:44px;border-radius:50%;object-fit:cover}
 .pool-champ-name{font-size:10px;color:var(--text-mid);line-height:1.2;font-weight:500}
-/* ---- MATCHUP GRID ---- */
 .matchup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.matchup-card{
-  background:var(--card2);border:1px solid var(--border);
-  border-radius:10px;padding:10px;cursor:pointer;
-  text-align:center;transition:all .2s;
-}
+.matchup-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:10px;cursor:pointer;text-align:center;transition:all .2s}
 .matchup-card:hover{border-color:var(--accent);transform:translateY(-2px)}
 .matchup-card img{width:56px;height:56px;border-radius:50%;border:3px solid var(--border2);margin-bottom:6px}
 .matchup-card-name{font-size:12px;font-weight:600;margin-bottom:4px}
-/* ---- SECTION HEADINGS ---- */
-.sec-title{
-  font-family:'Orbitron',sans-serif;font-size:13px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);
-  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);
-}
-/* ---- MISC ---- */
-.btn{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--accent-dim);border:1px solid var(--accent);
-  border-radius:8px;padding:8px 18px;cursor:pointer;
-  font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;
-  color:var(--accent);transition:all .2s;
-}
-.btn:hover{background:rgba(168,85,247,0.25);box-shadow:0 0 12px var(--accent-glow)}
-.btn-red{background:rgba(239,68,68,0.12);border-color:#ef4444;color:#ef4444}
-.btn-red:hover{background:rgba(239,68,68,0.25)}
-.stat-chip{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;
-  font-family:'JetBrains Mono',monospace;
-}
-.stat-chip.ad{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.3);color:#ef4444}
-.stat-chip.ap{background:rgba(168,85,247,0.12);border:1px solid rgba(168,85,247,0.3);color:#a855f7}
-.stat-chip.mobile{background:rgba(34,211,238,0.12);border:1px solid rgba(34,211,238,0.3);color:#22d3ee}
-.stat-chip.tank{background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.3);color:#818cf8}
-.stat-chip.assassin{background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);color:#f97316}
-.stat-chip.mr{background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.3);color:#22c55e}
-/* ---- RESPONSIVE ---- */
-@media(max-width:640px){
-  .grid-2,.grid-3{grid-template-columns:1fr}
-  .slot-grid{grid-template-columns:repeat(3,1fr)}
-  .matchup-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}
-}
-/* ---- RUNE TREE ---- */
+.sec-title{font-family:"Orbitron",sans-serif;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-mid);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent-dim);border:1px solid var(--accent);border-radius:8px;padding:8px 18px;cursor:pointer;font-family:"Rajdhani",sans-serif;font-weight:600;font-size:14px;color:var(--accent);transition:all .2s}
+.btn:hover{background:rgba(168,85,247,.25);box-shadow:0 0 12px var(--accent-glow)}
+.btn-red{background:rgba(239,68,68,.12);border-color:#ef4444;color:#ef4444}
+.btn-red:hover{background:rgba(239,68,68,.25)}
+.stat-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;font-family:"JetBrains Mono",monospace}
+.stat-chip.ad{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#ef4444}
+.stat-chip.ap{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.3);color:#a855f7}
+.stat-chip.mobile{background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);color:#22d3ee}
+.stat-chip.tank{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.3);color:#818cf8}
+.stat-chip.assassin{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.3);color:#f97316}
+.stat-chip.mr{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#22c55e}
+@media(max-width:640px){.grid-2{grid-template-columns:1fr}.slot-grid{grid-template-columns:repeat(3,1fr)}.matchup-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr))}}
 .rune-tree{display:flex;flex-direction:column;gap:12px}
 .rune-row{display:flex;gap:10px;align-items:center;justify-content:center}
-.rune-tree-title{
-  text-align:center;font-size:12px;font-weight:700;
-  text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px;
-}
+.rune-tree-title{text-align:center;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px}
 .rune-keystone .rune-icon{width:60px;height:60px}
-/* ---- SITUATIONAL ITEM LIST ---- */
-.sit-item{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 0;border-bottom:1px solid var(--border);
-}
+.sit-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
 .sit-item:last-child{border-bottom:none}
 .sit-item img{width:36px;height:36px;border-radius:6px;flex-shrink:0}
 .sit-item-name{font-weight:600;font-size:14px;color:var(--text);min-width:160px}
 .sit-item-when{font-size:12px;color:var(--text-dim);flex:1}
-/* ---- DRAFT RESULT ---- */
-.draft-result{margin-top:20px}
-.strat-card{
-  background:rgba(168,85,247,0.05);border:1px solid rgba(168,85,247,0.2);
-  border-radius:12px;padding:16px;
-}
-/* ---- FILTER BUTTONS ---- */
 .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.filter-btn{
-  padding:6px 14px;border-radius:20px;cursor:pointer;
-  font-size:12px;font-weight:600;font-family:'Rajdhani',sans-serif;
-  background:rgba(255,255,255,0.04);border:1px solid var(--border2);
-  color:var(--text-mid);transition:all .2s;
-}
-.filter-btn.active,.filter-btn:hover{
-  border-color:var(--accent);color:var(--accent);background:var(--accent-dim);
-}
-/* ---- GAME PLAN ---- */
-.timeline{
-  position:relative;padding-left:36px;margin-top:8px;
-}
-.timeline::before{
-  content:'';position:absolute;left:14px;top:0;bottom:0;
-  width:2px;background:linear-gradient(180deg,var(--accent),rgba(168,85,247,0.1));
-}
-.tl-item{
-  position:relative;margin-bottom:24px;
-}
-.tl-dot{
-  position:absolute;left:-29px;top:4px;
-  width:16px;height:16px;border-radius:50%;
-  border:2px solid var(--accent);background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  font-size:8px;font-weight:700;color:var(--accent);
-  box-shadow:0 0 10px var(--accent-glow);
-}
-.tl-dot.gold{border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(251,191,36,0.4)}
-.tl-dot.green{border-color:var(--green);color:var(--green);box-shadow:0 0 10px rgba(34,197,94,0.4)}
-.tl-dot.cyan{border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 10px rgba(34,211,238,0.4)}
-.tl-dot.red{border-color:var(--red);color:var(--red);box-shadow:0 0 10px rgba(239,68,68,0.4)}
-.tl-label{
-  font-family:'Orbitron',sans-serif;font-size:10px;font-weight:700;
-  letter-spacing:2px;text-transform:uppercase;color:var(--accent);
-  margin-bottom:4px;
-}
-.tl-label.gold{color:var(--gold)}
-.tl-label.green{color:var(--green)}
-.tl-label.cyan{color:var(--cyan)}
-.tl-label.red{color:var(--red)}
+.filter-btn{padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px;font-weight:600;font-family:"Rajdhani",sans-serif;background:rgba(255,255,255,.04);border:1px solid var(--border2);color:var(--text-mid);transition:all .2s}
+.filter-btn.active,.filter-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim)}
+.timeline{position:relative;padding-left:36px;margin-top:8px}
+.timeline::before{content:"";position:absolute;left:14px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--accent),rgba(168,85,247,.1))}
+.tl-item{position:relative;margin-bottom:24px}
+.tl-dot{position:absolute;left:-29px;top:4px;width:16px;height:16px;border-radius:50%;border:2px solid var(--accent);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:var(--accent);box-shadow:0 0 10px var(--accent-glow)}
+.tl-dot.gold{border-color:var(--gold);color:var(--gold)}.tl-dot.green{border-color:var(--green);color:var(--green)}.tl-dot.red{border-color:var(--red);color:var(--red)}
+.tl-label{font-family:"Orbitron",sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.tl-label.gold{color:var(--gold)}.tl-label.green{color:var(--green)}.tl-label.red{color:var(--red)}
 .tl-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
 .tl-body{font-size:13px;color:var(--text-mid);line-height:1.6}
-.phase-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;
-  font-family:'JetBrains Mono',monospace;margin-bottom:10px;
-}
-.phase-badge.purple{background:rgba(168,85,247,0.12);border:1px solid var(--accent);color:var(--accent)}
-.phase-badge.gold{background:rgba(251,191,36,0.12);border:1px solid var(--gold);color:var(--gold)}
-.phase-badge.green{background:rgba(34,197,94,0.12);border:1px solid var(--green);color:var(--green)}
-.phase-badge.red{background:rgba(239,68,68,0.12);border:1px solid var(--red);color:var(--red)}
-.gp-schema{
-  background:rgba(0,0,0,0.3);border:1px solid var(--border2);
-  border-radius:10px;padding:2px;margin:12px 0;overflow:hidden;
-}
+.phase-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;font-family:"JetBrains Mono",monospace;margin-bottom:10px}
+.phase-badge.purple{background:rgba(168,85,247,.12);border:1px solid var(--accent);color:var(--accent)}
+.phase-badge.gold{background:rgba(251,191,36,.12);border:1px solid var(--gold);color:var(--gold)}
+.phase-badge.red{background:rgba(239,68,68,.12);border:1px solid var(--red);color:var(--red)}
 .do-dont{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
-.do-card{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:12px}
-.dont-card{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:12px}
-.do-card .label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
-.dont-card .label{font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.do-card{background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:12px}
+.dont-card{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:12px}
+.do-card .label{font-size:11px;font-weight:700;color:var(--green);margin-bottom:8px;font-family:"JetBrains Mono",monospace}
+.dont-card .label{font-size:11px;font-weight:700;color:var(--red);margin-bottom:8px;font-family:"JetBrains Mono",monospace}
 .do-card li,.dont-card li{font-size:12px;color:var(--text-mid);margin-left:14px;margin-bottom:4px;line-height:1.4}
-.priority-bar{display:flex;gap:4px;align-items:center;margin-top:6px;flex-wrap:wrap}
-.prio-chip{
-  padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;
-  font-family:'JetBrains Mono',monospace;
-}
-.prio-1{background:rgba(239,68,68,0.15);border:1px solid var(--red);color:var(--red)}
-.prio-2{background:rgba(249,115,22,0.15);border:1px solid var(--orange);color:var(--orange)}
-.prio-3{background:rgba(251,191,36,0.15);border:1px solid var(--gold);color:var(--gold)}
-.prio-4{background:rgba(34,197,94,0.15);border:1px solid var(--green);color:var(--green)}
+.prio-chip{padding:3px 10px;border-radius:4px;font-size:11px;font-weight:600;font-family:"JetBrains Mono",monospace}
+.prio-1{background:rgba(239,68,68,.15);border:1px solid var(--red);color:var(--red)}
+.prio-2{background:rgba(249,115,22,.15);border:1px solid var(--orange);color:var(--orange)}
+.prio-3{background:rgba(251,191,36,.15);border:1px solid var(--gold);color:var(--gold)}
+.prio-4{background:rgba(34,197,94,.15);border:1px solid var(--green);color:var(--green)}
 .prio-arrow{color:var(--text-dim);font-size:12px}
 @media(max-width:640px){.do-dont{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
-<!-- CHAMPION SELECTOR -->
 <div id="champion-selector">
   <button class="champ-btn active" onclick="selectChampion('Veigar')" id="btn-Veigar">
     <img id="img-veigar" src="" alt="Veigar" onerror="this.style.display='none'" loading="lazy">
@@ -459,8 +174,6 @@ body::before{
     <span>Syndra</span>
   </button>
 </div>
-
-<!-- TABS -->
 <div id="tabs">
   <button class="tab-btn active" onclick="switchTab('draft')">🎯 Draft Analyzer</button>
   <button class="tab-btn" onclick="switchTab('matchups')">⚔️ Matchups</button>
@@ -470,38 +183,18 @@ body::before{
   <button class="tab-btn" onclick="switchTab('combos')">🎮 Combos</button>
   <button class="tab-btn" onclick="switchTab('gameplan')">🗺️ Game Plan</button>
 </div>
-
-<!-- CONTENT -->
 <div id="content">
-  <!-- DRAFT ANALYZER -->
   <div class="tab-panel active" id="panel-draft">
     <div class="slot-grid" id="draft-slots">
-      <div class="draft-slot mid-slot" data-role="mid" onclick="openPool('mid')" id="slot-mid">
-        <div class="draft-slot-label">MID 🎯</div>
-        <div class="draft-slot-name" id="slot-mid-name">Cliquer</div>
-      </div>
-      <div class="draft-slot" data-role="top" onclick="openPool('top')" id="slot-top">
-        <div class="draft-slot-label">TOP</div>
-        <div class="draft-slot-name" id="slot-top-name">Cliquer</div>
-      </div>
-      <div class="draft-slot" data-role="jungle" onclick="openPool('jungle')" id="slot-jungle">
-        <div class="draft-slot-label">JGL</div>
-        <div class="draft-slot-name" id="slot-jungle-name">Cliquer</div>
-      </div>
-      <div class="draft-slot" data-role="adc" onclick="openPool('adc')" id="slot-adc">
-        <div class="draft-slot-label">ADC</div>
-        <div class="draft-slot-name" id="slot-adc-name">Cliquer</div>
-      </div>
-      <div class="draft-slot" data-role="support" onclick="openPool('support')" id="slot-support">
-        <div class="draft-slot-label">SUP</div>
-        <div class="draft-slot-name" id="slot-support-name">Cliquer</div>
-      </div>
+      <div class="draft-slot mid-slot" data-role="mid" onclick="openPool('mid')" id="slot-mid"><div class="draft-slot-label">MID 🎯</div><div class="draft-slot-name" id="slot-mid-name">Cliquer</div></div>
+      <div class="draft-slot" data-role="top" onclick="openPool('top')" id="slot-top"><div class="draft-slot-label">TOP</div><div class="draft-slot-name" id="slot-top-name">Cliquer</div></div>
+      <div class="draft-slot" data-role="jungle" onclick="openPool('jungle')" id="slot-jungle"><div class="draft-slot-label">JGL</div><div class="draft-slot-name" id="slot-jungle-name">Cliquer</div></div>
+      <div class="draft-slot" data-role="adc" onclick="openPool('adc')" id="slot-adc"><div class="draft-slot-label">ADC</div><div class="draft-slot-name" id="slot-adc-name">Cliquer</div></div>
+      <div class="draft-slot" data-role="support" onclick="openPool('support')" id="slot-support"><div class="draft-slot-label">SUP</div><div class="draft-slot-name" id="slot-support-name">Cliquer</div></div>
     </div>
     <button class="btn btn-red" onclick="resetDraft()">🔄 Reset Draft</button>
     <div class="draft-result" id="draft-result"></div>
   </div>
-
-  <!-- MATCHUPS -->
   <div class="tab-panel" id="panel-matchups">
     <input type="text" id="matchup-search" placeholder="Rechercher un champion..." class="pool-search" style="margin-bottom:12px" oninput="filterMatchups()">
     <div class="filter-row" id="matchup-filters">
@@ -514,100 +207,57 @@ body::before{
     <div class="matchup-grid" id="matchup-grid"></div>
     <div id="matchup-detail" style="margin-top:20px"></div>
   </div>
-
-  <!-- BUILD -->
-  <div class="tab-panel" id="panel-build">
-    <div id="build-content"></div>
-  </div>
-
-  <!-- RUNES -->
-  <div class="tab-panel" id="panel-runes">
-    <div id="runes-content"></div>
-  </div>
-
-  <!-- CALCULATEUR -->
-  <div class="tab-panel" id="panel-calc">
-    <div id="calc-content"></div>
-  </div>
-
-  <!-- COMBOS -->
-  <div class="tab-panel" id="panel-combos">
-    <div id="combos-content"></div>
-  </div>
-
-  <!-- GAME PLAN -->
-  <div class="tab-panel" id="panel-gameplan">
-    <div id="gameplan-content"></div>
-  </div>
+  <div class="tab-panel" id="panel-build"><div id="build-content"></div></div>
+  <div class="tab-panel" id="panel-runes"><div id="runes-content"></div></div>
+  <div class="tab-panel" id="panel-calc"><div id="calc-content"></div></div>
+  <div class="tab-panel" id="panel-combos"><div id="combos-content"></div></div>
+  <div class="tab-panel" id="panel-gameplan"><div id="gameplan-content"></div></div>
 </div>
-
-<!-- POOL MODAL -->
 <div class="pool-overlay" id="pool-overlay" style="display:none">
   <div class="pool-modal">
     <div style="display:flex;justify-content:space-between;align-items:center">
-      <span style="font-family:Orbitron;font-size:13px;font-weight:700;color:var(--accent);letter-spacing:2px">SÉLECTION</span>
-      <button onclick="closePool()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:20px">✕</button>
+      <span style="font-family:Orbitron;font-size:13px;font-weight:700;color:var(--accent);letter-spacing:2px">SELECTION</span>
+      <button onclick="closePool()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:20px">x</button>
     </div>
     <input type="text" class="pool-search" id="pool-search-input" placeholder="Rechercher..." oninput="filterPool()">
     <div class="pool-grid" id="pool-grid"></div>
   </div>
 </div>
-
 <script>
-// ================================================================
-//  DATA
-// ================================================================
-const VERSION = '16.8.1';
-const DDragon = `https://ddragon.leagueoflegends.com/cdn/${VERSION}`;
-const DDragonImg = `https://ddragon.leagueoflegends.com/cdn/img`;
 
-// ID mapping Data Dragon
-const CHAMP_ID = {
-  'Aurelion Sol':'AurelionSol','Bel\'Veth':'Belveth','Cho\'Gath':'Chogath',
-  'Dr. Mundo':'DrMundo','Jarvan IV':'JarvanIV','K\'Sante':'KSante',
-  'Kai\'Sa':'Kaisa','Kha\'Zix':'Khazix','Kog\'Maw':'KogMaw',
-  'Lee Sin':'LeeSin','Master Yi':'MasterYi','Miss Fortune':'MissFortune',
-  'Rek\'Sai':'RekSai','Renata Glasc':'Renata','Tahm Kench':'TahmKench',
-  'Twisted Fate':'TwistedFate','Vel\'Koz':'Velkoz','Xin Zhao':'XinZhao',
-  'Wukong':'MonkeyKing','Nunu':'Nunu'
-};
-function champId(name){
-  if(CHAMP_ID[name]) return CHAMP_ID[name];
-  return name.replace(/[\s'.]/g,'').replace(/[^a-zA-Z0-9]/g,'');
-}
-function champImg(name){ return `${DDragon}/img/champion/${champId(name)}.png`; }
-function itemImg(id){ return `${DDragon}/img/item/${id}.png`; }
-function spellImg(id){ return `${DDragon}/img/spell/${id}.png`; }
-function runeImg(path){ return `${DDragonImg}/${path}`; }
+const VERSION='16.8.1';
+const DDragon=`https://ddragon.leagueoflegends.com/cdn/${VERSION}`;
+const DDragonImg='https://ddragon.leagueoflegends.com/cdn/img';
+const CHAMP_ID={'Aurelion Sol':'AurelionSol',"Bel'Veth":'Belveth',"Cho'Gath":'Chogath','Dr. Mundo':'DrMundo','Jarvan IV':'JarvanIV',"K'Sante":'KSante',"Kai'Sa":'Kaisa',"Kha'Zix":'Khazix',"Kog'Maw":'KogMaw','Lee Sin':'LeeSin','Master Yi':'MasterYi','Miss Fortune':'MissFortune',"Rek'Sai":'RekSai','Renata Glasc':'Renata','Tahm Kench':'TahmKench','Twisted Fate':'TwistedFate',"Vel'Koz":'Velkoz','Xin Zhao':'XinZhao','Wukong':'MonkeyKing','Nunu':'Nunu'};
+function champId(n){if(CHAMP_ID[n])return CHAMP_ID[n];return n.replace(/[\s'.]/g,'').replace(/[^a-zA-Z0-9]/g,'');}
+function champImg(n){return `${DDragon}/img/champion/${champId(n)}.png`;}
+function itemImg(id){return `${DDragon}/img/item/${id}.png`;}
+function spellImg(id){return `${DDragon}/img/spell/${id}.png`;}
+function runeImg(path){return `${DDragonImg}/${path}`;}
 
-// Items
-const ITEMS = {
-  'Ionian Boots':223158,'Rod of Ages':226657,'Seraph\'s Embrace':223040,
-  'Fimbulwinter':223121,'Cryptbloom':223137,'Rabadon\'s Deathcap':223089,
-  'Zhonya\'s Hourglass':223157,'Banshee\'s Veil':223102,'Frozen Heart':223110,
+const ITEMS={
+  'Ionian Boots':223158,'Sorcerer\'s Shoes':223020,'Boots of Swiftness':223009,
+  'Rod of Ages':226657,'Seraph\'s Embrace':223040,'Fimbulwinter':223121,
+  'Cryptbloom':223137,'Rabadon\'s Deathcap':223089,
+  'Zhonya\'s Hourglass':223157,"Banshee's Veil":223102,'Frozen Heart':223110,
   'Void Staff':223135,'Blackfire Torch':222503,'Abyssal Mask':228020,
-  'Shadowflame':224645,'Boots of Swiftness':223009,'Doran\'s Ring':1056,
-  'Tear of the Goddess':3070,'Health Potion':2003,'Luden\'s Companion':222501,
-  'Stormsurge':222504,'Malignance':222502,'Sorcerer\'s Shoes':223020,
-  'Cosmic Drive':224629,'Morellonomicon':223165,'Horizon Focus':224628
+  'Shadowflame':224645,"Doran's Ring":1056,'Tear of the Goddess':3070,
+  'Health Potion':2003,"Luden's Companion":222501,'Stormsurge':222504,
+  'Malignance':222502,'Cosmic Drive':224629,'Morellonomicon':223165,
+  'Horizon Focus':224628
 };
-function iImg(name){ return itemImg(ITEMS[name]); }
+function iImg(name){return itemImg(ITEMS[name]);}
 
-// Spells
-const SPELLS = {
+const SPELLS={
   Veigar:{Q:'VeigarBalefulStrike',W:'VeigarDarkMatter',E:'VeigarEventHorizon',R:'VeigarPrimordialBurst'},
   Syndra:{Q:'SyndraQ',W:'SyndraW',E:'SyndraE',R:'SyndraR'}
 };
-const FLASH_SPELL = 'SummonerFlash';
+const FLASH_SPELL='SummonerFlash';
 
-// ================================================================
-//  CHAMPION DATABASE
-// ================================================================
-const CHAMP_DB = [
+const CHAMP_DB=[
   {n:'Aatrox',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['top']},
   {n:'Ahri',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid']},
   {n:'Akali',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid','top']},
-  {n:'Akshan',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['mid','top','adc']},
   {n:'Alistar',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support']},
   {n:'Ambessa',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['top','jungle']},
   {n:'Amumu',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['jungle','support']},
@@ -619,15 +269,15 @@ const CHAMP_DB = [
   {n:'Aurora',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid','top']},
   {n:'Azir',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid']},
   {n:'Bard',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['support']},
-  {n:'Bel\'Veth',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
+  {n:"Bel'Veth",dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Blitzcrank',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support']},
-  {n:'Brand',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support','mid','jungle']},
+  {n:'Brand',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support','mid']},
   {n:'Braum',dmg:'ad',mobile:false,tanky:true,mr:true,roles:['support']},
   {n:'Briar',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Caitlyn',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc']},
   {n:'Camille',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['top','jungle']},
   {n:'Cassiopeia',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid']},
-  {n:'Cho\'Gath',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['top','mid']},
+  {n:"Cho'Gath",dmg:'ap',mobile:false,tanky:true,mr:false,roles:['top','mid']},
   {n:'Corki',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['mid','adc']},
   {n:'Darius',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top','mid']},
   {n:'Diana',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid','jungle']},
@@ -648,20 +298,16 @@ const CHAMP_DB = [
   {n:'Graves',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle','mid']},
   {n:'Gwen',dmg:'ap',mobile:true,tanky:false,mr:true,roles:['top','jungle']},
   {n:'Hecarim',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['jungle']},
-  {n:'Heimerdinger',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','support','top']},
   {n:'Hwei',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','support']},
-  {n:'Illaoi',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top']},
   {n:'Irelia',dmg:'ad',mobile:true,tanky:false,mr:true,roles:['top','mid']},
-  {n:'Ivern',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['jungle']},
   {n:'Janna',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['support']},
   {n:'Jarvan IV',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['jungle','top']},
   {n:'Jax',dmg:'ad',mobile:true,tanky:true,mr:true,roles:['top','jungle']},
   {n:'Jayce',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['top','mid']},
   {n:'Jhin',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc']},
   {n:'Jinx',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc']},
-  {n:'K\'Sante',dmg:'ad',mobile:true,tanky:true,mr:true,roles:['top']},
-  {n:'Kai\'Sa',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
-  {n:'Kalista',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
+  {n:"K'Sante",dmg:'ad',mobile:true,tanky:true,mr:true,roles:['top']},
+  {n:"Kai'Sa",dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
   {n:'Karma',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['support','mid']},
   {n:'Karthus',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','jungle','adc']},
   {n:'Kassadin',dmg:'ap',mobile:true,tanky:false,mr:true,roles:['mid']},
@@ -669,10 +315,8 @@ const CHAMP_DB = [
   {n:'Kayle',dmg:'ap',mobile:false,tanky:false,mr:true,roles:['top','mid']},
   {n:'Kayn',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Kennen',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['top','mid']},
-  {n:'Kha\'Zix',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
-  {n:'Kindred',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
-  {n:'Kled',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['top']},
-  {n:'Kog\'Maw',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc']},
+  {n:"Kha'Zix",dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
+  {n:"Kog'Maw",dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc']},
   {n:'LeBlanc',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid']},
   {n:'Lee Sin',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Leona',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support']},
@@ -686,7 +330,6 @@ const CHAMP_DB = [
   {n:'Maokai',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support','top','jungle']},
   {n:'Master Yi',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Mel',dmg:'ap',mobile:false,tanky:false,mr:true,roles:['mid','support']},
-  {n:'Milio',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support']},
   {n:'Miss Fortune',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc']},
   {n:'Mordekaiser',dmg:'ap',mobile:false,tanky:true,mr:true,roles:['top']},
   {n:'Morgana',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support','mid']},
@@ -695,63 +338,42 @@ const CHAMP_DB = [
   {n:'Nasus',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top']},
   {n:'Nautilus',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support','jungle']},
   {n:'Neeko',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','support']},
-  {n:'Nidalee',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['jungle']},
-  {n:'Nilah',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
   {n:'Nocturne',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Nunu',dmg:'ap',mobile:true,tanky:true,mr:false,roles:['jungle']},
-  {n:'Olaf',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle','top']},
   {n:'Orianna',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid']},
   {n:'Ornn',dmg:'ap',mobile:false,tanky:true,mr:true,roles:['top']},
   {n:'Pantheon',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['top','support','mid']},
-  {n:'Poppy',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top','support','jungle']},
   {n:'Pyke',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['support']},
   {n:'Qiyana',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['mid','jungle']},
-  {n:'Quinn',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['top','mid']},
   {n:'Rakan',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['support']},
   {n:'Rammus',dmg:'ap',mobile:true,tanky:true,mr:false,roles:['jungle']},
-  {n:'Rek\'Sai',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Rell',dmg:'ap',mobile:true,tanky:true,mr:false,roles:['support','jungle']},
-  {n:'Renata Glasc',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support']},
   {n:'Renekton',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['top']},
   {n:'Rengar',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle','top']},
   {n:'Riven',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['top']},
-  {n:'Rumble',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['top','mid']},
   {n:'Ryze',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid']},
   {n:'Samira',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
-  {n:'Seraphine',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support','mid','adc']},
   {n:'Sejuani',dmg:'ap',mobile:true,tanky:true,mr:false,roles:['jungle','top']},
   {n:'Senna',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['support','adc']},
   {n:'Sett',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top','support']},
   {n:'Shaco',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Shen',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['top','support']},
-  {n:'Shyvana',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['jungle']},
-  {n:'Singed',dmg:'ap',mobile:true,tanky:true,mr:false,roles:['top']},
   {n:'Sion',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['top']},
-  {n:'Sivir',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
-  {n:'Skarner',dmg:'ad',mobile:true,tanky:true,mr:false,roles:['jungle']},
-  {n:'Smolder',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc','mid']},
-  {n:'Sona',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support']},
   {n:'Soraka',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support']},
   {n:'Swain',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support','mid']},
   {n:'Sylas',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid','jungle']},
   {n:'Syndra',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid']},
   {n:'Tahm Kench',dmg:'ap',mobile:false,tanky:true,mr:false,roles:['support','top']},
-  {n:'Taliyah',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid','jungle']},
   {n:'Talon',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['mid','jungle']},
   {n:'Taric',dmg:'ap',mobile:false,tanky:true,mr:true,roles:['support']},
   {n:'Teemo',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['top','mid']},
   {n:'Thresh',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['support']},
   {n:'Tristana',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
-  {n:'Trundle',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['jungle','top']},
   {n:'Tryndamere',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['top']},
   {n:'Twisted Fate',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid']},
-  {n:'Twitch',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc','jungle']},
-  {n:'Udyr',dmg:'ad',mobile:true,tanky:true,mr:true,roles:['jungle','top']},
-  {n:'Urgot',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top']},
-  {n:'Varus',dmg:'ad',mobile:false,tanky:false,mr:false,roles:['adc','mid']},
   {n:'Vayne',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc','top']},
   {n:'Veigar',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','support']},
-  {n:'Vel\'Koz',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','support']},
+  {n:"Vel'Koz",dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid','support']},
   {n:'Vex',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['mid']},
   {n:'Vi',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Viego',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
@@ -765,9 +387,7 @@ const CHAMP_DB = [
   {n:'Xin Zhao',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['jungle']},
   {n:'Yasuo',dmg:'ad',mobile:true,tanky:false,mr:true,roles:['mid','top','adc']},
   {n:'Yone',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['mid','top']},
-  {n:'Yorick',dmg:'ad',mobile:false,tanky:true,mr:false,roles:['top']},
   {n:'Yunara',dmg:'ap',mobile:true,tanky:false,mr:false,roles:['mid','adc']},
-  {n:'Yuumi',dmg:'ap',mobile:false,tanky:false,mr:false,roles:['support']},
   {n:'Zac',dmg:'ap',mobile:true,tanky:true,mr:false,roles:['jungle','top']},
   {n:'Zed',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['mid','jungle']},
   {n:'Zeri',dmg:'ad',mobile:true,tanky:false,mr:false,roles:['adc']},
@@ -780,273 +400,87 @@ const CHAMP_DB = [
 // ================================================================
 //  MATCHUPS DATA
 // ================================================================
-const MATCHUPS = {
-  Veigar: [
-    {n:'Zed',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Place le E avant qu\'il E sur toi. Ne jamais ulter une cible avec Spell Shield de Zed R.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Farm sous tour, ne jamais aller à portée de combo. Prends Zhonya\'s en rush sitô après Rod of Ages.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Veigar bat Zed au scaling. Surviving la lane = victoire. Stack passif silencieusement.'}
-    ]},
-    {n:'Irelia',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Lance le E en préventif sur son chemin d\'approche, pas quand elle est déjà sur toi.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne jamais auto-attaquer, ça stun sa passive. Farm uniquement avec Q à longue portée.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Achète Seraph\'s vite. Irelia fait rage si tu survives au niveau 6, pose cage dès que possible.'}
-    ]},
-    {n:'Fizz',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Physiquement impossible de le cager pendant son E (invulnérable). Attends l\'atterrissage.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Reste à max range. Potion d\'or ne peut pas t\'aider si tu es à portée de R Fizz.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Banshee\'s Veil bloque son R. Achète-le si tu vas crever sinon.'}
-    ]},
-    {n:'Akali',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Elle est invulnérable en W (fumée). La cage ne fonctionne pas dedans. Patiente.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Joue uniquement en lane lumineuse (sort de sa fumée). Farm max Q.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Prends Bone Plating en resolve. Sa phase 1 est dangereuse, pas son scaling.'}
-    ]},
-    {n:'Sylas',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Il peut voler ton ulti et one-shot ton équipe avec plus d\'AP que toi. Garde cage defensive.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Banshee\'s en rush. Son E-E crée deux dash, difficile à cager.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Abuse en early car il est faible avant items. Évite de R si tu as peu de stacks.'}
-    ]},
-    {n:'Talon',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Lance la cage sur les rochers/murs quand il part en mission → il passe dedans au retour.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne jamais farm sous tour sauf quand il est visible. Il revient toujours par les flancs.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Warding les buissons latéraux. Talon n\'a aucun scaling vs ton burst à 40+ stacks.'}
-    ]},
-    {n:'Yasuo',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Windwall bloque tes Q et W mais pas ton E ni ton R. Cible après son Windwall.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Prends Bone Plating ou Second Wind. Farm safe et attends ses erreurs.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Ton R traverse son Windwall. Attends qu\'il utilise son dash puis cage.'}
-    ]},
-    {n:'Yone',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Il revient à sa position de départ après son R. Place cage là où il se téléporte.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Bone Plating ou Second Wind obligatoire. Sa poke est démente en early.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Ne jamais ulter son ombre (E voyage). Ulte son corps principal seulement.'}
-    ]},
-    {n:'Qiyana',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Elle peut effacer ta cage avec son E élémentaire. Attends qu\'elle dépense son dash.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Farm sous tower. Elle perd en scaling. Ton R à 200 stacks = game over pour elle.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Son ulti rebondit sur les murs → ne jamais te coller à un mur contre elle.'}
-    ]},
-    {n:'LeBlanc',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Elle a deux positions avec son W. Cage le point de retour, pas elle en combat.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne jamais overextend. Son combo E-W est instant et one-shot en early.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Banshee\'s pour bloquer son W (dash initial). Elle devient beaucoup plus gérable.'}
-    ]},
-    {n:'Ekko',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Prends sa position de revive en compte pour cager. Son R le téléporte en arrière.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Évite les zones sombres (sa passive charge). Farm max Q et attends ses erreurs.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Ulte avant qu\'il utilise son R. Son revive l\'immunise pas pendant l\'ult Veigar.'}
-    ]},
-    {n:'Katarina',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Cage entre les daggers pour qu\'elle ne puisse pas reset. Timing crucial.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne laisse jamais traîner des daggers. Zhonya\'s quand elle R.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Ta cage annule son R. C\'est literellement ton best matchup tool.'}
-    ]},
-    {n:'Kassadin',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Son R est non-ciblable pendant le dash. Cager après l\'atterrissage uniquement.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Abuse-le avant niveau 6. Après son R, le matchup s\'inverse totalement.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Certains Veigar jouent full AD vs Kassadin (il a MR naturelle vs AP). C\'est légit.'}
-    ]},
-    {n:'Syndra',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Son E repousse ta cage si elle en a une à portée. Attention au placement.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Matchup miroir. Qui spike en premier gagne. Spam Q pour stacker.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Banshee\'s vaut plus ici que Seraph\'s. Son burst est brutal niveau 6.'}
-    ]},
-    {n:'Galio',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Il devient résistant à tous CC pendant son R. Ne gaspille pas ta cage dessus.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Poke Q aggressif. Il est slow, facile à toucher. Harass avant son niveau 6.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Il absorbe les dommages magiques — build Void Staff si 2+ tanks.'}
-    ]},
-    {n:'Tristana',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Cage E</strong> : Elle peut sauter hors de ta cage avec W. Anticipe son atterrissage.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Scale énormément — force les kills avant qu\'elle atteigne son item spike.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Son E reset lui permet d\'échapper à tout. Ward les flancs pour éviter her dive.'}
-    ]},
-    {n:'Lux',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Esquive son Q ou Banshee\'s pour bloquer son snare. Poke Q agressif.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Très facile — elle est immobile. Combo complet fiable.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Veigar powerspike > Lux en mid-game. Push wave et roam.'}
-    ]},
-    {n:'Viktor',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Évite son W (lent à arriver). Poke Q fréquent entre ses spells.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Il est fixe pendant son laser E. Excellent timing de cage.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Toi et Viktor scalez pareil. L\'avantage de farm en early décide du matchup.'}
-    ]},
-    {n:'Xerath',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Difficilement touchable. Farm sous tower jusqu\'à ton spike d\'items.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Il est immobile en R Xerath. Insta-cage pendant son ult.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Fimbulwinter + cage te sauve de son poke infini.'}
-    ]},
-    {n:'Ahri',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Son R lui donne 3 dash. Difficile à cager mais elle ne peut pas one-shot.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Anticipe son approche. Elle est souvent prévisible en combo.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Tu scales mieux. Patiente jusqu\'à 200+ stacks.'}
-    ]},
-    {n:'Orianna',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Respecte son combo ball → Q→W. Poke Q + farm passive safe.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Très efficace — elle est immobile et prévisible.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Orianna a du CC de masse, sois jamais groupé sans cage ready.'}
-    ]},
-    {n:'Vex',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Son passive block un CC. Attends qu\'elle l\'ait consommé avant de cager.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Facilement cageable — peu mobile.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Elle poke bien. Prends Manaflow Band et farm tranquillement.'}
-    ]},
-    {n:'Lulu',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Son Whimsy annule ta cage si elle l\'utilise sur toi. Prends Banshee\'s.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Elle peut polymorpher pendant la cage. Ulte quand même.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Mid Lulu c\'est rare mais fort. Respecte son buff ADC.'}
-    ]},
-    {n:'Thresh',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Son Q est long range et douloureux. Banshee\'s pour bloquer un hook.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Cage E</strong> : Cage facile sur Thresh immobile.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Les supports mid sont un mode alternatif. Farm et ignore son harcèlement.'}
-    ]}
+const MATCHUPS={
+  Veigar:[
+    {n:'Zed',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Place E SOUS TOI quand il ulte. Son R le fait reapparaitre derriere toi = stun immediat.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Farm sous tour uniquement. Ne jamais aller a portee de combo. Rush Zhonya apres Rod of Ages.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Attends son W (ombre) avant de E. Sans W il peut plus fuir.'}]},
+    {n:'Irelia',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Lance E en preventif sur son chemin d\'approche, pas quand elle est deja sur toi.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : JAMAIS auto-attaquer, ca stun sa passive. Farm uniquement avec Q a longue portee.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Seraph\'s vite. Irelia est enragee si tu survives niv 6 — pose cage immediatement.'}]},
+    {n:'Fizz',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Physiquement impossible pendant son E (invulnerable). Attends l\'atterrissage.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Reste a max range. Banshee\'s Veil bloque son R.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : BAN RECOMMANDE en Bronze/Silver.'}]},
+    {n:'Akali',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Elle est invulnerable en W (fumee). La cage ne fonctionne pas dedans. Patiente.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Joue uniquement en lane lumineuse. Farm max Q.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Bone Plating en resolve. Sa phase 1 est dangereuse.'}]},
+    {n:'Sylas',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Il peut voler ton ulti et one-shot ta team. Garde cage defenive.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Banshee\'s en rush. Son E-E = deux dash, difficile a cager.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Evite de R si peu de stacks. Ton R vole scale avec SES AP.'}]},
+    {n:'Talon',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Lance la cage sur les murs / rochers quand il repart — il passe dedans au retour.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Ne farm jamais sous tour sans le voir. Il revient par les flancs.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Ward les buissons lateraux. Talon n\'a aucun scaling vs ton burst 40+ stacks.'}]},
+    {n:'Yasuo',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Windwall bloque Q et W mais PAS E ni R. Cible apres son Windwall.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Bone Plating ou Second Wind. Farm safe.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Ton R traverse Windwall. Attends son dash puis cage.'}]},
+    {n:'Yone',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Il revient a sa position apres R. Place cage la ou il se teleporte.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Bone Plating obligatoire. Sa poke est forte en early.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Ne jamais ulter son ombre (E voyage). Ulte son corps uniquement.'}]},
+    {n:'LeBlanc',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Elle a deux positions avec W. Cage le point de retour, pas elle en combat.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Ne jamais overextend. Son combo E-W est instant en early.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Banshee\'s bloque son W (dash initial).'}]},
+    {n:'Ekko',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Son R le teleporte en arriere. Prends sa position de revive en compte.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Evite les zones sombres (passive charge). Farm Q max.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Ulte avant qu\'il utilise R. Son revive ne l\'immunise pas contre ton ult.'}]},
+    {n:'Katarina',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Cage entre les daggers pour qu\'elle ne puisse pas reset.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Ne laisse pas trainer des daggers. Zhonya quand elle R.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Ta cage annule son R completement.'}]},
+    {n:'Kassadin',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Son R est non-ciblable pendant le dash. Cager apres atterrissage.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Abuse avant niv 6. Apres, le matchup s\'inverse.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Certains Veigar jouent AD vs Kassadin (MR naturelle).'}]},
+    {n:'Galio',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Il devient resistant a tout CC pendant R. Ne gaspille pas la cage dessus.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Poke Q agressif. Il est lent, facile a toucher.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Void Staff si 2+ tanks.'}]},
+    {n:'Lux',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Esquive Q ou Banshee pour bloquer snare. Poke Q agressif.'},{b:'badge-purple',l:'E',t:'<strong>Cage</strong> : Tres facile — elle est immobile. Combo fiable.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Veigar powerspike > Lux en mid-game.'}]},
+    {n:'Viktor',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Evite son W. Poke Q frequent entre ses spells.'},{b:'badge-purple',l:'E',t:'<strong>Cage</strong> : Immobile pendant son laser E. Excellent timing.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Avantage farm en early = decide du matchup.'}]},
+    {n:'Xerath',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Farm sous tower jusqu\'a ton spike items.'},{b:'badge-purple',l:'E',t:'<strong>Cage</strong> : Immobile en R. Insta-cage pendant son ult.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Fimbulwinter + cage te sauve de son poke infini.'}]},
+    {n:'Ahri',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Son R = 3 dash. Difficile a cager mais elle ne peut pas one-shot.'},{b:'badge-purple',l:'E',t:'<strong>Cage</strong> : Anticipe son approche. Elle est souvent previsible.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Tu scales mieux. Patiente 200+ stacks.'}]},
+    {n:'Orianna',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Respecte combo ball-Q-W. Poke Q + farm passive safe.'},{b:'badge-purple',l:'E',t:'<strong>Cage</strong> : Tres efficace — immobile et previsible.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Orianna CC de masse — jamais groupe sans cage ready.'}]},
+    {n:'Vex',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Son passive block un CC. Attends consommation avant cage.'},{b:'badge-purple',l:'E',t:'<strong>Cage</strong> : Facilement cageable — peu mobile.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Manaflow Band + farm tranquillement.'}]},
+    {n:'Syndra',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Cage E</strong> : Son E repousse ta cage si spheres a portee. Attention placement.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Matchup miroir. Qui spike en premier gagne.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Banshee\'s vaut plus que Seraph\'s ici. Son burst est brutal niv 6.'}]}
   ],
-  Syndra: [
-    {n:'Yasuo',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Windwall</strong> : Bloque tes Q et W mais pas ton E. Joue E→Q (combo inversé) pour contourner.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Bone Plating obligatoire. Il trade super bien niv 1-3. Farm safe.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Ne place jamais de Q directement — attends qu\'il dépense son dash, puis Q+E.'}
-    ]},
-    {n:'Irelia',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Stun</strong> : NE PAS faire Q+E instantanément quand elle est collée — attendre le spawn de la sphère !'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne jamais auto-attaquer (stacks passive). Farm uniquement avec Q de loin.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Prends Aery pour le bouclier défensif en plus des dégâts de poke en early.'}
-    ]},
-    {n:'Fizz',t:'extreme',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Stun</strong> : Son E le rend invulnérable. Attends l\'atterrissage pour Q+E ou R+E.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Joue safe niv 1-5, abuse de lui après 40 stacks (2 charges Q).'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : R+E en teamfight → toutes les sphères stunent → Fizz ne peut plus rien faire.'}
-    ]},
-    {n:'Xerath',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Positionnement</strong> : Il t\'outrange. Joue les flancs en teamfight. Ne jamais front-to-back vs lui.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Arcane Comet pour les trades de loin. Pas Aery — trop de distance.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Tu peux le punir sur ses animations longues (R Xerath). Q+E sur lui pendant son ult.'}
-    ]},
-    {n:'Vel\'Koz',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Portée</strong> : Il t\'outrange comme Xerath. Joue les flancs, évite le front.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Arcane Comet pour poke de loin. Évite son E (regroupe ses spells en combo).'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Son R le rend fixe — Q+E instant pendant son cast.'}
-    ]},
-    {n:'Lux',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Portée</strong> : Son Q snare + R ont énorme portée. Banshee\'s pour bloquer son Q.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Arcane Comet ou First Strike. Esquive son Q, trade ensuite.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Elle spike avec Shadowflame. Tu peux counter-ult son ult si tu vois le laser.'}
-    ]},
-    {n:'Katarina',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Stun</strong> : Ta cage E interrompt son R. Garde E pour son combo, c\'est ton seul outil.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne jamais laisser des sphères inutilisées près d\'elle — elle reset avec daggers.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Zhonya\'s si elle hard feed. Electrocute pour match son burst.'}
-    ]},
-    {n:'Akali',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Stun</strong> : Elle est invulnérable en W (fumée). Attends qu\'elle sorte pour Q+E.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Abuse avant niveau 6. Après son spike, tu dois jouer safe.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : R+E en teamfight = toutes sphères → impossible pour elle d\'esquiver le stun.'}
-    ]},
-    {n:'Zed',t:'hard',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>Stun</strong> : Son R est instantané, t\'as pas le temps de réagir. Zhonya\'s obligatoire.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Farm ultra safe. Ton spike à 40 stacks change le matchup.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Garde Q + sphères pour son retour de R. Il revient toujours — stun là.'}
-    ]},
-    {n:'Orianna',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Très symétrique. Qui place la meilleure zone de contrôle gagne le trade.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Stun</strong> : Facile à stuner — elle est immobile et son ball est visible.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Tu gagnes les fights 1v1. Elle gagne les teamfights avec son R. Joue split.'}
-    ]},
-    {n:'Viktor',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Respecte son W (slow + zone). Poke Q fréquent entre ses casts.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Stun</strong> : Immobile pendant son E (laser). Ideal pour Q+E.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Tu scales mieux en mid-game. Cherche le kill niv 6 pour snowball.'}
-    ]},
-    {n:'Ahri',t:'even',tips:[
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Son charm est à éviter. Ne jamais avancer droit vers elle.'},
-      {b:'badge-purple',l:'⭐','t':'<strong>Stun</strong> : R+E après son ult — elle ne peut pas esquiver toutes les sphères.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Aery pour poke constant. Ton burst > le sien en mid-game.'}
-    ]},
-    {n:'Darius',t:'easy',tips:[
-      {b:'badge-green',l:'✅','t':'<strong>Avantage</strong> : Il n\'a aucun moyen de t\'atteindre depuis mid. Poke Q libre.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Ne jamais te mettre à portée de grab. Spam Q + farm passive confortablement.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Aery pour maximiser le poke. Il arrive généralement après 200 stacks passif = too late.'}
-    ]},
-    {n:'Samira',t:'easy',tips:[
-      {b:'badge-green',l:'✅','t':'<strong>Avantage</strong> : Pas de dash long range, doit te courir dessus. Facile à stuner.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Garde distance, spam Q. Son W (parry) bloque tes projectiles → joue E.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : R+E en teamfight = toutes sphères lancées → elle ne peut pas parry tout ça.'}
-    ]},
-    {n:'Galio',t:'even',tips:[
-      {b:'badge-red',l:'⚡','t':'<strong>First Strike</strong> : Galio joue Doran\'s Shield et scale — prends First Strike, tu peux pas le sortir de lane.'},
-      {b:'badge-gold',l:'🛡','t':'<strong>Lane</strong> : Il absorbe les dégâts magiques. Shadowflame pour flat pen.'},
-      {b:'badge-cyan',l:'💡','t':'<strong>Pro tip</strong> : Mise sur le scaling. Ton burst post-40 stacks l\'one-shot même avec sa MR passive.'}
-    ]}
+  Syndra:[
+    {n:'Yasuo',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Bone Plating obligatoire. Windwall bloque Q/W mais PAS ton E. Joue E pour contourner.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Farm safe niv 1-3. Ne jamais trader sans stacks passif (40+).'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Ne place jamais Q direct — attends son dash depense, puis Q+E.'}]},
+    {n:'Irelia',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>IMPORTANT</strong> : NE PAS faire Q+E instantanement quand elle est collee — attendre le spawn de la sphere (0.2s)!'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : JAMAIS auto-attaquer (stacks passive). Farm uniquement avec Q de loin.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Aery + Bone Plating en runes. Elle peut pas tank ton poke constant.'}]},
+    {n:'Fizz',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Son E = invulnerable. Attends atterrissage pour Q+E ou R+E.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Safe niv 1-5. Abuse FORT apres 40 stacks (2 charges Q). BAN RECOMMANDE.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : R+E en teamfight = toutes spheres au sol = Fizz ne peut plus rien faire.'}]},
+    {n:'Akali',t:'extreme',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Invulnerable en W (fumee). Attends qu\'elle sorte pour Q+E.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Abuse avant niv 6. Bone Plating en runes obligatoire.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : R+E = toutes spheres = impossible d\'esquiver.'}]},
+    {n:'Xerath',t:'hard',tips:[{b:'badge-red',l:'P',t:'<strong>Positionnement</strong> : Il t\'outrange. Joue les flancs en teamfight. Ne jamais face-to-face.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Arcane Comet pour trades de loin. Evite son outrange.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Sur son R (immobile) = Q+E instantane. C\'est ta seule fenetre.'}]},
+    {n:"Vel'Koz",t:'hard',tips:[{b:'badge-red',l:'P',t:'<strong>Portee</strong> : Il t\'outrange. Joue les flancs en teamfight.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Arcane Comet. Evite son E (combo de spells).'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Son R le rend fixe — Q+E instant pendant son cast.'}]},
+    {n:'Lux',t:'hard',tips:[{b:'badge-red',l:'P',t:'<strong>Portee</strong> : Snare + R longue portee. Banshee\'s pour bloquer Q.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Arcane Comet ou First Strike. Esquive Q puis trade.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Elle spike Shadowflame. Counter-ult sur son R visible.'}]},
+    {n:'Katarina',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Ton E interrompt son R. Garde E POUR son combo — c\'est ton seul outil.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Ne laisse pas de spheres inutilisees pres d\'elle — elle reset avec daggers.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Zhonya si elle feed. R+E = stun de zone meme sur ses resets.'}]},
+    {n:'Zed',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Son R = instantane, pas le temps de reagir. Zhonya obligatoire.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Farm ultra safe. Spike 40 stacks change le matchup.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Garde Q + spheres pour son retour de R. Il revient — stun la.'}]},
+    {n:'LeBlanc',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Son W (distortion dash) proc le stun ! Cage le spot de retour W.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Banshee\'s bloque sa chaine E. Poke Q de loin.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Son clone HP bas — la vraie bouge normalement. R+E pour la tuer meme si elle flash.'}]},
+    {n:'Sylas',t:'hard',tips:[{b:'badge-red',l:'E',t:'<strong>Stun</strong> : Cage entre toi et lui AVANT son E2 d\'approche.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Il vole ton R. Son R + toutes tes spheres = dangereux.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Garde ton E (shield) pour bloquer son E2. Joue safe early.'}]},
+    {n:'Orianna',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Tres symetrique. Qui place la meilleure zone gagne. First Strike viable.'},{b:'badge-purple',l:'E',t:'<strong>Stun</strong> : Facile — immobile et ball visible.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Tu gagnes 1v1. Elle gagne TF avec R. Joue side.'}]},
+    {n:'Viktor',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Respecte W (lent). Poke Q frequent.'},{b:'badge-purple',l:'E',t:'<strong>Stun</strong> : Immobile pendant laser E. Ideal Q+E.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Tu scales mieux mid-game. Kill niv 6 pour snowball.'}]},
+    {n:'Ahri',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Evite son charm (E). Ne jamais avancer droit.'},{b:'badge-purple',l:'E',t:'<strong>Stun</strong> : R+E apres son ult — elle ne peut pas esquiver toutes les spheres.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Son R (Spirit Rush) proc les spheres = R+E souvent optimal.'}]},
+    {n:'Kassadin',t:'even',tips:[{b:'badge-red',l:'E',t:'<strong>Early</strong> : Bully HARD pre-6 avec poke constant. Apres niv 6 joue safe.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : First Strike viable — tu pokes librement early.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Post-6 son R = blink = stun difficile. Garde R+E pour TF.'}]},
+    {n:'Galio',t:'even',tips:[{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : First Strike — tu peux pas le sortir de lane. Prends l\'or et scales.'},{b:'badge-purple',l:'E',t:'<strong>Stun</strong> : Ne gaspille pas E sur son R (CC-immune). Attends.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Shadowflame pour flat pen. Ton burst post-40 stacks le one-shot.'}]},
+    {n:'Darius',t:'easy',tips:[{b:'badge-green',l:'F',t:'<strong>Avantage</strong> : Pas de range, pas de dash. Poke Q totalement libre. Il DOIT te courir dessus.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Ne jamais a portee de grab (Q). Spam Q + farm confortablement.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Aery pour max poke. Il arrive apres 200 stacks passif = trop tard.'}]},
+    {n:'Samira',t:'easy',tips:[{b:'badge-green',l:'F',t:'<strong>Avantage</strong> : Court range, doit te courir dessus. Facile a stuner.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Son W (parry) bloque projectiles — joue E. Garde distance, spam Q.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : R+E = toutes spheres = elle ne peut pas parry tout ca.'}]},
+    {n:'Nasus',t:'easy',tips:[{b:'badge-green',l:'F',t:'<strong>Avantage</strong> : Pas de mobilite, pas de range. Tu pokes infiniment.'},{b:'badge-gold',l:'L',t:'<strong>Lane</strong> : Aery + spam Q. Il farm ses stacks, toi les tiens. Les tiens scalent mieux.'},{b:'badge-cyan',l:'T',t:'<strong>Pro tip</strong> : Attention si full tank late avec Void Staff — prioritise les carries.'}]}
   ]
 };
 
 // ================================================================
 //  BUILDS DATA
 // ================================================================
-const BUILDS = {
-  Veigar: {
-    builds: [
-      {
-        name:'Standard Core',tag:'Recommandé',
-        starter:["Doran's Ring","Health Potion"],
-        items:["Tear of the Goddess","Ionian Boots","Rod of Ages","Seraph's Embrace","Cryptbloom","Rabadon's Deathcap"],
-        sixth:"Zhonya's Hourglass ou Banshee's Veil selon la comp",
-        desc:"Build optimal pour la majorité des situations. Rod of Ages te donne survie + mana + scaling. Seraph's empile sur le passif Veigar."
-      },
-      {
-        name:'Anti-Mobile',tag:'VS mobiles',
-        starter:["Doran's Ring","Health Potion"],
-        items:["Tear of the Goddess","Fimbulwinter","Ionian Boots","Rabadon's Deathcap","Cryptbloom","Zhonya's Hourglass"],
-        sixth:"Banshee's Veil",
-        desc:"Quand l'équipe adverse a 3+ champions mobiles. Fimbulwinter au lieu de Seraph's — le slow supplémentaire compense leur mobilité."
-      },
-      {
-        name:'Blackfire Anti-Tank',tag:'VS tanks',
-        starter:["Doran's Ring","Health Potion"],
-        items:["Tear of the Goddess","Blackfire Torch","Ionian Boots","Rabadon's Deathcap","Cryptbloom","Zhonya's Hourglass"],
-        sixth:"Void Staff",
-        desc:"Quand l'équipe adverse a 2+ tanks. Blackfire Torch inflige des dégâts sur la durée qui contournent les shields."
-      }
+const BUILDS={
+  Veigar:{
+    builds:[
+      {name:'Standard Core',tag:'Recommande',starter:["Doran's Ring","Health Potion"],items:["Tear of the Goddess","Ionian Boots","Rod of Ages","Seraph's Embrace","Cryptbloom","Rabadon's Deathcap"],sixth:"Zhonya's Hourglass ou Banshee's Veil selon la comp",desc:"Build optimal pour la majorite des situations. Rod of Ages donne survie + mana + scaling. Seraph's empile sur le passif Veigar."},
+      {name:'Anti-Mobile',tag:'VS 3+ mobiles',starter:["Doran's Ring","Health Potion"],items:["Tear of the Goddess","Fimbulwinter","Ionian Boots","Rabadon's Deathcap","Cryptbloom","Zhonya's Hourglass"],sixth:"Banshee's Veil si heavy AP en plus",desc:"Quand l'ennemi a 3+ champions mobiles. Fimbulwinter = shield sur chaque cage E."},
+      {name:'Blackfire Anti-Tank',tag:'VS 2+ tanks',starter:["Doran's Ring","Health Potion"],items:["Blackfire Torch","Ionian Boots","Rabadon's Deathcap","Void Staff","Cryptbloom","Zhonya's Hourglass"],sixth:"Banshee's si heavy AP en sup",desc:"2+ tanks ennemis. Blackfire burn passe leur HP. Void Staff pour % pen obligatoire vs MR."}
     ],
     situational:[
-      {n:"Zhonya's Hourglass",when:"VS assassins AD (Zed, Talon). Rush après premier item core."},
-      {n:"Banshee's Veil",when:"VS burst AP (Syndra, LeBlanc, Fizz). Bouclier pour bloquer un spell."},
-      {n:"Fimbulwinter",when:"VS 3+ mobiles (Fizz, Irelia, Katarina). Remplace Seraph's."},
-      {n:"Frozen Heart",when:"VS auto-attackers lourds (Jax, Tryndamere, Vayne). -20% AS."},
-      {n:"Void Staff",when:"Si 2+ ennemis ont 60+ MR. Prioritaire sur Cryptbloom alors."},
-      {n:"Abyssal Mask",when:"VS heavy AP dans la comp adverse. Réduit leur MR."},
-      {n:"Shadowflame",when:"VS equipe full squishy. Flat pen > % pen sur les squishies."},
-      {n:"Boots of Swiftness",when:"VS beaucoup de slows (Cassiopeia, Nasus). Remplace Ionian."}
+      {n:"Zhonya's Hourglass",when:"VS assassins AD (Zed, Talon). Rush apres 1er item core."},
+      {n:"Banshee's Veil",when:"VS burst AP (Syndra, LeBlanc, Fizz). Bloque un spell."},
+      {n:'Fimbulwinter',when:"VS 3+ mobiles (Fizz, Irelia, Katarina). Remplace Seraph's."},
+      {n:'Frozen Heart',when:"VS auto-attackers lourds (Jax, Tryndamere, Vayne). -20% AS."},
+      {n:'Void Staff',when:"2+ ennemis avec 60+ MR. Prioritaire sur Cryptbloom."},
+      {n:'Abyssal Mask',when:"VS heavy AP dans la comp adverse. Reduit leur MR."},
+      {n:'Shadowflame',when:"VS equipe full squishy. Flat pen > % pen."},
+      {n:'Boots of Swiftness',when:"VS beaucoup de slows (Cassiopeia, Nasus). Remplace Ionian."}
     ]
   },
-  Syndra: {
-    builds: [
-      {
-        name:'Burst One-Shot',tag:'vs Squishies',
-        starter:["Doran's Ring","Health Potion"],
-        items:["Luden's Companion","Sorcerer's Shoes","Shadowflame","Rabadon's Deathcap","Void Staff","Zhonya's Hourglass"],
-        sixth:"Zhonya's Hourglass ou Banshee's Veil",
-        desc:"Build solo carry vs compos squishy. Une rotation de spells = one-shot. Luden's pour le poke + mana, Shadowflame pour la flat pen."
-      },
-      {
-        name:'DPS Contrôle',tag:'vs Tanks/AP',
-        starter:["Doran's Ring","Health Potion"],
-        items:["Blackfire Torch","Sorcerer's Shoes","Cosmic Drive","Rabadon's Deathcap","Void Staff","Zhonya's Hourglass"],
-        sixth:"Morellonomicon si anti-heal nécessaire",
-        desc:"Build DPS pour compos avec tanks ou beaucoup d'AP. Spam spells, stuns multiples en teamfight. Demande un bon positionnement."
-      }
+  Syndra:{
+    builds:[
+      {name:'Blackfire + Cosmic META 2026',tag:'Recommande Challenger',starter:["Doran's Ring","Health Potion"],items:["Blackfire Torch","Ionian Boots","Cosmic Drive","Rabadon's Deathcap","Void Staff","Zhonya's Hourglass"],sixth:"Cryptbloom si peu de MR ennemie. Banshee's si heavy AP/CC",desc:"Build META 2026 (Challenger recommande). Blackfire 1er TOUJOURS. Ionian Boots : ton E revient plus vite = plus de securite defenseive. Cosmic Drive synergise : chaque tick Blackfire reapplique le movespeed. Apres Cosmic, tu one-shot les squishies de toute facon."},
+      {name:"Luden's Burst",tag:'VS Squishies',starter:["Doran's Ring","Health Potion"],items:["Luden's Companion","Sorcerer's Shoes","Shadowflame","Rabadon's Deathcap","Void Staff","Zhonya's Hourglass"],sixth:"Banshee's si heavy AP/CC engage",desc:"Build one-shot vs compos full squishy. Luden's pour poke + mana + burst niv 6. Shadowflame = flat pen max. Une rotation = one-shot. Sorc Shoes pour pen maximale."}
     ],
     situational:[
-      {n:"Zhonya's Hourglass",when:"VS assassins AD (Zed, Talon). Rush si tu meurs trop."},
-      {n:"Banshee's Veil",when:"VS AP pick dangereux (Sylas, Veigar, Fizz)."},
-      {n:"Void Staff",when:"Si 2+ ennemis ont 60+ MR. Prioriser si nécessaire."},
-      {n:"Rabadon's Deathcap",when:"En 4ème-5ème item pour multiplicateur AP massif."},
-      {n:"Shadowflame",when:"VS equipe full squishy. Flat pen optimale."},
-      {n:"Morellonomicon",when:"VS healing massif (Vladimir, Aatrox, Soraka)."},
-      {n:"Cosmic Drive",when:"Pour plus de CDR + mouvement dans build DPS."},
-      {n:"Horizon Focus",when:"Si tu joues hyper range, amp tes dégâts depuis loin."}
+      {n:"Zhonya's Hourglass",when:"VS assassins AD (Zed, Talon, Yone). Stasis = riposte pendant leurs CDs."},
+      {n:"Banshee's Veil",when:"VS AP burst ou CC (Fizz, LeBlanc, Sylas, Leona). Spellshield bloque l'engage."},
+      {n:'Void Staff',when:"2+ ennemis MR. Toujours en 5e item si necessaire."},
+      {n:'Cryptbloom',when:"Pas de MR ennemie. Pen + heal sur kill. Remplace Void Staff."},
+      {n:'Shadowflame',when:"Full squishy, 0 MR. Flat pen + crit sous 40% HP."},
+      {n:'Morellonomicon',when:"VS healing massif (Vladimir, Aatrox, Soraka). Anti-heal."},
+      {n:'Cosmic Drive',when:"AP + HP + Haste + movespeed en combat. Synergise Blackfire."},
+      {n:'Horizon Focus',when:"Si tu joues hyper range. Vision dans fog + degats bonus cibles eloignees."}
     ]
   }
 };
@@ -1054,470 +488,330 @@ const BUILDS = {
 // ================================================================
 //  RUNES DATA
 // ================================================================
-const RUNES = {
-  Veigar: {
-    primary:{
-      tree:'Sorcery',
-      treeImg:'perk-images/Styles/7202_Sorcery.png',
-      keystone:{id:'SummonAery',path:'perk-images/Styles/Sorcery/SummonAery/SummonAery.png',name:'Aery',desc:'Ton W et Q lancent Aery sur les ennemis pour du poke supplémentaire. Idéal pour le harass constant.'},
+const RUNES={
+  Veigar:{
+    primary:{tree:'Sorcery',treeImg:'perk-images/Styles/7202_Sorcery.png',
+      keystone:{id:'SummonAery',path:'perk-images/Styles/Sorcery/SummonAery/SummonAery.png',name:'Aery',desc:'Ton W et Q lancent Aery sur les ennemis. Ideal pour le harass constant. Bouclier sur tes allies.'},
       rows:[
-        [{id:'ManaflowBand',path:'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png',name:'Manaflow Band',desc:'Augmente ta mana max avec les spells. Essentiel pour Veigar qui spam Q.',active:true},{id:'NimbusCloak',path:'perk-images/Styles/Sorcery/NimbusCloak/NimbusCloak.png',name:'Nimbus Cloak',desc:'Boost vitesse après SS.',active:false}],
-        [{id:'Transcendence',path:'perk-images/Styles/Sorcery/Transcendence/Transcendence.png',name:'Transcendence',desc:'CDR → AP au level 11. Excellent scaling pour Veigar.',active:true},{id:'Celerity',path:'perk-images/Styles/Sorcery/Celerity/Celerity.png',name:'Célérité',desc:'Movespeed → AP.',active:false}],
-        [{id:'Scorch',path:'perk-images/Styles/Sorcery/Scorch/Scorch.png',name:'Scorch',desc:'Poke supplémentaire en early. Combo parfait avec Aery.',active:true},{id:'GatheringStorm',path:'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png',name:'Gathering Storm',desc:'AP scaling infinii. Alternatif si tu vas très long terme.',active:false}]
-      ]
-    },
-    secondary:{
-      tree:'Inspiration',
-      treeImg:'perk-images/Styles/7203_Whimsy.png',
+        [{id:'ManaflowBand',path:'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png',name:'Manaflow Band',desc:'Augmente mana max avec les spells. Essentiel pour Veigar qui spam Q.',active:true},{id:'NimbusCloak',path:'perk-images/Styles/Sorcery/NimbusCloak/NimbusCloak.png',name:'Nimbus Cloak',desc:'Boost vitesse apres SS.',active:false}],
+        [{id:'Transcendence',path:'perk-images/Styles/Sorcery/Transcendence/Transcendence.png',name:'Transcendence',desc:'CDR -> AP level 11. Excellent scaling.',active:true},{id:'Celerity',path:'perk-images/Styles/Sorcery/Celerity/Celerity.png',name:'Celerite',desc:'Movespeed -> AP.',active:false}],
+        [{id:'Scorch',path:'perk-images/Styles/Sorcery/Scorch/Scorch.png',name:'Scorch',desc:'Poke supplementaire en early. Combo parfait avec Aery.',active:true},{id:'GatheringStorm',path:'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png',name:'Gathering Storm',desc:'AP scaling infini. Alternatif long terme.',active:false}]
+      ]},
+    secondary:{tree:'Inspiration',treeImg:'perk-images/Styles/7203_Whimsy.png',
       runes:[
-        {id:'BiscuitDelivery',path:'perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png',name:'Biscuit Delivery',desc:'Sustain en lane + bonus mana permanent. Super pour tenir en lane difficile.',active:true},
-        {id:'CosmicInsight',path:'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png',name:'Cosmic Insight',desc:'Réduit CD des Summoner Spells. Flash plus souvent !',active:true}
-      ]
-    },
-    shards:[
-      {img:'perk-images/StatMods/StatModsCDRScalingIcon.png',label:'+8 AH',desc:'Haste compétence pour spammer Q plus souvent.'},
-      {img:'perk-images/StatMods/StatModsAdaptiveForceIcon.png',label:'+9 AP',desc:'AP pure en early pour plus de dégâts de poke.'},
-      {img:'perk-images/StatMods/StatModsHealthScalingIcon.png',label:'+65 HP',desc:'Survie supplémentaire vs burst.'}
-    ],
-    alt:{
-      name:'First Strike',tag:'Matchups faciles / mages immobiles',
-      keystone:{id:'FirstStrike',path:'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png',name:'First Strike',desc:'Premier coup donne de l\'or + dégâts amplifiés. Parfait vs mages immobiles.'},
-      desc:'À prendre vs Lux, Xerath, Orianna. Tu génères de l\'or en plus tout en faisant dégâts. Secondaire Inspiration (Biscuit + Cosmic).'
-    },
-    matchupAdapt:[
-      {vs:'VS Yone/Yasuo',rune:'Bone Plating (Resolve 2ème arbre)',desc:'Annule leur combo de burst en early. Vital pour survivre la lane.'},
-      {vs:'VS Assassins AP',rune:'Shard MR au lieu d\'AP',desc:'Un peu moins de dégâts mais tu survis au burst en early.'},
-      {vs:'VS Heavy poke',rune:'Second Wind (Resolve)',desc:'Régén HP passive après avoir pris des dégâts de poke.'},
-      {vs:'Build Fimbulwinter',rune:'Overgrowth + Conditioning (Resolve)',desc:'Combo défense scaling pour les builds tankiers.'},
-      {vs:'VS Kassadin',rune:'Runes totalement différentes (AD)',desc:'Kassadin a MR innate vs AP. Envisage un build off-meta.'}
-    ]
+        {id:'BiscuitDelivery',path:'perk-images/Styles/Inspiration/BiscuitDelivery/BiscuitDelivery.png',name:'Biscuit Delivery',desc:'Sustain en lane + bonus mana permanent.',active:true},
+        {id:'CosmicInsight',path:'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png',name:'Cosmic Insight',desc:'Reduit CD des Summoner Spells. Flash plus souvent !',active:true}
+      ]},
+    shards:[{img:'perk-images/StatMods/StatModsCDRScalingIcon.png',label:'+8 AH'},{img:'perk-images/StatMods/StatModsAdaptiveForceIcon.png',label:'+9 AP'},{img:'perk-images/StatMods/StatModsHealthScalingIcon.png',label:'+65 HP'}],
+    alt:{name:'First Strike',tag:'Matchups faciles / mages immobiles',keystone:{id:'FirstStrike',path:'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png',name:'First Strike',desc:'Premier coup donne de l\'or + degats amplifie. Parfait vs Lux, Xerath, Orianna.'},desc:'VS mages immobiles. Tu generates de l\'or tout en faisant des degats. Secondaire Inspiration (Biscuit + Cosmic).'},
+    matchupAdapt:[{vs:'VS Yone/Yasuo',rune:'Bone Plating (Resolve 2eme)',desc:'Annule leur combo burst en early.'},{vs:'VS Assassins AP',rune:'Shard MR au lieu d\'AP',desc:'Moins de degats mais tu survis au burst.'},{vs:'VS Heavy poke',rune:'Second Wind (Resolve)',desc:'Regen HP passive apres poke.'},{vs:'Build Fimbulwinter',rune:'Overgrowth + Conditioning (Resolve)',desc:'Combo defense scaling.'},{vs:'VS Kassadin',rune:'Runes AD off-meta',desc:'Kassadin a MR innate vs AP.'}]
   },
-  Syndra: {
-    primary:{
-      tree:'Sorcery',
-      treeImg:'perk-images/Styles/7202_Sorcery.png',
-      keystone:{id:'SummonAery',path:'perk-images/Styles/Sorcery/SummonAery/SummonAery.png',name:'Aery',desc:'Poke sur chaque Q + bouclier allié. Optimal vs melee qui doivent te courir dessus (Darius, Samira).'},
+  Syndra:{
+    primary:{tree:'Sorcery',treeImg:'perk-images/Styles/7202_Sorcery.png',
+      keystone:{id:'SummonAery',path:'perk-images/Styles/Sorcery/SummonAery/SummonAery.png',name:'Aery (Standard)',desc:'Poke sur chaque Q + bouclier allie. Optimal vs melee (Darius, Samira). Proc sur Q, W, E = presence constante. Recommande pour debuter sur Syndra.'},
       rows:[
-        [{id:'ManaflowBand',path:'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png',name:'Manaflow Band',desc:'Syndra spam beaucoup de spells — mana essentielle.',active:true},{id:'NullifyingOrb',path:'perk-images/Styles/Sorcery/NullifyingOrb/NullifyingOrb.png',name:'Nullifying Orb',desc:'Bouclier AP en emergency.',active:false}],
-        [{id:'Transcendence',path:'perk-images/Styles/Sorcery/Transcendence/Transcendence.png',name:'Transcendence',desc:'CDR → AP au level 11. Top tier scaling.',active:true},{id:'AbsoluteFocus',path:'perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png',name:'Absolute Focus',desc:'AP quand HP > 70%. Moins utile.',active:false}],
-        [{id:'Scorch',path:'perk-images/Styles/Sorcery/Scorch/Scorch.png',name:'Scorch',desc:'Poke agressif en early. Combo Aery+Scorch = lane dominante.',active:true},{id:'GatheringStorm',path:'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png',name:'Gathering Storm',desc:'Long terme. Prendre si tu joues ultra passif.',active:false}]
-      ]
-    },
-    secondary:{
-      tree:'Inspiration',
-      treeImg:'perk-images/Styles/7203_Whimsy.png',
+        [{id:'ManaflowBand',path:'perk-images/Styles/Sorcery/ManaflowBand/ManaflowBand.png',name:'Manaflow Band',desc:'Syndra spam beaucoup de spells. Mana essentielle. Recommande sous Emerald.',active:true},{id:'NullifyingOrb',path:'perk-images/Styles/Sorcery/NullifyingOrb/NullifyingOrb.png',name:'Nullifying Orb',desc:'Bouclier AP en emergency.',active:false}],
+        [{id:'Transcendence',path:'perk-images/Styles/Sorcery/Transcendence/Transcendence.png',name:'Transcendence',desc:'CDR -> AP level 11. Top tier scaling pour Syndra.',active:true},{id:'AbsoluteFocus',path:'perk-images/Styles/Sorcery/AbsoluteFocus/AbsoluteFocus.png',name:'Absolute Focus',desc:'AP quand HP > 70%. Moins utile.',active:false}],
+        [{id:'Scorch',path:'perk-images/Styles/Sorcery/Scorch/Scorch.png',name:'Scorch',desc:'Poke agressif early. Combo Aery+Scorch = lane dominante.',active:true},{id:'GatheringStorm',path:'perk-images/Styles/Sorcery/GatheringStorm/GatheringStorm.png',name:'Gathering Storm',desc:'Long terme. Prendre si jeu ultra passif.',active:false}]
+      ]},
+    secondary:{tree:'Inspiration',treeImg:'perk-images/Styles/7203_Whimsy.png',
       runes:[
-        {id:'CosmicInsight',path:'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png',name:'Cosmic Insight',desc:'Flash CD réduit. Crucial pour E→Flash combo et repositionnements.',active:true},
-        {id:'TripleTonic',path:'perk-images/Styles/Inspiration/TripleTonic/TripleTonic.png',name:'Triple Tonic',desc:'Les élixirs donnent des stacks de passif Syndra. Accélère ton scaling.',active:true}
-      ]
-    },
-    shards:[
-      {img:'perk-images/StatMods/StatModsCDRScalingIcon.png',label:'+8 AH',desc:'Haste pour spam Q et accumuler les stacks passif.'},
-      {img:'perk-images/StatMods/StatModsAdaptiveForceIcon.png',label:'+9 AP',desc:'AP pour le poke Aery.'},
-      {img:'perk-images/StatMods/StatModsHealthScalingIcon.png',label:'+65 HP',desc:'Survie en early.'}
-    ],
-    alt:{
-      name:'Arcane Comet',tag:'VS long range (Xerath, Vel\'Koz, Lux)',
-      keystone:{id:'ArcaneComet',path:'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png',name:'Arcane Comet',desc:'Trades de loin sans aller en mêlée. Ideal vs champions qui t\'outrange.'},
-      desc:'Quand tu peux pas aller en contact. Arcane Comet touche sur Q slow (W). Secondaire Inspiration ou Domination.'
-    },
-    alt2:{
-      name:'First Strike',tag:'VS Galio/Yone/Akali (Doran\'s Shield) — scaling',
-      keystone:{id:'FirstStrike',path:'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png',name:'First Strike',desc:'Tu peux pas sortir de lane vs ces champions — génère de l\'or et mise sur le scaling.'},
-      desc:'Si First Strike primaire → obligé Sorcery secondaire (Manaflow + Scorch ou Transcendence).'
-    },
-    alt3:{
-      name:'Electrocute',tag:'Burst niv 6 — trades courts',
-      keystone:{id:'Electrocute',path:'perk-images/Styles/Domination/Electrocute/Electrocute.png',name:'Electrocute',desc:'Burst massif en trades courts. Secondaire Sorcery Manaflow + Scorch.'},
-      desc:'Pour les gros trades courts dès niveau 6. Attention : tu perds le poke constant d\'Aery.'
-    },
-    matchupAdapt:[
-      {vs:'VS melee mobile (Yasuo, Irelia)',rune:'Bone Plating (Resolve)',desc:'Réduit leur burst en early. Vital pour passer la lane.'},
-      {vs:'VS long range (Xerath, Vel\'Koz)',rune:'Arcane Comet primaire',desc:'Tu peux pas aller en contact. Joue les trades de loin.'},
-      {vs:'VS assassins AD',rune:'Overgrowth ou Second Wind',desc:'Sustain pour survivre aux trades agressifs.'}
-    ]
+        {id:'CosmicInsight',path:'perk-images/Styles/Inspiration/CosmicInsight/CosmicInsight.png',name:'Cosmic Insight',desc:'Flash CD reduit. Crucial pour E+Flash combo et repositionnements.',active:true},
+        {id:'TripleTonic',path:'perk-images/Styles/Inspiration/TripleTonic/TripleTonic.png',name:'Triple Tonic',desc:'Les elixirs donnent des stacks de passif Syndra ! Accelère ton scaling.',active:true}
+      ]},
+    shards:[{img:'perk-images/StatMods/StatModsCDRScalingIcon.png',label:'+8 AH'},{img:'perk-images/StatMods/StatModsAdaptiveForceIcon.png',label:'+9 AP'},{img:'perk-images/StatMods/StatModsHealthScalingIcon.png',label:'+65 HP'}],
+    alt:{name:'First Strike',tag:'VS Galio / Yone / Akali (scaling pur)',keystone:{id:'FirstStrike',path:'perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png',name:'First Strike',desc:'Tu peux pas sortir de lane vs ces champs. Genere de l\'or et misses sur le scaling.'},desc:'Si First Strike primaire -> Sorcery secondaire (Manaflow + Scorch ou Transcendence). Magical Footwear + Triple Tonic.'},
+    alt2:{name:'Arcane Comet',tag:'VS long range (Xerath, Vel\'Koz, Lux)',keystone:{id:'ArcaneComet',path:'perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png',name:'Arcane Comet',desc:'Trades de loin sans aller en melee. Le comet suit le slow/stun. Ideal si tu ne peux pas approcher.'},desc:'Quand tu ne peux pas approcher. Comet touche sur Q slow (W). Secondaire Inspiration : Cosmic + Triple Tonic.'},
+    alt3:{name:'Electrocute',tag:'Burst niv 6 — trades courts agressifs',keystone:{id:'Electrocute',path:'perk-images/Styles/Domination/Electrocute/Electrocute.png',name:'Electrocute',desc:'Burst massif en trades courts. 3 hits en 3s = proc. Q+E+W = instantane. Secondaire Sorcery Manaflow + Scorch.'},desc:'Pour burst violent dès niv 6. Attention : tu perds le poke constant d\'Aery.'},
+    matchupAdapt:[{vs:'VS melee mobile (Yasuo, Irelia)',rune:'Bone Plating (Resolve)',desc:'Reduit leur burst en early. Vital pour passer la lane.'},{vs:'VS long range (Xerath, Vel\'Koz)',rune:'Arcane Comet primaire',desc:'Tu ne peux pas approcher. Joue les trades de loin.'},{vs:'VS assassins AP (LeBlanc, Fizz)',rune:'Aery + Bone Plating (Resolve)',desc:'Bone Plating absorbe leur combo burst 3 premiers hits.'},{vs:'VS Phase Rush',rune:'Phase Rush vs divers (Tryndamere, Ekko)',desc:'Burst de vitesse apres 3 sorts. Spacer vs les melee qui te collent.'}]
   }
 };
 
 // ================================================================
-//  COMBOS DATA
+//  COMBOS DATA - Updated with all 8 Syndra combos
 // ================================================================
-const COMBOS_DATA = {
+const COMBOS_DATA={
   Veigar:[
-    {name:'Trade basique',when:'En lane : poke + stun rapide',seq:['Q','E']},
-    {name:'Poke W+stun',when:'Quand le Q est en CD',seq:['W','E']},
-    {name:'All-in complet',when:'Full kill combo avec R',seq:['E','W','Q','R']},
-    {name:'Flash+Cage surprise',when:'Engage surprise depuis hors vision',seq:['FLASH','E']},
-    {name:'Max burst',when:'Quand tu as tous tes stacks — one-shot',seq:['E','W','Q','R']}
+    {name:'Trade basique',diff:'easy',when:'En lane — poke + stun rapide',seq:['Q','E']},
+    {name:'Poke W + stun',diff:'easy',when:'Quand Q est en CD',seq:['W','E']},
+    {name:'Full all-in',diff:'mid',when:'Combo kill complet avec R',seq:['E','W','Q','R']},
+    {name:'Flash + Cage surprise',diff:'mid',when:'Engage surprise depuis hors vision',seq:['FLASH','E']},
+    {name:'Max burst one-shot',diff:'mid',when:'Quand tu as tous tes stacks',seq:['E','W','Q','R']}
   ],
   Syndra:[
-    {name:'Trade basique Q+E',when:'Combo fondamental en lane. Le plus utilisé.',seq:['Q','E']},
-    {name:'W+E (Q en CD)',when:'Même mécanique avec le W au lieu du Q',seq:['W','E']},
-    {name:'W+Q+E (triple)',when:'W pour slow, Q pour sphère, E pour stun. Ou : Q un CS puis W le lance',seq:['W','Q','E']},
-    {name:'Full one-shot',when:'Combo complet pour kill assuré',seq:['W','Q','E','R']},
-    {name:'R+E (COMBO CLÉ)',when:'LE plus important en teamfight. R pose toutes les sphères → E pousse tout → stun de zone massif. Imblocable.',seq:['R','E']},
-    {name:'E+Q avancé',when:'Difficile. E d\'abord puis Q à l\'endroit où le E va pousser. Utile vs melee collés.',seq:['E','Q']},
-    {name:'E+Flash stun surprise',when:'Stun depuis un angle inattendu. Plus rapide que Flash→E. Utilise les sphères au sol.',seq:['E','FLASH']}
+    {name:'Trade basique Q+E',diff:'easy',when:'COMBO #1 — fondamental en lane. Pose Q, E pousse la sphere = stun. ATTENTION : si ennemi colle, attendre 0.2s avant E !',seq:['Q','E']},
+    {name:'W+E (Q en CD)',diff:'easy',when:'COMBO #2 — W slow garantit que le E touche. Utile quand Q est en cooldown.',seq:['W','E']},
+    {name:'Triple W+Q+E',diff:'mid',when:'COMBO #3 — W pour slow, Q pour sphere, E pour stun. Trade signature de Syndra.',seq:['W','Q','E']},
+    {name:'Full one-shot',diff:'mid',when:'COMBO #4 — Toujours remettre un Q supplementaire AVANT le R pour avoir max spheres !',seq:['W','Q','E','R']},
+    {name:'R+E (COMBO CLE)',diff:'mid',when:'COMBO #5 — LE plus important. R pose TOUTES les spheres au sol -> E pousse tout = stun de zone massif. Quasi-impossible a esquiver. Utiliser : (1) stun multiple TF a travers frontline, (2) tuer champions mobiles (flash/dash ne les sauvent pas).',seq:['R','E']},
+    {name:'6-ball Ult garantie',diff:'hard',when:'COMBO #6 — Pose Q au sol, attends recharge Q, W pickup (reset 6s), puis Q+E+W+Q+R = 6 spheres. Replicable a chaque fight apres 40 stacks.',seq:['Q','W','Q','E','W','R']},
+    {name:'E+Flash angle surprise',diff:'hard',when:'COMBO #7 — Plus rapide que Flash+E. Stun depuis un angle inattendu. Utile quand ennemi est loin sous tour et spheres au sol.',seq:['E','FLASH']},
+    {name:'Double-tap W (Challenger)',diff:'hard',when:'COMBO #8 — Q+E pour placer sphere -> W pick up -> RE-TAP W immediatement. La sphere teleporte instantanement = impossible a esquiver. Plus rapide = plus efficace. Entrainer sur les touches rapidement.',seq:['Q','E','W','W']}
   ]
 };
 
 // ================================================================
 //  CALCULATOR DATA
 // ================================================================
-const CALC = {
+const CALC={
   Veigar:{
     inputs:[
       {id:'stacks',label:'Stacks passif',min:0,max:1200,def:200,step:10},
-      {id:'level',label:'Niveau',min:1,max:18,def:11,step:1},
       {id:'ap_items',label:'AP items (ex: 300)',min:0,max:800,def:300,step:10},
-      {id:'rabadon',label:'Rabadon\'s ?',type:'checkbox',def:false},
+      {id:'rabadon',label:"Rabadon's ?",type:'checkbox',def:false},
       {id:'q_rank',label:'Rang Q (1-5)',min:1,max:5,def:5,step:1},
       {id:'r_rank',label:'Rang R (1-3)',min:1,max:3,def:3,step:1}
     ],
     calc(v){
-      // Passive AP : stacks (no cap, stacks = raw AP bonus)
-      const passiveAP = v.stacks;
-      let totalAP = passiveAP + v.ap_items;
-      if(v.rabadon) totalAP *= 1.35;
-      const qBase=[80,120,160,200,240];
-      const qRatio=[0.5,0.55,0.6,0.65,0.7];
-      const wBase=[85,140,195,250,305];
-      const wRatio=[0.7,0.8,0.9,1.0,1.1];
-      const rMinBase=[175,250,325];
-      const rMaxBase=[350,500,650];
-      const rMinRatio=[0.65,0.7,0.75];
-      const rMaxRatio=[1.3,1.4,1.5];
-      const qr = v.q_rank-1, rr = v.r_rank-1;
-      const Q = Math.round(qBase[qr] + qRatio[qr]*totalAP);
-      const W = Math.round(wBase[4] + wRatio[4]*totalAP);
-      const E = 70 + 0.3*totalAP;
-      const Rmin = Math.round(rMinBase[rr] + rMinRatio[rr]*totalAP);
-      const Rmax = Math.round(rMaxBase[rr] + rMaxRatio[rr]*totalAP);
-      const combo = Q + W + Rmax;
-      return {totalAP:Math.round(totalAP),Q,W,E:Math.round(E),Rmin,Rmax,combo};
+      let totalAP=v.stacks+v.ap_items;
+      if(v.rabadon)totalAP*=1.35;
+      const qBase=[80,120,160,200,240],qRatio=[.5,.55,.6,.65,.7];
+      const rMinBase=[175,250,325],rMaxBase=[350,500,650];
+      const rMinRatio=[.65,.7,.75],rMaxRatio=[1.3,1.4,1.5];
+      const qr=v.q_rank-1,rr=v.r_rank-1;
+      const Q=Math.round(qBase[qr]+qRatio[qr]*totalAP);
+      const W=Math.round(305+1.1*totalAP);
+      const E=Math.round(70+.3*totalAP);
+      const Rmin=Math.round(rMinBase[rr]+rMinRatio[rr]*totalAP);
+      const Rmax=Math.round(rMaxBase[rr]+rMaxRatio[rr]*totalAP);
+      return{totalAP:Math.round(totalAP),Q,W,E,Rmin,Rmax,combo:Q+W+Rmax};
     }
   },
   Syndra:{
     inputs:[
-      {id:'level',label:'Niveau',min:1,max:18,def:11,step:1},
-      {id:'ap_items',label:'AP items (ex: 300)',min:0,max:800,def:300,step:10},
-      {id:'splinters',label:'Stacks Splinters (0-120)',min:0,max:120,def:80,step:5},
-      {id:'spheres',label:'Nombre de sphères pour R (3-7)',min:3,max:7,def:5,step:1},
+      {id:'splinters',label:'Splinters (0-120)',min:0,max:120,def:80,step:5},
+      {id:'ap_items',label:'AP items',min:0,max:800,def:350,step:10},
+      {id:'spheres',label:'Spheres pour R (3-7)',min:3,max:7,def:5,step:1},
       {id:'q_rank',label:'Rang Q (1-5)',min:1,max:5,def:5,step:1},
       {id:'r_rank',label:'Rang R (1-3)',min:1,max:3,def:3,step:1}
     ],
     calc(v){
-      let totalAP = v.ap_items;
-      if(v.splinters >= 120) totalAP *= 1.15; // Transcendence +15% AP
+      let totalAP=v.ap_items;
+      if(v.splinters>=120)totalAP*=1.15;
       const qBase=[80,115,150,185,220];
-      const qRatio=0.65;
       const rSphereBase=[80,120,160];
-      const rSphereRatio=0.65;
-      const qr = v.q_rank-1, rr = v.r_rank-1;
-      const Q = Math.round(qBase[qr] + qRatio*totalAP);
-      // W: 70/110/150/190/230 + 60% AP
-      const W = Math.round(150 + 0.6*totalAP);
-      // E: 70/110/150/190/230 + 60% AP (base)
-      const E = Math.round(150 + 0.4*totalAP);
-      const spheres = v.spheres;
-      const R = Math.round((rSphereBase[rr] + rSphereRatio*totalAP) * spheres);
-      const combo = Q + W + R;
-      return {totalAP:Math.round(totalAP),Q,W,E,R,spheres,combo};
+      const qr=v.q_rank-1,rr=v.r_rank-1;
+      const Q=Math.round(qBase[qr]+.65*totalAP);
+      const W=Math.round(230+.6*totalAP);
+      const E=Math.round(200+.6*totalAP);
+      const R=Math.round((rSphereBase[rr]+.65*totalAP)*v.spheres);
+      return{totalAP:Math.round(totalAP),Q,W,E,R,spheres:v.spheres,combo:Q+W+R};
     }
   }
 };
 
 // ================================================================
-//  STATE
+//  STATE + INIT
 // ================================================================
-let currentChamp = 'Veigar';
-let activeTab = 'draft';
-let draft = {mid:null,top:null,jungle:null,adc:null,support:null};
-let currentPoolRole = null;
-let matchupFilter = 'all';
+let currentChamp='Veigar',activeTab='draft',matchupFilter='all';
+let draft={mid:null,top:null,jungle:null,adc:null,support:null};
+let currentPoolRole=null;
 
-// Restore from localStorage
-try{
-  const saved = JSON.parse(localStorage.getItem('tac_dashboard'));
-  if(saved){
-    if(saved.champ) currentChamp = saved.champ;
-    if(saved.draft) draft = saved.draft;
-    if(saved.tab) activeTab = saved.tab;
-  }
-}catch(e){}
+try{const s=JSON.parse(localStorage.getItem('tac_v2'));if(s){if(s.champ)currentChamp=s.champ;if(s.draft)draft=s.draft;if(s.tab)activeTab=s.tab;}}catch(e){}
 
-// ================================================================
-//  INIT
-// ================================================================
+function saveState(){try{localStorage.setItem('tac_v2',JSON.stringify({champ:currentChamp,draft,tab:activeTab}));}catch(e){}}
+
 function init(){
-  // Set champion images
-  document.getElementById('img-veigar').src = champImg('Veigar');
-  document.getElementById('img-syndra').src = champImg('Syndra');
-  // Apply saved champ
-  selectChampion(currentChamp, false);
-  // Apply saved tab
-  switchTab(activeTab, false);
-  // Restore draft
-  Object.entries(draft).forEach(([role, champ]) => {
-    if(champ) updateSlot(role, champ);
-  });
+  document.getElementById('img-veigar').src=champImg('Veigar');
+  document.getElementById('img-syndra').src=champImg('Syndra');
+  selectChampion(currentChamp,false);
+  switchTab(activeTab,false);
+  Object.entries(draft).forEach(([r,c])=>{if(c)updateSlot(r,c);});
   renderDraftResult();
 }
 
-function saveState(){
-  try{
-    localStorage.setItem('tac_dashboard', JSON.stringify({
-      champ: currentChamp, draft, tab: activeTab
-    }));
-  }catch(e){}
-}
-
-// ================================================================
-//  CHAMPION SELECTOR
-// ================================================================
-function selectChampion(name, doSave=true){
-  currentChamp = name;
-  document.querySelectorAll('.champ-btn').forEach(b => b.classList.remove('active'));
+function selectChampion(name,doSave=true){
+  currentChamp=name;
+  document.querySelectorAll('.champ-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-'+name).classList.add('active');
-  // Update accent color
-  const accent = name==='Veigar' ? '#a855f7' : '#6366f1';
-  const accentDim = name==='Veigar' ? 'rgba(168,85,247,0.15)' : 'rgba(99,102,241,0.15)';
-  const accentGlow = name==='Veigar' ? 'rgba(168,85,247,0.4)' : 'rgba(99,102,241,0.4)';
-  document.documentElement.style.setProperty('--accent', accent);
-  document.documentElement.style.setProperty('--accent-dim', accentDim);
-  document.documentElement.style.setProperty('--accent-glow', accentGlow);
-  // Re-render active tab content
-  renderTab(activeTab);
-  renderDraftResult();
-  if(doSave) saveState();
+  const accent=name==='Veigar'?'#a855f7':'#6366f1';
+  const dim=name==='Veigar'?'rgba(168,85,247,0.15)':'rgba(99,102,241,0.15)';
+  const glow=name==='Veigar'?'rgba(168,85,247,0.4)':'rgba(99,102,241,0.4)';
+  document.documentElement.style.setProperty('--accent',accent);
+  document.documentElement.style.setProperty('--accent-dim',dim);
+  document.documentElement.style.setProperty('--accent-glow',glow);
+  renderTab(activeTab);renderDraftResult();
+  if(doSave)saveState();
 }
 
-// ================================================================
-//  TABS
-// ================================================================
-function switchTab(id, doSave=true){
-  activeTab = id;
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
-    const ids=['draft','matchups','build','runes','calc','combos','gameplan'];
-    b.classList.toggle('active', ids[i]===id);
-  });
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+function switchTab(id,doSave=true){
+  activeTab=id;
+  const ids=['draft','matchups','build','runes','calc','combos','gameplan'];
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',ids[i]===id));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   renderTab(id);
-  if(doSave) saveState();
+  if(doSave)saveState();
 }
-
 function renderTab(id){
-  if(id==='matchups') renderMatchups();
-  if(id==='build') renderBuild();
-  if(id==='runes') renderRunes();
-  if(id==='calc') renderCalc();
-  if(id==='combos') renderCombos();
-  if(id==='gameplan') renderGamePlan();
+  if(id==='matchups')renderMatchups();
+  if(id==='build')renderBuild();
+  if(id==='runes')renderRunes();
+  if(id==='calc')renderCalc();
+  if(id==='combos')renderCombos();
+  if(id==='gameplan')renderGamePlan();
 }
 
 // ================================================================
 //  DRAFT ANALYZER
 // ================================================================
-function openPool(role){
-  currentPoolRole = role;
-  const overlay = document.getElementById('pool-overlay');
-  overlay.style.display = 'flex';
-  document.getElementById('pool-search-input').value = '';
-  renderPoolGrid('');
-}
-function closePool(){ document.getElementById('pool-overlay').style.display='none'; }
-function filterPool(){ renderPoolGrid(document.getElementById('pool-search-input').value.toLowerCase()); }
+function openPool(role){currentPoolRole=role;document.getElementById('pool-overlay').style.display='flex';document.getElementById('pool-search-input').value='';renderPoolGrid('');}
+function closePool(){document.getElementById('pool-overlay').style.display='none';}
+function filterPool(){renderPoolGrid(document.getElementById('pool-search-input').value.toLowerCase());}
 
 function renderPoolGrid(search){
-  const role = currentPoolRole;
-  let champs = CHAMP_DB.filter(c => {
-    const nameMatch = c.n.toLowerCase().includes(search);
-    if(search) return nameMatch;
-    // Filter by role unless mid
-    if(role==='mid') return c.roles.includes('mid');
-    if(role==='top') return c.roles.includes('top');
-    if(role==='jungle') return c.roles.includes('jungle');
-    if(role==='adc') return c.roles.includes('adc');
-    if(role==='support') return c.roles.includes('support');
+  const role=currentPoolRole;
+  let champs=CHAMP_DB.filter(c=>{
+    const nm=c.n.toLowerCase().includes(search);
+    if(search)return nm;
+    if(role==='mid')return c.roles.includes('mid');
+    if(role==='top')return c.roles.includes('top');
+    if(role==='jungle')return c.roles.includes('jungle');
+    if(role==='adc')return c.roles.includes('adc');
+    if(role==='support')return c.roles.includes('support');
     return true;
   }).sort((a,b)=>a.n.localeCompare(b.n));
-
-  const grid = document.getElementById('pool-grid');
-  grid.innerHTML = champs.map(c=>`
+  document.getElementById('pool-grid').innerHTML=champs.map(c=>`
     <div class="pool-champ" onclick="selectChampForSlot('${c.n.replace(/'/g,"\\'")}')">
       <img src="${champImg(c.n)}" alt="${c.n}" onerror="this.style.display='none'" loading="lazy">
       <div class="pool-champ-name">${c.n}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function selectChampForSlot(name){
-  draft[currentPoolRole] = name;
-  updateSlot(currentPoolRole, name);
-  closePool();
-  renderDraftResult();
-  saveState();
-}
+function selectChampForSlot(name){draft[currentPoolRole]=name;updateSlot(currentPoolRole,name);closePool();renderDraftResult();saveState();}
 
-function updateSlot(role, name){
-  const slot = document.getElementById('slot-'+role);
-  const nameEl = document.getElementById('slot-'+role+'-name');
+function updateSlot(role,name){
+  const slot=document.getElementById('slot-'+role);
+  const nameEl=document.getElementById('slot-'+role+'-name');
   slot.classList.add('filled');
-  // Remove old img if any
-  const oldImg = slot.querySelector('img');
-  if(oldImg) oldImg.remove();
-  const img = document.createElement('img');
-  img.src = champImg(name);
-  img.alt = name;
-  img.onerror = function(){ this.style.display='none'; };
-  img.loading = 'lazy';
-  slot.insertBefore(img, nameEl);
-  nameEl.textContent = name;
+  const oldImg=slot.querySelector('img');if(oldImg)oldImg.remove();
+  const img=document.createElement('img');img.src=champImg(name);img.alt=name;img.onerror=function(){this.style.display='none';};img.loading='lazy';
+  slot.insertBefore(img,nameEl);nameEl.textContent=name;
 }
 
 function resetDraft(){
-  draft = {mid:null,top:null,jungle:null,adc:null,support:null};
+  draft={mid:null,top:null,jungle:null,adc:null,support:null};
   ['mid','top','jungle','adc','support'].forEach(role=>{
-    const slot = document.getElementById('slot-'+role);
-    const nameEl = document.getElementById('slot-'+role+'-name');
-    slot.classList.remove('filled');
-    const img = slot.querySelector('img');
-    if(img) img.remove();
-    nameEl.textContent = 'Cliquer';
+    const slot=document.getElementById('slot-'+role);const nameEl=document.getElementById('slot-'+role+'-name');
+    slot.classList.remove('filled');const img=slot.querySelector('img');if(img)img.remove();
+    nameEl.textContent='Cliquer';
   });
-  document.getElementById('draft-result').innerHTML = '';
-  saveState();
+  document.getElementById('draft-result').innerHTML='';saveState();
+}
+
+// ─── Build engine : zero duplicates ──────────────────────────────
+function buildSyndra(enemies,db,adCount,apCount,mobileCount,tankCount,mrCount,assassinCount,midData){
+  const midIsAD=midData&&midData.dmg==='ad'&&midData.mobile;
+  const midIsAssassinAP=midData&&midData.dmg==='ap'&&midData.mobile&&!midData.tanky;
+
+  // ── ITEM 1 : Core 1 (Blackfire vs tanks, Luden otherwise)
+  let i1,i1r;
+  if(tankCount>=2){i1="Blackfire Torch";i1r=`${tankCount} tanks ennemis. Burn %HP traverse leur sante massive. Genere +AP par cible touchee.`;}
+  else{i1="Luden's Companion";i1r="Compo squishy / standard. Poke + mana + burst imm. niv 6. Luden's snowball > Blackfire sur squishies.";}
+
+  // ── ITEM 2 : Boots (jamais les memes que i1, ca ne peut pas arriver)
+  let i2,i2r;
+  const hasSlows=db.some(c=>['Nasus','Ashe','Cassiopeia'].includes(c.n));
+  if(hasSlows){i2="Boots of Swiftness";i2r="Compo avec slows — tu as besoin de rester mobile pour placer tes stuns.";}
+  else if(i1==="Blackfire Torch"){i2="Ionian Boots";i2r="Ionian Boots : ton E revient plus vite = moins vulnerable apres un mauvais E. +Summoner Haste.";}
+  else{i2="Sorcerer's Shoes";i2r="Flat magic pen sur squishies. Meilleur DPS en early avec le build Luden's burst.";}
+
+  // ── ITEM 3 : Core 2 (depend de i1)
+  let i3,i3r;
+  if(i1==="Blackfire Torch"){i3="Cosmic Drive";i3r="Synergy Challenger : chaque tick Blackfire reapplique le movespeed de Cosmic. Haste + HP + mouvement permanent.";}
+  else{i3="Shadowflame";i3r="Flat pen maximale sur squishies. Crit sous 40% HP. Synergise avec Luden's pour one-shot sur une rotation.";}
+
+  // ── ITEM 4 : Rabadon's (toujours different des 3 precedents)
+  const i4="Rabadon's Deathcap";
+  const i4r="Multiplicateur AP +35%. Non-negociable. Toujours en 4e — tu as assez de survie (Cosmic HP ou Luden mana).";
+
+  // ── ITEM 5 : Pen (different de tous les precedents)
+  let i5,i5r;
+  if(mrCount>=2){i5="Void Staff";i5r=`${mrCount} ennemis qui build MR. % pen obligatoire.`;}
+  else{i5="Cryptbloom";i5r="Pen magique + heal sur kill. Synergie avec execute R (100 stacks). Tu chaînes les kills.";}
+
+  // ── ITEM 6 : Survie (different de tous les precedents)
+  let i6,i6r;
+  if(midIsAD){i6="Zhonya's Hourglass";i6r=`Assassin AD mid (${midData.n}). Stasis pendant leur burst — riposte pendant leurs CDs.`;}
+  else if(midIsAssassinAP||apCount>=3){i6="Banshee's Veil";i6r=`${apCount>=3?apCount+" AP ennemis":"Assassin AP mid"}. Spellshield bloque l'engage initial.`;}
+  else if(tankCount>=2&&mrCount<2){i6="Banshee's Veil";i6r="Protection vs engage frontal des tanks. Bloque leur CC initiale.";}
+  else{i6="Zhonya's Hourglass";i6r="Defensif standard. Active pendant les burst assassins ou apres avoir lance ton E (CD long).";}
+
+  // Garantie anti-doublon
+  const used=new Set([i1,i2,i3,i4,i5]);
+  if(used.has(i6)){i6=(i6==="Zhonya's Hourglass")?"Banshee's Veil":"Zhonya's Hourglass";i6r="Ajuste pour eviter doublon. Item defensif adaptatif.";}
+
+  return [
+    {n:i1,reason:i1r,tags:['Core','Rush']},
+    {n:i2,reason:i2r,tags:['Mobilite']},
+    {n:i3,reason:i3r,tags:['Core']},
+    {n:i4,reason:i4r,tags:['AP','x1.35']},
+    {n:i5,reason:i5r,tags:['Pen']},
+    {n:i6,reason:i6r,tags:['Defense']}
+  ];
 }
 
 function renderDraftResult(){
-  const el = document.getElementById('draft-result');
-  if(!draft.mid){ el.innerHTML=''; return; }
-  const enemies = Object.values(draft).filter(Boolean);
-  const enemy_champs = enemies.map(n => CHAMP_DB.find(c=>c.n===n)).filter(Boolean);
-  const adCount = enemy_champs.filter(c=>c.dmg==='ad').length;
-  const apCount = enemy_champs.filter(c=>c.dmg==='ap').length;
-  const mobileCount = enemy_champs.filter(c=>c.mobile).length;
-  const tankCount = enemy_champs.filter(c=>c.tanky).length;
-  const mrCount = enemy_champs.filter(c=>c.mr).length;
-  const assassinCount = enemy_champs.filter(c=>
-    ['Zed','Talon','Katarina','Akali','LeBlanc','Qiyana','Khazix','Nocturne','Naafiri'].includes(champId(c.n)) ||
-    (c.mobile && c.dmg==='ad' && !c.tanky)
-  ).length;
-  const midChamp = CHAMP_DB.find(c=>c.n===draft.mid);
-  const midIsAssassinAD = midChamp && midChamp.dmg==='ad' && midChamp.mobile && !midChamp.tanky;
-  const midIsAssassinAP = midChamp && midChamp.dmg==='ap' && midChamp.mobile && !midChamp.tanky;
+  const el=document.getElementById('draft-result');
+  if(!draft.mid){el.innerHTML='';return;}
+  const enemies=Object.values(draft).filter(Boolean);
+  const db=enemies.map(n=>CHAMP_DB.find(c=>c.n===n)).filter(Boolean);
+  const adCount=db.filter(c=>c.dmg==='ad').length;
+  const apCount=db.filter(c=>c.dmg==='ap').length;
+  const mobileCount=db.filter(c=>c.mobile).length;
+  const tankCount=db.filter(c=>c.tanky).length;
+  const mrCount=db.filter(c=>c.mr).length;
+  const assassinCount=db.filter(c=>(c.mobile&&!c.tanky&&(c.dmg==='ad'||c.n==='LeBlanc'||c.n==='Fizz'||c.n==='Akali'||c.n==='Katarina'))).length;
+  const midData=CHAMP_DB.find(c=>c.n===draft.mid)||{};
 
-  // Build engine
-  let build, boots, sixth, strat, runeReco;
-  if(currentChamp==='Veigar'){
-    boots = (enemy_champs.filter(c=>c.n==='Cassiopeia'||c.n==='Nasus').length>=1) ? "Boots of Swiftness" : "Ionian Boots";
-    const hasManyTanks = tankCount>=2;
-    const hasManyMobile = mobileCount>=3;
-    const hasManyMR = mrCount>=2 || (tankCount>=2 && adCount<=1);
-    let core1, core2, core3;
-    if(hasManyMobile){
-      core1 = "Fimbulwinter"; core2 = "Rabadon's Deathcap"; core3 = "Cryptbloom";
-    } else if(hasManyTanks){
-      core1 = "Blackfire Torch"; core2 = "Rabadon's Deathcap"; core3 = "Cryptbloom";
-    } else {
-      core1 = "Rod of Ages"; core2 = "Seraph's Embrace"; core3 = "Cryptbloom";
-    }
-    if(hasManyMR) core3 = "Void Staff";
-    sixth = midIsAssassinAD ? "Zhonya's Hourglass" : midIsAssassinAP ? "Banshee's Veil" : adCount>=3 ? "Frozen Heart" : "Zhonya's Hourglass";
-    build = [
-      {n:"Tear of the Goddess",reason:"Rush Tear pour mana infinie et préparer Seraph's/Fimbulwinter.",tags:['Mana','Rush']},
-      {n:boots,reason:boots==="Boots of Swiftness"?"Neutralise les slows adverses.":"Haste compétences pour Q spam et stacking passif.",tags:['Mobilité']},
-      {n:core1,reason:core1==="Fimbulwinter"?`Slow sur ${mobileCount} mobiles (${enemies.filter((_,i)=>enemy_champs[i]?.mobile).join(', ')}). Remplace Seraph.`:core1==="Blackfire Torch"?`Dégâts DoT sur ${tankCount} tanks. Passe leur résistances.`:`Mana + HP + AP scaling. Fondation du build standard.`,tags:['Core']},
-      {n:core2,reason:`Multiplicateur AP. Ton passif + items = ${hasManyMobile?'one-shot même les mobiles':'scaling infini'}.`,tags:['AP','Multiplicateur']},
-      {n:core3,reason:core3==="Void Staff"?`${mrCount} ennemis avec MR. % penetration obligatoire.`:`Penetration magique + healing sur kills. Finisher.`,tags:['Pen']},
-      {n:sixth,reason:sixth==="Zhonya's Hourglass"?`Survie vs ${draft.mid} (assassin AD) — active pendant leur combo.`:sixth==="Banshee's Veil"?`Bloque un spell burst de ${draft.mid}.`:sixth==="Frozen Heart"?`-20% AS vs ${adCount} AD. Réduction DPS auto-attackers.`:`Défensif prioritaire dans cette composition.`,tags:['Défense','Situationnel']}
-    ];
-    strat = mobileCount>=3 ? `Compo très mobile (${mobileCount} mobiles). Joue Fimbulwinter + cage préventive. Priorise targets qui restent fixes.` :
-            tankCount>=2 ? `${tankCount} tanks ennemis. Blackfire Torch + Void Staff pour percer. Cible les squishy d'abord.` :
-            apCount>=3 ? `${apCount} AP ennemis. Banshee's en priorité. Joue safe derrière ta cage.` :
-            `Compo équilibrée. Build standard optimal. Abuse ton scaling avec ${adCount} AD et ${apCount} AP à burster.`;
-    runeReco = `${assassinCount>=2?'Bone Plating obligatoire.':apCount>=3?'Shard MR au lieu d\'AP.':'Aery + Biscuit standard optimal.'}`;
+  let build,strat,runeReco;
+
+  if(currentChamp==='Syndra'){
+    build=buildSyndra(enemies,db,adCount,apCount,mobileCount,tankCount,mrCount,assassinCount,midData);
+    const midIsAD=midData.dmg==='ad'&&midData.mobile&&!midData.tanky;
+    const midIsAP=midData.dmg==='ap'&&midData.mobile&&!midData.tanky;
+    strat=tankCount>=2?`${tankCount} tanks. Build DPS Blackfire — spam stuns, focus frontline puis backline via R+E. Synthetise les spheres AVANT le fight.`:
+          mobileCount>=3?`${mobileCount} mobiles ennemis. Ton E est ta SEULE defense — ne le gaspille pas. R+E en TF = spheres au sol = stun imblocable.`:
+          apCount>=3?`${apCount} AP ennemis. Banshee's en 6e obligatoire. Build Burst — flancs sur squishies hors vision.`:
+          `Compo favorable. Build one-shot actif. Cherche le kill niv 6-7 a 40 stacks (2 charges Q). Joue side, cree du jeu seule.`;
+    runeReco=midIsAD?'Aery + Bone Plating (Resolve 2e arbre) contre '+draft.mid+'. Vital.':
+             midIsAP?'Aery + Bone Plating. Leur burst early = mortel.':
+             (adCount<=1&&apCount<=1&&tankCount>=1)?'First Strike — tu pokes librement, gene de l\'or et scales.':
+             mobileCount<=1&&apCount>=2?'Arcane Comet si tu ne peux pas approcher souvent.':
+             'Aery standard optimal. Manaflow + Transcendence + Scorch.';
   } else {
-    // Syndra — logique build correcte
-    boots = "Sorcerer's Shoes";
-
-    // Build DPS/Contrôle : SEULEMENT si 2+ vrais tanks (tanky=true dans la DB)
-    // Pas parce qu'il y a beaucoup d'AP — ça n'a rien à voir avec le build Syndra
-    const hasManyTanks = tankCount >= 2;
-    // AP dans la compo adverse = Banshee's en défensif, PAS Blackfire Torch
-    // Blackfire = réponse aux tanks, pas aux mages
-    const manyAP = apCount >= 3; // sert uniquement pour le 6ème item défensif
-
-    let core1, core2, core3, buildType;
-    if(hasManyTanks){
-      // Build DPS : tanks ennemis → DoT + CDR
-      buildType = 'dps';
-      core1 = "Blackfire Torch";
-      core2 = "Cosmic Drive";
-      core3 = mrCount >= 2 ? "Void Staff" : "Rabadon's Deathcap";
-    } else {
-      // Build Burst : compo standard/squishy → one-shot
-      buildType = 'burst';
-      core1 = "Luden's Companion";
-      core2 = "Shadowflame";
-      core3 = mrCount >= 2 ? "Void Staff" : "Rabadon's Deathcap";
-    }
-
-    // 6ème item : défense adaptée à la menace principale
-    if(midIsAssassinAD) {
-      sixth = "Zhonya's Hourglass";
-    } else if(midIsAssassinAP || manyAP) {
-      sixth = "Banshee's Veil";
-    } else if(mrCount >= 2) {
-      sixth = "Void Staff";
-    } else {
-      sixth = "Zhonya's Hourglass"; // défault safe
-    }
-
-    // Raison build core1
-    const core1Reason = buildType === 'dps'
-      ? `${tankCount} tanks ennemis (${enemy_champs.filter(c=>c.tanky).map(c=>c.n).join(', ')}). Blackfire DoT passe leur HP massive.`
-      : `Compo squishy — poke + mana + burst immédiat niv 6. Pas de tanks à percer.`;
-
-    // Raison core2
-    const core2Reason = buildType === 'dps'
-      ? `CDR + mouvement pour enchaîner les stuns et rester mobile en teamfight.`
-      : `Flat pen maximale vs ${enemy_champs.filter(c=>!c.tanky).map(c=>c.n).slice(0,2).join(', ')||'squishies'}. One-shot activé.`;
-
-    // Raison core3
-    const core3Reason = core3 === "Void Staff"
-      ? `${mrCount} ennemis avec MR (${enemy_champs.filter(c=>c.mr).map(c=>c.n).join(', ')}). % pen obligatoire.`
-      : `Multiplicateur AP — transforme ton AP en dégâts exponentiels en mid-game.`;
-
-    build = [
-      {n:core1,reason:core1Reason,tags:['Core','Rush']},
-      {n:boots,reason:"Flat magic pen dès le début. Meilleure paire de boots sur Syndra systématiquement.",tags:['Mobilité','Pen']},
-      {n:core2,reason:core2Reason,tags:['Core']},
-      {n:core3,reason:core3Reason,tags:['AP']},
-      {n:"Zhonya's Hourglass",reason:"Survie pendant le CD de ton E (ta seule défense). Active quand tu es focus.",tags:['Défense']},
-      {n:sixth,reason:sixth==="Banshee's Veil"?`${manyAP?apCount+' AP ennemis':'Assassin AP mid'} — bouclier pour absorber un burst.`:sixth==="Void Staff"?`Percer la MR restante en late.`:`6ème item adaptatif — change selon comment la partie se déroule.`,tags:['Flexible']}
+    // Veigar build engine
+    const midIsAD=midData&&midData.dmg==='ad'&&midData.mobile;
+    const midIsAssassin=midData&&midData.mobile&&!midData.tanky;
+    const hasSlows=db.some(c=>['Cassiopeia','Nasus'].includes(c.n));
+    const boots=hasSlows?"Boots of Swiftness":"Ionian Boots";
+    const useFimbul=mobileCount>=3||(midIsAssassin&&mobileCount>=2)||midIsAD;
+    const tearItem=useFimbul?"Fimbulwinter":"Seraph's Embrace";
+    const firstBig=tankCount>=2?"Blackfire Torch":"Rod of Ages";
+    const penItem=mrCount>=2?"Void Staff":"Cryptbloom";
+    let defItem;
+    if(midIsAD){defItem="Zhonya's Hourglass";}
+    else if(apCount>=3||(midData.dmg==='ap'&&midIsAssassin)){defItem="Banshee's Veil";}
+    else{defItem="Zhonya's Hourglass";}
+    // Garantie anti-doublon pour Veigar aussi
+    const used6=new Set(["Tear of the Goddess",boots,firstBig,tearItem,"Rabadon's Deathcap",penItem]);
+    if(used6.has(defItem)){defItem=defItem==="Zhonya's Hourglass"?"Banshee's Veil":"Zhonya's Hourglass";}
+    build=[
+      {n:"Tear of the Goddess",reason:"Rush Tear pour mana infinie. Prépare Seraph's/Fimbulwinter.",tags:['Mana']},
+      {n:boots,reason:boots==="Boots of Swiftness"?"Slows adverses detectes — mobilite essentielle.":"Haste Q + stack passif + Summoner Haste.",tags:['Boots']},
+      {n:firstBig,reason:firstBig==="Blackfire Torch"?`${tankCount} tanks. DoT %HP passe leur resistance.`:"HP + Mana + AP scaling. Fondation standard.",tags:['Core']},
+      {n:tearItem,reason:tearItem==="Fimbulwinter"?`${mobileCount} mobiles. Shield sur chaque cage E.`:"Mana massive -> AP via passif. Sustain TF.",tags:['Core']},
+      {n:"Rabadon's Deathcap",reason:"Multiplicateur +35% AP. Stacks passif x Rabadon = one-shot.",tags:['AP']},
+      {n:penItem,reason:penItem==="Void Staff"?`${mrCount} ennemis MR. % pen obligatoire.`:"Pen magique + heal sur kill.",tags:['Pen']},
+      {n:defItem,reason:defItem==="Zhonya's Hourglass"?`Survie vs ${draft.mid}. Stasis pendant leur burst.`:`Bloque le burst de ${draft.mid}. Spellshield.`,tags:['Defense']}
     ];
-
-    strat = hasManyTanks
-      ? `${tankCount} tanks adverses. Build DPS (Blackfire+Cosmic) pour percer. Spam stuns en teamfight, focus frontline puis backline via R+E.`
-      : mobileCount >= 3
-        ? `${mobileCount} mobiles. Garde ton E pour te défendre (ta seule esquive). R+E en teamfight pour zone de stun impossible à esquiver.`
-        : manyAP
-          ? `${apCount} AP ennemis. Banshee's en 6ème obligatoire. Build Burst actif — cherche le flanc sur les squishies.`
-          : `Compo favorable pour Syndra. Build Burst — cherche le kill niv 6-7 avec 40 stacks (2 charges Q). Tu dois te sortir de lane seule.`;
-
-    runeReco = midIsAssassinAD || midIsAssassinAP
-      ? 'Bone Plating (Resolve 2ème arbre) + Zhonya\'s rush en early.'
-      : mobileCount >= 3
-        ? 'Arcane Comet si tu peux pas approcher, sinon Aery.'
-        : adCount <= 1 && apCount <= 1
-          ? 'Aery vs melee court range (Darius, Garen). Spam Q libre.'
-          : 'Aery standard optimal. Arcane Comet si long range dominant.';
+    strat=mobileCount>=3?`${mobileCount} mobiles. Fimbulwinter + cage preventive. Jamais seul.`:
+          tankCount>=2?`${tankCount} tanks. Blackfire + Void Staff pour percer.`:
+          `Compo standard. Scale tes stacks, place cage pour zone TF.`;
+    runeReco=midIsAssassin&&midData.dmg==='ad'?'Bone Plating obligatoire (Resolve).':apCount>=3?'Shard MR au lieu AP.':'Aery + Biscuit standard.';
   }
 
-  // Render
-  const buildHtml = build.map((item,i)=>`
+  const bHtml=build.map((item,i)=>`
     <div class="build-order-item">
       <div class="build-num">${i+1}</div>
       <img class="build-item-img" src="${iImg(item.n)}" alt="${item.n}" onerror="this.style.display='none'" loading="lazy">
@@ -1526,120 +820,72 @@ function renderDraftResult(){
         <div class="build-item-reason">${item.reason}</div>
         <div class="build-tags">${item.tags.map(t=>`<span class="build-tag">${t}</span>`).join('')}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  const buildString = build.map(b=>b.n).join(' → ');
-
-  el.innerHTML = `
-    <div class="sec-title">ANALYSE DE COMPOSITION</div>
+  const buildStr=build.map(b=>b.n).join(' -> ');
+  el.innerHTML=`
+    <div class="sec-title" style="margin-top:20px">ANALYSE DE COMPOSITION</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
-      <span class="stat-chip ad">⚔️ ${adCount} AD</span>
-      <span class="stat-chip ap">✨ ${apCount} AP</span>
-      <span class="stat-chip mobile">⚡ ${mobileCount} Mobiles</span>
-      <span class="stat-chip tank">🛡 ${tankCount} Tanks</span>
-      <span class="stat-chip assassin">🗡 ${assassinCount} Assassins</span>
-      <span class="stat-chip mr">💫 ${mrCount} MR</span>
+      <span class="stat-chip ad">AD: ${adCount}</span>
+      <span class="stat-chip ap">AP: ${apCount}</span>
+      <span class="stat-chip mobile">Mobile: ${mobileCount}</span>
+      <span class="stat-chip tank">Tank: ${tankCount}</span>
+      <span class="stat-chip assassin">Assassins: ${assassinCount}</span>
+      <span class="stat-chip mr">MR: ${mrCount}</span>
     </div>
-    <div class="card mt-16">
-      <div class="card-title">BUILD ORDER</div>
-      ${buildHtml}
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="btn" onclick="copyBuild('${buildString}')">📋 Copier le build</button>
-      </div>
+    <div class="card mt-16"><div class="card-title">BUILD ORDER — ZERO DOUBLON GARANTI</div>${bHtml}
+      <button class="btn" style="margin-top:12px" onclick="copyBuild('${buildStr}')">Copier le build</button>
     </div>
     <div class="grid-2 mt-16">
-      <div class="card">
-        <div class="card-title">STRATÉGIE</div>
-        <p style="font-size:14px;color:var(--text-mid);line-height:1.6">${strat}</p>
-      </div>
-      <div class="card">
-        <div class="card-title">RUNES RECOMMANDÉES</div>
-        <p style="font-size:14px;color:var(--text-mid);line-height:1.6">${runeReco}</p>
-      </div>
-    </div>
-  `;
+      <div class="card"><div class="card-title">STRATEGIE</div><p style="font-size:14px;color:var(--text-mid);line-height:1.6">${strat}</p></div>
+      <div class="card"><div class="card-title">RUNES RECOMMANDEES</div><p style="font-size:14px;color:var(--text-mid);line-height:1.6">${runeReco}</p></div>
+    </div>`;
 }
 
 function copyBuild(str){
-  try{ navigator.clipboard.writeText(str); }catch(e){}
-  const btn = document.querySelector('.btn[onclick*="copyBuild"]');
-  if(btn){ btn.textContent='✅ Copié !'; setTimeout(()=>btn.textContent='📋 Copier le build',2000); }
+  try{navigator.clipboard.writeText(str);}catch(e){}
+  const btn=document.querySelector('.btn[onclick*="copyBuild"]');
+  if(btn){btn.textContent='Copie !';setTimeout(()=>btn.textContent='Copier le build',2000);}
 }
 
 // ================================================================
 //  MATCHUPS
 // ================================================================
-function setMatchupFilter(filter, el){
-  matchupFilter = filter;
-  document.querySelectorAll('#matchup-filters .filter-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  filterMatchups();
-}
-
-function filterMatchups(){
-  renderMatchups(document.getElementById('matchup-search').value.toLowerCase());
-}
-
+function setMatchupFilter(f,el){matchupFilter=f;document.querySelectorAll('#matchup-filters .filter-btn').forEach(b=>b.classList.remove('active'));el.classList.add('active');filterMatchups();}
+function filterMatchups(){renderMatchups(document.getElementById('matchup-search').value.toLowerCase());}
 function renderMatchups(search=''){
-  const data = MATCHUPS[currentChamp] || [];
-  const filtered = data.filter(m=>{
-    const nameMatch = m.n.toLowerCase().includes(search);
-    const tierMatch = matchupFilter==='all' || m.t===matchupFilter;
-    return nameMatch && tierMatch;
-  });
-  const sorted = [...filtered].sort((a,b)=>{
-    const order={extreme:0,hard:1,even:2,easy:3};
-    return order[a.t]-order[b.t];
-  });
-  const grid = document.getElementById('matchup-grid');
-  grid.innerHTML = sorted.map(m=>`
+  const data=MATCHUPS[currentChamp]||[];
+  const filtered=data.filter(m=>{const nm=m.n.toLowerCase().includes(search);const tm=matchupFilter==='all'||m.t===matchupFilter;return nm&&tm;});
+  const sorted=[...filtered].sort((a,b)=>({extreme:0,hard:1,even:2,easy:3}[a.t]-{extreme:0,hard:1,even:2,easy:3}[b.t]));
+  const grid=document.getElementById('matchup-grid');
+  grid.innerHTML=sorted.map(m=>`
     <div class="matchup-card" onclick="showMatchupDetail('${m.n.replace(/'/g,"\\'")}')">
       <img src="${champImg(m.n)}" alt="${m.n}" onerror="this.style.display='none'" loading="lazy">
       <div class="matchup-card-name">${m.n}</div>
-      <div>
-        <span class="threat-badge badge-${m.t}">${m.t.toUpperCase()}</span>
-      </div>
-    </div>
-  `).join('');
-  if(!sorted.length) grid.innerHTML = '<p style="color:var(--text-dim);padding:20px">Aucun matchup trouvé.</p>';
+      <div><span class="threat-badge badge-${m.t}">${m.t.toUpperCase()}</span></div>
+    </div>`).join('');
+  if(!sorted.length)grid.innerHTML='<p style="color:var(--text-dim);padding:20px">Aucun matchup trouve.</p>';
 }
-
 function showMatchupDetail(name){
-  const data = MATCHUPS[currentChamp] || [];
-  const m = data.find(x=>x.n===name);
-  if(!m) return;
-  const width = {extreme:'95%',hard:'70%',even:'50%',easy:'30%'}[m.t];
-  const el = document.getElementById('matchup-detail');
-  el.innerHTML = `
+  const m=(MATCHUPS[currentChamp]||[]).find(x=>x.n===name);if(!m)return;
+  const w2={extreme:'95%',hard:'70%',even:'50%',easy:'30%'}[m.t];
+  document.getElementById('matchup-detail').innerHTML=`
     <div class="card">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
         <img src="${champImg(m.n)}" style="width:56px;height:56px;border-radius:50%;border:3px solid var(--accent)" onerror="this.style.display='none'" loading="lazy">
-        <div>
-          <div style="font-family:Orbitron;font-size:18px;font-weight:700">${m.n}</div>
-          <span class="threat-badge badge-${m.t}">${m.t.toUpperCase()}</span>
-        </div>
+        <div><div style="font-family:Orbitron;font-size:18px;font-weight:700">${m.n}</div>
+        <span class="threat-badge badge-${m.t}">${m.t.toUpperCase()}</span></div>
       </div>
-      <div class="threat-bar-wrap" style="margin-bottom:16px;height:8px">
-        <div class="threat-fill ${m.t}" style="width:${width}"></div>
-      </div>
-      ${m.tips.map(tip=>`
-        <div class="flashcard">
-          <div class="flashcard-badge ${tip.b}">${tip.l}</div>
-          <div class="flashcard-text">${tip.t}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
+      <div class="threat-bar-wrap" style="margin-bottom:16px;height:8px"><div class="threat-fill ${m.t}" style="width:${w2}"></div></div>
+      ${m.tips.map(t=>`<div class="flashcard"><div class="flashcard-badge ${t.b}">${t.l}</div><div class="flashcard-text">${t.t}</div></div>`).join('')}
+    </div>`;}
 
 // ================================================================
 //  BUILD TAB
 // ================================================================
 function renderBuild(){
-  const data = BUILDS[currentChamp];
-  const el = document.getElementById('build-content');
-  el.innerHTML = `
+  const data=BUILDS[currentChamp];
+  document.getElementById('build-content').innerHTML=`
     <div class="sec-title">BUILDS — ${currentChamp.toUpperCase()}</div>
     ${data.builds.map(b=>`
       <div class="card mt-16">
@@ -1647,639 +893,190 @@ function renderBuild(){
           <div class="card-title" style="margin:0">${b.name}</div>
           <span class="build-tag">${b.tag}</span>
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">STARTER</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            ${b.starter.map(item=>`<div class="item-chip"><img src="${iImg(item)}" alt="${item}" onerror="this.style.display='none'" loading="lazy"><span class="item-chip-name">${item}</span></div>`).join('')}
-          </div>
+        <div style="margin-bottom:10px"><div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">STARTER</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">${b.starter.map(i=>`<div class="item-chip"><img src="${iImg(i)}" alt="${i}" onerror="this.style.display='none'" loading="lazy"><span class="item-chip-name">${i}</span></div>`).join('')}</div>
         </div>
-        <div style="margin-bottom:10px">
-          <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">CORE BUILD</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            ${b.items.map(item=>`<div class="item-chip"><img src="${iImg(item)}" alt="${item}" onerror="this.style.display='none'" loading="lazy"><span class="item-chip-name">${item}</span></div>`).join('')}
-          </div>
+        <div style="margin-bottom:10px"><div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">BUILD ORDER</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">${b.items.map((it,idx)=>`<div class="item-chip"><div class="build-num" style="width:20px;height:20px;font-size:10px;flex-shrink:0">${idx+1}</div><img src="${iImg(it)}" alt="${it}" onerror="this.style.display='none'" loading="lazy"><span class="item-chip-name">${it}</span></div>`).join('')}</div>
         </div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:8px">6ème item : ${b.sixth}</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:8px">Slot flexible : ${b.sixth}</div>
         <p style="font-size:13px;color:var(--text-mid);margin-top:10px;line-height:1.5">${b.desc}</p>
-      </div>
-    `).join('')}
-    <div class="card mt-16">
-      <div class="card-title">ITEMS SITUATIONNELS</div>
-      ${data.situational.map(s=>`
-        <div class="sit-item">
-          <img src="${iImg(s.n)}" alt="${s.n}" onerror="this.style.display='none'" loading="lazy">
-          <div class="sit-item-name">${s.n}</div>
-          <div class="sit-item-when">${s.when}</div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
+      </div>`).join('')}
+    <div class="card mt-16"><div class="card-title">ITEMS SITUATIONNELS</div>
+      ${data.situational.map(s=>`<div class="sit-item"><img src="${iImg(s.n)}" alt="${s.n}" onerror="this.style.display='none'" loading="lazy"><div class="sit-item-name">${s.n}</div><div class="sit-item-when">${s.when}</div></div>`).join('')}
+    </div>`;}
 
 // ================================================================
 //  RUNES TAB
 // ================================================================
 function renderRunes(){
-  const data = RUNES[currentChamp];
-  const el = document.getElementById('runes-content');
-  const baseUrl = DDragonImg+'/';
-
-  function runeIconHtml(r, sizeClass=''){
-    return `
-      <div class="rune-icon ${r.active!==false?'active':'inactive'} ${sizeClass}">
-        <img src="${baseUrl+r.path}" alt="${r.name}" onerror="this.style.display='none'" loading="lazy">
-        <div class="tooltip">
-          <span class="tooltip-name">${r.name}</span>
-          <span class="tooltip-desc">${r.desc}</span>
-        </div>
-      </div>`;
-  }
-
-  const altSections = [];
-  if(data.alt){
-    altSections.push(`
-      <div class="card mt-16">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <div class="card-title" style="margin:0">Setup Alternatif : ${data.alt.name}</div>
-          <span class="build-tag">${data.alt.tag}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-          <div class="rune-icon active rune-keystone">
-            <img src="${baseUrl+data.alt.keystone.path}" alt="${data.alt.keystone.name}" onerror="this.style.display='none'" loading="lazy">
-            <div class="tooltip"><span class="tooltip-name">${data.alt.keystone.name}</span><span class="tooltip-desc">${data.alt.keystone.desc}</span></div>
-          </div>
-          <p style="font-size:13px;color:var(--text-mid);line-height:1.5">${data.alt.desc}</p>
-        </div>
-      </div>`);
-  }
-  if(data.alt2){
-    altSections.push(`
-      <div class="card mt-16">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <div class="card-title" style="margin:0">${data.alt2.name}</div>
-          <span class="build-tag">${data.alt2.tag}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-          <div class="rune-icon active rune-keystone">
-            <img src="${baseUrl+data.alt2.keystone.path}" alt="${data.alt2.keystone.name}" onerror="this.style.display='none'" loading="lazy">
-            <div class="tooltip"><span class="tooltip-name">${data.alt2.keystone.name}</span><span class="tooltip-desc">${data.alt2.keystone.desc}</span></div>
-          </div>
-          <p style="font-size:13px;color:var(--text-mid);line-height:1.5">${data.alt2.desc}</p>
-        </div>
-      </div>`);
-  }
-  if(data.alt3){
-    altSections.push(`
-      <div class="card mt-16">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-          <div class="card-title" style="margin:0">${data.alt3.name}</div>
-          <span class="build-tag">${data.alt3.tag}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-          <div class="rune-icon active rune-keystone">
-            <img src="${baseUrl+data.alt3.keystone.path}" alt="${data.alt3.keystone.name}" onerror="this.style.display='none'" loading="lazy">
-            <div class="tooltip"><span class="tooltip-name">${data.alt3.keystone.name}</span><span class="tooltip-desc">${data.alt3.keystone.desc}</span></div>
-          </div>
-          <p style="font-size:13px;color:var(--text-mid);line-height:1.5">${data.alt3.desc}</p>
-        </div>
-      </div>`);
-  }
-
-  el.innerHTML = `
+  const data=RUNES[currentChamp];
+  const base=DDragonImg+'/';
+  function ri(r,sz=''){return `<div class="rune-icon ${r.active!==false?'active':'inactive'} ${sz}"><img src="${base+r.path}" alt="${r.name}" onerror="this.style.display='none'" loading="lazy"><div class="tooltip"><span class="tooltip-name">${r.name}</span><span class="tooltip-desc">${r.desc}</span></div></div>`;}
+  const alts=[data.alt,data.alt2,data.alt3].filter(Boolean).map(a=>`
+    <div class="card mt-16">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <div class="card-title" style="margin:0">${a.name}</div><span class="build-tag">${a.tag}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+        <div class="rune-icon active rune-keystone"><img src="${base+a.keystone.path}" alt="${a.keystone.name}" onerror="this.style.display='none'" loading="lazy"><div class="tooltip"><span class="tooltip-name">${a.keystone.name}</span><span class="tooltip-desc">${a.keystone.desc}</span></div></div>
+        <p style="font-size:13px;color:var(--text-mid);line-height:1.5">${a.desc}</p>
+      </div>
+    </div>`).join('');
+  document.getElementById('runes-content').innerHTML=`
     <div class="sec-title">RUNES — ${currentChamp.toUpperCase()}</div>
     <div class="grid-2">
-      <!-- PRIMARY -->
       <div class="card">
-        <div class="rune-tree-title">
-          <img src="${baseUrl+data.primary.treeImg}" style="width:24px;height:24px;vertical-align:middle;margin-right:6px" onerror="this.style.display='none'" loading="lazy">
-          ${data.primary.tree} (Primaire)
-        </div>
+        <div class="rune-tree-title"><img src="${base+data.primary.treeImg}" style="width:24px;height:24px;vertical-align:middle;margin-right:6px" onerror="this.style.display='none'" loading="lazy">${data.primary.tree} (Primaire)</div>
         <div class="rune-tree">
-          <div class="rune-row rune-keystone">
-            ${runeIconHtml({...data.primary.keystone, active:true},'rune-keystone')}
-          </div>
-          ${data.primary.rows.map(row=>`
-            <div class="rune-row">${row.map(r=>runeIconHtml(r)).join('')}</div>
-          `).join('')}
+          <div class="rune-row rune-keystone">${ri({...data.primary.keystone,active:true},'rune-keystone')}</div>
+          ${data.primary.rows.map(row=>`<div class="rune-row">${row.map(r=>ri(r)).join('')}</div>`).join('')}
         </div>
       </div>
-      <!-- SECONDARY -->
       <div class="card">
-        <div class="rune-tree-title">
-          <img src="${baseUrl+data.secondary.treeImg}" style="width:24px;height:24px;vertical-align:middle;margin-right:6px" onerror="this.style.display='none'" loading="lazy">
-          ${data.secondary.tree} (Secondaire)
-        </div>
-        <div class="rune-tree">
-          <div class="rune-row">${data.secondary.runes.map(r=>runeIconHtml(r)).join('')}</div>
-        </div>
-        <!-- SHARDS -->
-        <div style="margin-top:20px">
-          <div class="rune-tree-title">Shards</div>
-          <div class="rune-row">
-            ${data.shards.map(s=>`
-              <div class="rune-icon active" style="position:relative">
-                <img src="${baseUrl+s.img}" alt="${s.label}" style="width:100%;height:100%;border-radius:50%" onerror="this.style.display='none'" loading="lazy">
-                <div class="tooltip"><span class="tooltip-name">${s.label}</span><span class="tooltip-desc">${s.desc}</span></div>
-              </div>
-            `).join('')}
-          </div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            ${data.shards.map(s=>`<span style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">${s.label}</span>`).join('')}
-          </div>
+        <div class="rune-tree-title"><img src="${base+data.secondary.treeImg}" style="width:24px;height:24px;vertical-align:middle;margin-right:6px" onerror="this.style.display='none'" loading="lazy">${data.secondary.tree} (Secondaire)</div>
+        <div class="rune-tree"><div class="rune-row">${data.secondary.runes.map(r=>ri(r)).join('')}</div></div>
+        <div style="margin-top:20px"><div class="rune-tree-title">Shards</div>
+          <div class="rune-row">${data.shards.map(s=>`<div class="rune-icon active"><img src="${base+s.img}" style="width:100%;height:100%;border-radius:50%" onerror="this.style.display='none'" loading="lazy"></div>`).join('')}</div>
+          <div style="display:flex;gap:8px;margin-top:8px">${data.shards.map(s=>`<span style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono'">${s.label}</span>`).join('')}</div>
         </div>
       </div>
     </div>
-    ${altSections.join('')}
-    <div class="card mt-16">
-      <div class="card-title">ADAPTATIONS PAR MATCHUP</div>
-      ${data.matchupAdapt.map(a=>`
-        <div class="flashcard">
-          <div class="flashcard-badge badge-cyan" style="font-size:10px;min-width:32px;text-align:center">VS</div>
-          <div class="flashcard-text">
-            <strong>${a.vs}</strong> → ${a.rune}<br>
-            <span style="font-size:12px;color:var(--text-dim)">${a.desc}</span>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-}
+    ${alts}
+    <div class="card mt-16"><div class="card-title">ADAPTATIONS PAR MATCHUP</div>
+      ${data.matchupAdapt.map(a=>`<div class="flashcard"><div class="flashcard-badge badge-cyan" style="font-size:10px;min-width:32px;text-align:center">VS</div><div class="flashcard-text"><strong>${a.vs}</strong> -> ${a.rune}<br><span style="font-size:12px;color:var(--text-dim)">${a.desc}</span></div></div>`).join('')}
+    </div>`;}
 
 // ================================================================
 //  CALCULATOR
 // ================================================================
 function renderCalc(){
-  const data = CALC[currentChamp];
-  const spells = SPELLS[currentChamp];
-  const el = document.getElementById('calc-content');
-  const inputsHtml = data.inputs.map(inp=>{
-    if(inp.type==='checkbox'){
-      return `<div style="margin-bottom:12px">
-        <label class="calc-label" style="display:flex;align-items:center;gap:10px;cursor:pointer">
-          <input type="checkbox" id="calc_${inp.id}" ${inp.def?'checked':''} onchange="updateCalc()" style="width:18px;height:18px;accent-color:var(--accent)">
-          ${inp.label}
-        </label>
-      </div>`;
-    }
-    return `<div style="margin-bottom:12px">
-      <label class="calc-label" for="calc_${inp.id}">${inp.label} <span id="calc_${inp.id}_val" style="color:var(--accent);font-family:'JetBrains Mono',monospace">${inp.def}</span></label>
-      <input type="range" id="calc_${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.def}"
-        class="calc-input" style="height:4px;padding:0;cursor:pointer"
-        oninput="document.getElementById('calc_${inp.id}_val').textContent=this.value;updateCalc()">
-    </div>`;
+  const data=CALC[currentChamp];
+  const spells=SPELLS[currentChamp];
+  const inputs=data.inputs.map(inp=>{
+    if(inp.type==='checkbox')return `<div style="margin-bottom:12px"><label class="calc-label" style="display:flex;align-items:center;gap:10px;cursor:pointer"><input type="checkbox" id="calc_${inp.id}" ${inp.def?'checked':''} onchange="updateCalc()" style="width:18px;height:18px;accent-color:var(--accent)">${inp.label}</label></div>`;
+    return `<div style="margin-bottom:12px"><label class="calc-label" for="calc_${inp.id}">${inp.label} <span id="calc_${inp.id}_val" style="color:var(--accent);font-family:'JetBrains Mono'">${inp.def}</span></label><input type="range" id="calc_${inp.id}" min="${inp.min}" max="${inp.max}" step="${inp.step}" value="${inp.def}" class="calc-input" style="height:4px;padding:0;cursor:pointer" oninput="document.getElementById('calc_${inp.id}_val').textContent=this.value;updateCalc()"></div>`;
   }).join('');
-
-  el.innerHTML = `
-    <div class="sec-title">CALCULATEUR — ${currentChamp.toUpperCase()}</div>
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">PARAMÈTRES</div>
-        ${inputsHtml}
-      </div>
-      <div class="card">
-        <div class="card-title">RÉSULTATS</div>
-        <div id="calc-results"></div>
-      </div>
-    </div>
-  `;
-  // Restore calc values
-  try{
-    const saved = JSON.parse(localStorage.getItem('tac_calc_'+currentChamp));
-    if(saved){
-      data.inputs.forEach(inp=>{
-        const el2 = document.getElementById('calc_'+inp.id);
-        if(el2 && saved[inp.id]!==undefined){
-          el2.value = saved[inp.id];
-          const valEl = document.getElementById('calc_'+inp.id+'_val');
-          if(valEl) valEl.textContent = saved[inp.id];
-          if(inp.type==='checkbox') el2.checked = saved[inp.id];
-        }
-      });
-    }
-  }catch(e){}
+  document.getElementById('calc-content').innerHTML=`<div class="sec-title">CALCULATEUR — ${currentChamp.toUpperCase()}</div><div class="grid-2"><div class="card"><div class="card-title">PARAMETRES</div>${inputs}</div><div class="card"><div class="card-title">RESULTATS</div><div id="calc-results"></div></div></div>`;
   updateCalc();
 }
-
 function updateCalc(){
-  const data = CALC[currentChamp];
-  const spells = SPELLS[currentChamp];
-  const v = {};
-  const toSave = {};
-  data.inputs.forEach(inp=>{
-    const el = document.getElementById('calc_'+inp.id);
-    if(!el) return;
-    if(inp.type==='checkbox'){ v[inp.id]=el.checked; toSave[inp.id]=el.checked; }
-    else { v[inp.id]=Number(el.value); toSave[inp.id]=el.value; }
-  });
-  try{ localStorage.setItem('tac_calc_'+currentChamp, JSON.stringify(toSave)); }catch(e){}
-  const res = data.calc(v);
-  const el = document.getElementById('calc-results');
-  if(!el) return;
-
-  const rows = currentChamp==='Veigar' ? [
-    {key:'totalAP',label:'AP Total',spell:null,icon:null},
-    {key:'Q',label:'Dégâts Q',spell:'Q',icon:spells.Q},
-    {key:'W',label:'Dégâts W',spell:'W',icon:spells.W},
-    {key:'E',label:'Dégâts E',spell:'E',icon:spells.E},
-    {key:'Rmin',label:'R minimum',spell:'R',icon:spells.R},
-    {key:'Rmax',label:'R maximum (full stacks)',spell:'R',icon:spells.R},
-    {key:'combo',label:'Combo Q+W+R',spell:null,icon:null}
-  ] : [
-    {key:'totalAP',label:'AP Total',spell:null,icon:null},
-    {key:'Q',label:'Dégâts Q',spell:'Q',icon:spells.Q},
-    {key:'W',label:'Dégâts W',spell:'W',icon:spells.W},
-    {key:'E',label:'Dégâts E (base)',spell:'E',icon:spells.E},
-    {key:'R',label:`Dégâts R (${res.spheres||5} sphères)`,spell:'R',icon:spells.R},
-    {key:'combo',label:'Combo Q+W+R',spell:null,icon:null}
+  const data=CALC[currentChamp],spells=SPELLS[currentChamp],v={};
+  data.inputs.forEach(inp=>{const el=document.getElementById('calc_'+inp.id);if(!el)return;if(inp.type==='checkbox')v[inp.id]=el.checked;else v[inp.id]=Number(el.value);});
+  const res=data.calc(v);
+  const el=document.getElementById('calc-results');if(!el)return;
+  const rows=currentChamp==='Veigar'?[
+    {k:'totalAP',l:'AP Total',icon:null},{k:'Q',l:'Degats Q',icon:spells.Q},{k:'W',l:'Degats W',icon:spells.W},
+    {k:'E',l:'Degats E',icon:spells.E},{k:'Rmin',l:'R minimum',icon:spells.R},{k:'Rmax',l:'R maximum',icon:spells.R},{k:'combo',l:'Combo Q+W+R',icon:null}
+  ]:[
+    {k:'totalAP',l:'AP Total',icon:null},{k:'Q',l:'Degats Q',icon:spells.Q},{k:'W',l:'Degats W',icon:spells.W},
+    {k:'E',l:'Degats E (base)',icon:spells.E},{k:'R',l:`R (${res.spheres} spheres)`,icon:spells.R},{k:'combo',l:'Combo Q+W+R',icon:null}
   ];
-
-  el.innerHTML = rows.map(r=>`
-    <div class="calc-result-row">
-      ${r.icon ? `<img src="${spellImg(r.icon)}" style="width:28px;height:28px;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'" loading="lazy">` : '<div style="width:28px"></div>'}
-      <span class="calc-label-sm">${r.label}</span>
-      <span class="calc-dmg">${res[r.key]?.toLocaleString('fr-FR') ?? '—'}</span>
-    </div>
-  `).join('');
-}
+  el.innerHTML=rows.map(r=>`<div class="calc-result-row">${r.icon?`<img src="${spellImg(r.icon)}" style="width:28px;height:28px;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'" loading="lazy">`:'<div style="width:28px"></div>'}<span class="calc-label-sm">${r.l}</span><span class="calc-dmg">${res[r.k]?.toLocaleString('fr-FR')??'?'}</span></div>`).join('');}
 
 // ================================================================
 //  COMBOS TAB
 // ================================================================
 function renderCombos(){
-  const combos = COMBOS_DATA[currentChamp];
-  const spells = SPELLS[currentChamp];
-  const el = document.getElementById('combos-content');
-  el.innerHTML = `<div class="sec-title">COMBOS — ${currentChamp.toUpperCase()}</div>`;
-
-  const html = combos.map(combo=>{
-    const seqHtml = combo.seq.map((s,i)=>{
-      const isFlash = s==='FLASH';
-      const src = isFlash ? spellImg(FLASH_SPELL) : spellImg(spells[s]);
-      const label = isFlash ? 'Flash' : s;
-      return `
-        ${i>0 ? '<span class="combo-arrow">→</span>' : ''}
-        <div style="text-align:center">
-          <img class="spell-icon" src="${src}" alt="${label}" onerror="this.style.display='none'" loading="lazy">
-          <div style="font-size:10px;color:var(--text-dim);margin-top:2px;font-family:'JetBrains Mono',monospace">${label}</div>
-        </div>`;
+  const combos=COMBOS_DATA[currentChamp],spells=SPELLS[currentChamp];
+  const diffMap={'easy':'cb-easy','mid':'cb-mid','hard':'cb-hard'};
+  const diffLabel={'easy':'DEBUTANT','mid':'STANDARD','hard':'AVANCE / CHALLENGER'};
+  let html=combos.map(combo=>{
+    const seqHtml=combo.seq.map((s,i)=>{
+      const isFlash=s==='FLASH';
+      const src=isFlash?spellImg(FLASH_SPELL):spellImg(spells[s]);
+      return `${i>0?'<span class="combo-arrow">-></span>':''}<div style="text-align:center"><img class="spell-icon" src="${src}" alt="${s}" onerror="this.style.display='none'" loading="lazy"><div style="font-size:10px;color:var(--text-dim);margin-top:2px;font-family:'JetBrains Mono'">${isFlash?'Flash':s}</div></div>`;
     }).join('');
-    return `
-      <div class="combo-card">
-        <div class="combo-name">${combo.name}</div>
-        <div class="combo-when">${combo.when}</div>
-        <div class="combo-seq">${seqHtml}</div>
-      </div>`;
+    return `<div class="combo-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><div class="combo-name" style="margin:0">${combo.name}</div><span class="combo-badge ${diffMap[combo.diff]||'cb-mid'}">${diffLabel[combo.diff]||'STANDARD'}</span></div><div class="combo-when">${combo.when}</div><div class="combo-seq">${seqHtml}</div></div>`;
   }).join('');
 
-  el.innerHTML += html;
-
-  // Phase de jeu Syndra bonus
-  if(currentChamp==='Syndra'){
-    el.innerHTML += `
-      <div class="card mt-16">
-        <div class="card-title">PHASE DE JEU</div>
-        <div class="flashcard">
-          <div class="flashcard-badge badge-red">1</div>
-          <div class="flashcard-text"><strong>Early (niv 1-7) :</strong> FAIBLE. Farm, accumule les stacks, évite les ganks. Petits trades Q+E mais ne force pas.</div>
-        </div>
-        <div class="flashcard">
-          <div class="flashcard-badge badge-gold">2</div>
-          <div class="flashcard-text"><strong>Mid-game (niv 7-8+) :</strong> Transformation à 40 stacks (2 charges Q). Énorme burst, solo kill possible. Mix mage/assassin — crée du jeu seule.</div>
-        </div>
-        <div class="flashcard">
-          <div class="flashcard-badge badge-purple">3</div>
-          <div class="flashcard-text"><strong>Teamfight :</strong> Positionnement en bush avant objectifs. Cherche flancs sur squishies. R+E pour stun frontline → backline. Sois TRÈS PATIENT avec E.</div>
-        </div>
-        <div class="flashcard">
-          <div class="flashcard-badge badge-cyan">💡</div>
-          <div class="flashcard-text"><strong>Tips :</strong> Toujours remettre un Q avant R (plus de sphères). Les flèches sur les sphères indiquent la direction du E. Le E/W passent mieux à travers les murs.</div>
-        </div>
-      </div>`;
-  }
-}
+  if(currentChamp==='Syndra'){html+=`
+    <div class="card mt-16"><div class="card-title">TIPS MECANIQUES CLE</div>
+      <div class="flashcard"><div class="flashcard-badge badge-purple">E</div><div class="flashcard-text"><strong>Delai avant E sur ennemi colle :</strong> Si l'ennemi est VRAIMENT a ton corps-a-corps, attends 0.2s avant le E apres le Q — sinon tu le repousses avant que la sphere spawn et il n'est pas stun.</div></div>
+      <div class="flashcard"><div class="flashcard-badge badge-gold">W</div><div class="flashcard-text"><strong>Double-tap W = teleportation :</strong> Re-taper W immediatement apres pickup = la sphere teleporte instantanement. Entraine ca — c'est "la mecanique la plus importante et non-dite de Syndra" (Challenger).</div></div>
+      <div class="flashcard"><div class="flashcard-badge badge-cyan">R</div><div class="flashcard-text"><strong>Toujours remettre un Q avant R :</strong> Erreur classique low elo = ulter avec 3 spheres alors qu'on pouvait en avoir 5-6. Chaque sphere supplementaire = plus de degats.</div></div>
+      <div class="flashcard"><div class="flashcard-badge badge-red">E</div><div class="flashcard-text"><strong>Fleche sur les spheres :</strong> Chaque sphere a une petite fleche qui indique la direction de poussee selon ta position. Tourne-toi pour viser la bonne direction avant le E.</div></div>
+      <div class="flashcard"><div class="flashcard-badge badge-green">W</div><div class="flashcard-text"><strong>E et W traversent les murs :</strong> Si tu lances au-dela de la moitie du mur, ta portee est quasi-doublee. Excellent pour stuner depuis un bush lateral ou chasser dans la jungle.</div></div>
+    </div>`;}
+  document.getElementById('combos-content').innerHTML=`<div class="sec-title">COMBOS — ${currentChamp.toUpperCase()}</div>`+html;}
 
 // ================================================================
 //  GAME PLAN
 // ================================================================
 function renderGamePlan(){
-  const el = document.getElementById('gameplan-content');
-
-  // Schéma SVG — timeline de game par phase (commun aux 2 champs)
-  const timelineSVG = `
-<svg viewBox="0 0 700 80" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-  <defs>
-    <linearGradient id="tl-grad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8"/>
-      <stop offset="35%" stop-color="#f97316" stop-opacity="0.8"/>
-      <stop offset="65%" stop-color="#a855f7" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.9"/>
-    </linearGradient>
-  </defs>
-  <!-- barre principale -->
-  <rect x="20" y="34" width="660" height="6" rx="3" fill="url(#tl-grad)" opacity="0.5"/>
-  <!-- zones -->
-  <rect x="20" y="30" width="200" height="14" rx="7" fill="#ef4444" opacity="0.12"/>
-  <rect x="230" y="30" width="200" height="14" rx="7" fill="#a855f7" opacity="0.12"/>
-  <rect x="440" y="30" width="240" height="14" rx="7" fill="#22d3ee" opacity="0.12"/>
-  <!-- labels niveaux -->
-  <text x="20" y="22" font-family="JetBrains Mono" font-size="9" fill="#ef4444" opacity="0.9">Niv 1</text>
-  <text x="95" y="22" font-family="JetBrains Mono" font-size="9" fill="#f97316" opacity="0.9">Niv 6</text>
-  <text x="175" y="22" font-family="JetBrains Mono" font-size="9" fill="#fbbf24" opacity="0.9">1er item</text>
-  <text x="300" y="22" font-family="JetBrains Mono" font-size="9" fill="#a855f7" opacity="0.9">Mid-game</text>
-  <text x="470" y="22" font-family="JetBrains Mono" font-size="9" fill="#22d3ee" opacity="0.9">Late / TF</text>
-  <!-- points marqueurs -->
-  <circle cx="20" cy="37" r="5" fill="#ef4444"/>
-  <circle cx="120" cy="37" r="5" fill="#f97316"/>
-  <circle cx="220" cy="37" r="5" fill="#fbbf24"/>
-  <circle cx="430" cy="37" r="5" fill="#a855f7"/>
-  <circle cx="680" cy="37" r="5" fill="#22d3ee"/>
-  <!-- labels phases sous la barre -->
-  <text x="60" y="62" text-anchor="middle" font-family="Rajdhani" font-size="10" fill="#ef4444" font-weight="700">EARLY — FARM</text>
-  <text x="320" y="62" text-anchor="middle" font-family="Rajdhani" font-size="10" fill="#a855f7" font-weight="700">MID — SIDE / ROTATION</text>
-  <text x="570" y="62" text-anchor="middle" font-family="Rajdhani" font-size="10" fill="#22d3ee" font-weight="700">LATE — TEAMFIGHT</text>
-</svg>`;
-
-  // Schéma SVG — side vs group decision
-  const sideSVG = `
-<svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-  <!-- carte simplifiée -->
-  <rect width="500" height="120" fill="rgba(0,0,0,0.2)" rx="8"/>
-  <!-- mid lane -->
-  <line x1="250" y1="0" x2="250" y2="120" stroke="#2a2a45" stroke-width="2" stroke-dasharray="4,4"/>
-  <!-- bot lane -->
-  <line x1="250" y1="90" x2="500" y2="90" stroke="#2a2a45" stroke-width="2" stroke-dasharray="4,4"/>
-  <!-- top lane -->
-  <line x1="250" y1="30" x2="0" y2="30" stroke="#2a2a45" stroke-width="2" stroke-dasharray="4,4"/>
-  <!-- labels -->
-  <text x="125" y="20" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#6b6b9a">TOP LANE</text>
-  <text x="375" y="105" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#6b6b9a">BOT LANE</text>
-  <text x="255" y="60" font-family="Rajdhani" font-size="9" fill="#6b6b9a">MID</text>
-  <!-- MAGE position en side -->
-  <circle cx="370" cy="60" r="12" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
-  <text x="370" y="64" text-anchor="middle" font-family="Orbitron" font-size="8" fill="#a855f7" font-weight="700">M</text>
-  <text x="370" y="85" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#a855f7">SIDE → push</text>
-  <!-- flèche vers mid pour rotation -->
-  <path d="M355 60 Q300 55 265 60" stroke="#a855f7" stroke-width="1.5" fill="none" stroke-dasharray="3,3" marker-end="url(#arr)"/>
-  <defs>
-    <marker id="arr" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#a855f7"/>
-    </marker>
-  </defs>
-  <!-- team groupée mid -->
-  <circle cx="210" cy="58" r="8" fill="rgba(34,211,238,0.15)" stroke="#22d3ee" stroke-width="1.5"/>
-  <text x="210" y="62" text-anchor="middle" font-family="Orbitron" font-size="7" fill="#22d3ee">T</text>
-  <!-- objectif -->
-  <rect x="460" y="40" width="30" height="30" rx="4" fill="rgba(251,191,36,0.1)" stroke="#fbbf24" stroke-width="1"/>
-  <text x="475" y="58" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#fbbf24">OBJ</text>
-  <!-- hover zone -->
-  <circle cx="140" cy="58" r="10" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,3"/>
-  <text x="140" y="62" text-anchor="middle" font-family="Orbitron" font-size="7" fill="#22c55e">H</text>
-  <text x="140" y="78" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#22c55e">HOVER JGL</text>
-</svg>`;
-
-  // Schéma trade en lane (punir lastit)
-  const tradeSVG = `
-<svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
-  <rect width="400" height="90" fill="rgba(0,0,0,0.2)" rx="8"/>
-  <!-- minions -->
-  <rect x="160" y="38" width="10" height="10" rx="2" fill="#6b6b9a" opacity="0.5"/>
-  <rect x="175" y="38" width="10" height="10" rx="2" fill="#6b6b9a" opacity="0.5"/>
-  <rect x="190" y="38" width="10" height="10" rx="2" fill="#6b6b9a" opacity="0.5"/>
-  <!-- adversaire qui lastit -->
-  <circle cx="240" cy="43" r="12" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="1.5"/>
-  <text x="240" y="47" text-anchor="middle" font-family="Orbitron" font-size="8" fill="#ef4444">ADV</text>
-  <text x="240" y="65" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#ef4444">last-hits</text>
-  <!-- toi qui punish -->
-  <circle cx="80" cy="43" r="12" fill="rgba(168,85,247,0.2)" stroke="#a855f7" stroke-width="2"/>
-  <text x="80" y="47" text-anchor="middle" font-family="Orbitron" font-size="8" fill="#a855f7">TOI</text>
-  <!-- spell/poke -->
-  <path d="M95 43 Q160 30 225 43" stroke="#a855f7" stroke-width="2" fill="none" stroke-dasharray="4,2" marker-end="url(#arr2)"/>
-  <defs>
-    <marker id="arr2" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#a855f7"/>
-    </marker>
-  </defs>
-  <!-- recul -->
-  <path d="M60 50 Q40 60 35 55" stroke="#22c55e" stroke-width="1.5" fill="none" stroke-dasharray="3,3" marker-end="url(#arr3)"/>
-  <defs>
-    <marker id="arr3" markerWidth="5" markerHeight="5" refX="2" refY="2" orient="auto">
-      <path d="M0,0 L5,2 L0,5 Z" fill="#22c55e"/>
-    </marker>
-  </defs>
-  <text x="25" y="80" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#22c55e">recul + CD</text>
-  <text x="200" y="15" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#fbbf24" font-weight="600">→ poke court, puis reculer attendre CD</text>
-  <!-- label ressources CD -->
-  <text x="80" y="80" text-anchor="middle" font-family="Rajdhani" font-size="9" fill="#a855f7">attendre CD</text>
-  <!-- légende -->
-  <rect x="300" y="10" width="90" height="70" rx="4" fill="rgba(255,255,255,0.02)" stroke="#1e1e35" stroke-width="1"/>
-  <text x="345" y="25" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#a0a0cc" font-weight="600">TRADE COURT</text>
-  <line x1="310" y1="35" x2="380" y2="35" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4,2"/>
-  <text x="345" y="47" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#a0a0cc">poke spell</text>
-  <line x1="310" y1="57" x2="380" y2="57" stroke="#22c55e" stroke-width="1.5" stroke-dasharray="3,3"/>
-  <text x="345" y="70" text-anchor="middle" font-family="Rajdhani" font-size="8" fill="#a0a0cc">recul</text>
-</svg>`;
-
-  // Spécifique par champion pour les tips de patience en teamfight
-  const champTips = {
-    Veigar: {
-      patience: [
-        'Garde ta cage E pour le moment DÉCISIF — pas pour poke',
-        'R uniquement quand 2+ ennemis sont dans la cage ou en fuite',
-        'Reste derrière ton frontline — tu es une tourelle de DPS fixe',
-        'Si tu rates ta cage, joue 17 secondes safe jusqu\'au CD'
-      ],
-      spike: 'Niv 11 (Transcendence) + Rod of Ages + Seraph\'s → game-changing spike',
-      fantasy: 'Mage de scaling pur — plus la game dure, plus tu es OP'
+  const tips={
+    Veigar:{
+      spike:'Niv 11 (Transcendence) + Rod of Ages + Seraph\'s = game-changing spike.',
+      fantasy:'Mage de scaling pur. Plus la game dure, plus tu es OP.',
+      patience:['Garde ta cage E pour le moment DECISIF — pas pour poke','R uniquement quand 2+ ennemis dans la cage ou en fuite','Reste derriere ton frontline — tu es une tourelle de DPS fixe','Si tu rates ta cage, joue 17 secondes safe jusqu\'au CD']
     },
-    Syndra: {
-      patience: [
-        'Garde ton E pour te DÉFENDRE — c\'est ta seule échappatoire',
-        'R+E en TF : R d\'abord pour poser les sphères, puis E pour stun de zone',
-        'Positionne-toi dans un bush AVANT que le fight commence',
-        'Si tu as utilisé E pour poke, joue ultra safe 17 secondes'
-      ],
-      spike: 'Niv 7-8 (40 stacks passif = 2 charges Q) → transformation radicale',
-      fantasy: 'Mix mage/assassin — crée du jeu seule + devastating teamfight'
+    Syndra:{
+      spike:'Niv 7-8 (40 stacks passif = 2 charges Q) = transformation radicale.',
+      fantasy:'Mix mage/assassin — cree du jeu seule + devastating teamfight avec R+E.',
+      patience:['Syndra 1 (0-40 stacks) : FAIBLE. Seul objectif = atteindre 40 stacks SANS mourir et SANS claquer le Flash. Rien d\'autre.','Syndra 2 (40+ stacks) : Tu existes. Push vite, cherche kills, utilise les 2 charges Q.','Syndra 3 (100 stacks) : Execute sous 15% HP. Carry absolu. 1v1 tout le monde. Si tu perds = erreur de positionnement ou mauvais E.','Ton E = ta seule defense. Chaque mort = un mauvais E. Review tes replays dessus.']
     }
-  };
-  const tips = champTips[currentChamp];
+  }[currentChamp];
 
-  el.innerHTML = `
-<div class="sec-title">GAME PLAN — MAGE MID (SOURCE : CHAMBLES GM)</div>
-
-<!-- TIMELINE VISUELLE -->
-<div class="card">
-  <div class="card-title">TIMELINE DE GAME</div>
-  <div class="gp-schema">${timelineSVG}</div>
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-    <span class="phase-badge red">1–6 : Farm</span>
-    <span class="prio-arrow">→</span>
-    <span class="phase-badge purple">7–13 : Side + Roam</span>
-    <span class="prio-arrow">→</span>
-    <span class="phase-badge" style="background:rgba(34,211,238,0.12);border:1px solid var(--cyan);color:var(--cyan)">14+ : Teamfight</span>
-  </div>
-  <div class="flashcard" style="margin-top:10px">
-    <div class="flashcard-badge badge-gold">🎯</div>
-    <div class="flashcard-text"><strong>Objectif à 10 minutes :</strong> 0-1 mort, 85-90 CS/min, 0-1 kill. Pas d'avance en kills = normal. L'avance en farm et XP suffit.</div>
-  </div>
-</div>
-
-<!-- 5 POINTS CHAMBLES -->
-<div class="timeline mt-16">
-
-  <!-- POINT 1 -->
-  <div class="tl-item">
-    <div class="tl-dot red">1</div>
-    <div class="tl-label red">POINT 1 — EARLY GAME</div>
-    <div class="tl-title">Priorise le farm, pas les kills</div>
-    <div class="tl-body">
-      Tu n'es pas là pour tuer en early — tu es là pour scaler. Les mages scalent sur l'XP et deviennent forts à 1-2-3 items, alors que les assassins sont forts dès le niveau 2-3. Accepte ça et farm intelligemment.
-    </div>
-    <div class="do-dont" style="margin-top:10px">
-      <div class="do-card">
-        <div class="label">✅ FAIRE</div>
-        <ul>
-          <li>Farm avec Q en priorité absolue</li>
-          <li>Autoattaque sur les derniers CS</li>
-          <li>Forcer de mauvais resets adverses</li>
-          <li>Rester en XP range même sans CS</li>
-        </ul>
+  document.getElementById('gameplan-content').innerHTML=`
+    <div class="sec-title">GAME PLAN — ${currentChamp.toUpperCase()}</div>
+    <div class="card">
+      <div class="card-title">TIMELINE DE GAME</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <span class="phase-badge red">Early : Farm</span>
+        <span style="color:var(--text-dim)">-></span>
+        <span class="phase-badge purple">Mid : Side + Rotation</span>
+        <span style="color:var(--text-dim)">-></span>
+        <span class="phase-badge" style="background:rgba(34,211,238,.12);border:1px solid var(--cyan);color:var(--cyan)">Late : Teamfight</span>
       </div>
-      <div class="dont-card">
-        <div class="label">❌ NE PAS FAIRE</div>
-        <ul>
-          <li>Sacrifier un CS pour une auto sur l'ennemi</li>
-          <li>Chasser les kills en 1v1</li>
-          <li>Roam seul avant niv 6-7</li>
-          <li>Mourir pour rien — c'est catastrophique</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- POINT 2 -->
-  <div class="tl-item">
-    <div class="tl-dot gold">2</div>
-    <div class="tl-label gold">POINT 2 — PUNIR LA LASTITE</div>
-    <div class="tl-title">Trade court sur chaque last-hit adverse</div>
-    <div class="gp-schema">${tradeSVG}</div>
-    <div class="tl-body">
-      À chaque fois que l'ennemi doit s'approcher pour last-hit, tu le punis. Tu as des cooldowns courts et tu es distance. Mettre un poke = forcer un reset = différentiel de farm + XP = scaling accéléré.
-    </div>
-    <div class="flashcard" style="margin-top:8px">
-      <div class="flashcard-badge badge-purple">📐</div>
-      <div class="flashcard-text"><strong>Mécanique clé :</strong> Tu veux être <strong>à portée de spell</strong> quand l'ennemi arrive sur le minion. Poke → recule → attends CD → recommence. Jamais de trade long.</div>
-    </div>
-  </div>
-
-  <!-- POINT 3 -->
-  <div class="tl-item">
-    <div class="tl-dot" style="border-color:var(--cyan);color:var(--cyan);box-shadow:0 0 10px rgba(34,211,238,0.4)">3</div>
-    <div class="tl-label cyan">POINT 3 — PRIORITÉ DE LANE</div>
-    <div class="tl-title">Hover et couvrir — pas roamer</div>
-    <div class="tl-body">
-      Quand tu as le push niv 7-8, tu utilises ta priorité DIFFÉREMMENT d'un assassin. Pas de kills en roam solo. Tu hoveres du côté de ton jungle pour qu'il puisse jouer gros — tu fais de la vision, tu sécurises.
-    </div>
-    <div class="gp-schema">${sideSVG}</div>
-    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <span style="font-size:11px;color:var(--text-dim);font-family:'JetBrains Mono',monospace">PRIORITÉS :</span>
-      <span class="prio-chip prio-1">Vision mid</span>
-      <span class="prio-arrow">→</span>
-      <span class="prio-chip prio-2">Hover JGL</span>
-      <span class="prio-arrow">→</span>
-      <span class="prio-chip prio-3">Cover objectif</span>
-      <span class="prio-arrow">→</span>
-      <span class="prio-chip prio-4">Roam si safe</span>
-    </div>
-  </div>
-
-  <!-- POINT 4 -->
-  <div class="tl-item">
-    <div class="tl-dot green">4</div>
-    <div class="tl-label green">POINT 4 — MID GAME : ALLER EN SIDE</div>
-    <div class="tl-title">Side pour l'XP et l'or — rota au mid ensuite</div>
-    <div class="tl-body">
-      Dès qu'une tour tombe (mid ou bot), swap avec ta bot lane. Prends la wave de côté, puis rota au mid <em>après</em> avoir pris la wave. Tu n'enfondes pas le side seul — tu prends l'or, tu cours au mid pour le fight.
-    </div>
-    <div class="do-dont" style="margin-top:10px">
-      <div class="do-card">
-        <div class="label">✅ SEQUENCE CORRECTE</div>
-        <ul>
-          <li>Push la wave bot/top jusqu'à la tour</li>
-          <li>Prendre les 6-8 minions = or + XP</li>
-          <li>Rota au mid immédiatement après</li>
-          <li>Créer surnombre mid sur l'objectif</li>
-        </ul>
-      </div>
-      <div class="dont-card">
-        <div class="label">❌ ERREURS CLASSIQUES</div>
-        <ul>
-          <li>Over-group mid sans items → irrelevant</li>
-          <li>Essayer d'enfoncer le side seul (tu 1v1 mal)</li>
-          <li>Abandonner la wave pour aider sans raison</li>
-          <li>Skip wave pour un fight qui peut attendre</li>
-        </ul>
-      </div>
-    </div>
-    <div class="flashcard" style="margin-top:8px">
-      <div class="flashcard-badge badge-cyan">⚠️</div>
-      <div class="flashcard-text"><strong>Exception :</strong> Si l'ADC ennemi est très fed (6-0), reste mid pour neutraliser le swap. Tu clear les vagues → ils ne peuvent pas snowball → ta bot lane se refait.</div>
-    </div>
-  </div>
-
-  <!-- POINT 5 -->
-  <div class="tl-item">
-    <div class="tl-dot" style="border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(251,191,36,0.4)">5</div>
-    <div class="tl-label gold">POINT 5 — PATIENCE</div>
-    <div class="tl-title">La patience à tous les stages — surtout en teamfight</div>
-    <div class="tl-body">
-      Tu es la pierre angulaire de ta team. Si tu rates ton gros spell, ta team perd le fight. Attends le moment parfait. Ne te précipite jamais.
-    </div>
-    <div style="margin-top:10px">
-      ${tips.patience.map(t=>`
       <div class="flashcard">
-        <div class="flashcard-badge badge-gold">⏳</div>
-        <div class="flashcard-text">${t}</div>
-      </div>`).join('')}
+        <div class="flashcard-badge badge-gold">?</div>
+        <div class="flashcard-text"><strong>Objectif a 10 min :</strong> 0-1 mort, 85-90 CS/min, 0-1 kill. Pas d\'avance en kills = normal. L\'avance en farm et XP suffit.</div>
+      </div>
     </div>
-  </div>
 
-</div>
+    <div class="timeline mt-16">
+      <div class="tl-item">
+        <div class="tl-dot red">1</div>
+        <div class="tl-label red">EARLY — FARM</div>
+        <div class="tl-title">Priorise le farm, pas les kills</div>
+        <div class="tl-body">Tu es la pour scaler. Les mages scalent sur l\'XP et items — les assassins sont forts niv 2-3. Accepte ca et farm intelligemment.</div>
+        <div class="do-dont">
+          <div class="do-card"><div class="label">FAIRE</div><ul><li>Farm Q en priorite absolue</li><li>Last-hit canons (Splinters + mana remboursee)</li><li>Petits trades pour stacks passif</li><li>Rester en XP range meme sans CS</li></ul></div>
+          <div class="dont-card"><div class="label">NE PAS FAIRE</div><ul><li>Sacrifier un CS pour trader</li><li>Chasser des kills en 1v1</li><li>Roam seul avant niv 6-7</li><li>Mourir inutilement</li></ul></div>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot gold">2</div>
+        <div class="tl-label gold">MID — SIDE + ROTATION</div>
+        <div class="tl-title">Side pour l\'or, rota au mid sur objectifs</div>
+        <div class="tl-body">Quand une tour tombe (mid ou bot), swap avec ta bot lane. Push la wave, prends les 6-8 minions, rota au mid IMMEDIATEMENT apres. Tu ne pousses pas le side seul — tu prends l\'or puis tu fuis vers le mid.</div>
+        <div class="flashcard"><div class="flashcard-badge badge-cyan">!</div><div class="flashcard-text"><strong>Exception :</strong> Si l\'ADC ennemi est tres fed, reste mid pour neutraliser le swap. Clear les vagues = ils ne peuvent pas snowball.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot">3</div>
+        <div class="tl-label">LATE — TEAMFIGHT</div>
+        <div class="tl-title">Patience absolue</div>
+        <div class="tl-body">Tu es la pierre angulaire de ta team. Si tu rates ton gros spell, ta team perd le fight.</div>
+        ${tips.patience.map(t=>`<div class="flashcard"><div class="flashcard-badge badge-gold">!</div><div class="flashcard-text">${t}</div></div>`).join('')}
+      </div>
+    </div>
 
-<!-- SPIKE / FANTASY -->
-<div class="grid-2 mt-16">
-  <div class="card">
-    <div class="card-title">POWER SPIKE — ${currentChamp.toUpperCase()}</div>
-    <div class="flashcard">
-      <div class="flashcard-badge badge-purple">⚡</div>
-      <div class="flashcard-text">${tips.spike}</div>
-    </div>
-    <p style="font-size:13px;color:var(--text-dim);margin-top:10px;line-height:1.5">${tips.fantasy}</p>
-  </div>
-  <div class="card">
-    <div class="card-title">OBJECTIFS PAR PHASE</div>
-    <div class="tl-body">
-      <div style="margin-bottom:10px">
-        <span class="phase-badge red" style="margin-bottom:6px;display:inline-flex">EARLY</span><br>
-        <span style="font-size:12px">≤1 mort · 85-90 CS/min · 1er item enclenché · Vision posée</span>
+    <div class="grid-2 mt-16">
+      <div class="card"><div class="card-title">POWER SPIKE</div>
+        <div class="flashcard"><div class="flashcard-badge badge-purple">!</div><div class="flashcard-text">${tips.spike}</div></div>
+        <p style="font-size:13px;color:var(--text-mid);margin-top:10px;line-height:1.5">${tips.fantasy}</p>
       </div>
-      <div style="margin-bottom:10px">
-        <span class="phase-badge purple" style="margin-bottom:6px;display:inline-flex">MID</span><br>
-        <span style="font-size:12px">2ème item rush · Side efficace · 0 wave perdue · Rota mid sur objectifs</span>
+      <div class="card"><div class="card-title">OBJECTIFS PAR PHASE</div>
+        <div class="tl-body">
+          <div style="margin-bottom:10px"><span class="phase-badge red" style="display:inline-flex;margin-bottom:4px">EARLY</span><br><span style="font-size:12px">max 1 mort - 85+ CS/min - 1er item en cours - flash conserve</span></div>
+          <div style="margin-bottom:10px"><span class="phase-badge purple" style="display:inline-flex;margin-bottom:4px">MID</span><br><span style="font-size:12px">2eme item rush - side efficace - 0 wave perdue - rota mid sur objectifs</span></div>
+          <div><span class="phase-badge" style="display:inline-flex;background:rgba(34,211,238,.12);border:1px solid var(--cyan);color:var(--cyan);margin-bottom:4px">LATE</span><br><span style="font-size:12px">3-4 items - derriere frontline - E/Cage garde pour moment cle - patience absolue</span></div>
+        </div>
       </div>
-      <div>
-        <span class="phase-badge" style="background:rgba(34,211,238,0.12);border:1px solid var(--cyan);color:var(--cyan);margin-bottom:6px;display:inline-flex">LATE</span><br>
-        <span style="font-size:12px">3-4 items · Derrière frontline · E/Cage gardé pour le moment clé · Patience absolue</span>
-      </div>
-    </div>
-  </div>
-</div>
-`;
+    </div>`;
 }
 
-// ================================================================
-//  LAUNCH
-// ================================================================
+// LAUNCH
 init();
 </script>
 </body>
