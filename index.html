@@ -182,6 +182,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
   <button class="tab-btn" onclick="switchTab('calc')">🧮 Calculateur</button>
   <button class="tab-btn" onclick="switchTab('combos')">🎮 Combos</button>
   <button class="tab-btn" onclick="switchTab('gameplan')">🗺️ Game Plan</button>
+  <button class="tab-btn" onclick="switchTab('guide')">📖 Guide</button>
 </div>
 <div id="content">
   <div class="tab-panel active" id="panel-draft">
@@ -212,6 +213,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
   <div class="tab-panel" id="panel-calc"><div id="calc-content"></div></div>
   <div class="tab-panel" id="panel-combos"><div id="combos-content"></div></div>
   <div class="tab-panel" id="panel-gameplan"><div id="gameplan-content"></div></div>
+  <div class="tab-panel" id="panel-guide"><div id="guide-content"></div></div>
 </div>
 <div class="pool-overlay" id="pool-overlay" style="display:none">
   <div class="pool-modal">
@@ -719,7 +721,7 @@ function selectChampion(name,doSave=true){
 
 function switchTab(id,doSave=true){
   activeTab=id;
-  const ids=['draft','matchups','build','runes','calc','combos','gameplan'];
+  const ids=['draft','matchups','build','runes','calc','combos','gameplan','guide'];
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',ids[i]===id));
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
@@ -733,6 +735,7 @@ function renderTab(id){
   if(id==='calc')renderCalc();
   if(id==='combos')renderCombos();
   if(id==='gameplan')renderGamePlan();
+  if(id==='guide')renderGuide();
 }
 
 // ================================================================
@@ -1158,6 +1161,92 @@ function renderGamePlan(){
       </div>
     </div>`;
 }
+
+
+function renderGuide(){
+  var el=document.getElementById('guide-content');
+  if(!el)return;
+  var h='';
+  h+='<div class="sec-title">GUIDE — MONTEE ELO MID LANE (BRONZE TO GOLD)</div>';
+  h+='<div class="card" style="border-color:rgba(251,191,36,.3)">';
+  h+='<div class="card-title" style="color:var(--gold)">REGLE DU 33 — ETAT D\'ESPRIT (Source : Challenger coach)</div>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:12px">Sur 100 games : <strong style="color:var(--text)">33 perdues d\'avance</strong>, <strong style="color:var(--text)">33 gagnees d\'avance</strong>, <strong style="color:var(--gold)">33 dependent de toi.</strong> Tu ne sais jamais lesquelles. Joue chaque game a fond. Accepte les pertes sans tilt.</p>';
+  h+='<div style="display:flex;gap:10px;flex-wrap:wrap">';
+  h+='<div class="do-card" style="flex:1;min-width:180px"><div class="label">BONNE ROUTINE</div><ul><li>Max 3 games avant pause</li><li>Apres une defaite = 5-10 min de break</li><li>ARAM pour chauffer avant ranked</li><li>Practice tool combos avant la session</li></ul></div>';
+  h+='<div class="dont-card" style="flex:1;min-width:180px"><div class="label">TILT MARKERS</div><ul><li>Blamer les allies en chat</li><li>Changer de champion apres une defaite</li><li>Spam ranked apres une serie de pertes</li><li>Jouer fatigue ou enerve</li></ul></div>';
+  h+='</div></div>';
+  h+='<div class="card mt-16"><div class="card-title">PRIORITE #1 — FARM D\'ABORD (Source : Chreak Challenger FR + Young Challenger EUW)</div>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:12px"><strong style="color:var(--text)">16 sbires = 1 kill en or.</strong> 5 kills et 80 CS a 15 min = MOINS riche que 2 kills et 160 CS. Plus tu as de kills, plus ton bounty grossit vite.</p>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-purple">CS</div><div class="flashcard-text"><strong>Objectif :</strong> 8+ CS/minute. Verifie sur op.gg apres chaque game.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-gold">TIP</div><div class="flashcard-text"><strong>Action timer (Skill-Capped Challenger EUW) :</strong> Poke quand l\'adversaire last-hit — pas au hasard. Il choisit : se faire toucher ou louper l\'or.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-cyan">!</div><div class="flashcard-text"><strong>Ne lache jamais une wave pour rien.</strong> Raisons valables : Baron, Dragon imminent, action gratuite avec ton jungle. Sinon = farm.</div></div></div>';
+  h+='<div class="card mt-16"><div class="card-title">LES 3 ETATS DE WAVE (Source : Chreak Challenger FR)</div>';
+
+  h+='<div style="padding:16px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.25);border-radius:12px;margin-bottom:10px">';
+  h+='<div style="font-family:Orbitron;font-size:11px;font-weight:700;color:var(--red);margin-bottom:10px;letter-spacing:1px">FREEZE — Comment le faire concrètement</div>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:10px"><strong style="color:var(--text)">Ce que c\'est :</strong> tu gardes la vague de sbires qui se battent juste devant TA tour, sans qu\'elle avance vers l\'ennemi. L\'ennemi est obligé de s\'avancer loin de sa tour pour farmer — il est exposé. Toi tu es safe.</p>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:10px"><strong style="color:var(--text)">Comment faire concrètement :</strong> tu last-hit tes sbires un par un, le plus lentement possible. Tu ne fais RIEN pour aider ta wave à tuer les sbires ennemis plus vite. Résultat : les deux waves s\'annulent en permanence et restent au même endroit — devant ta tour.</p>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:6px"><strong style="color:var(--text)">La règle simple :</strong> si tu as environ 3-4 sbires ennemis de plus que les tiens, la wave va naturellement pousser vers toi. Tu la laisses arriver jusqu\'à ta tour, puis tu last-hit doucement.</p>';
+  h+='<div style="padding:8px 12px;background:rgba(0,0,0,.2);border-radius:6px;font-size:12px;color:var(--text-dim)">⚠️ Sur Syndra c\'est difficile : ses Q/W font des AOE qui tuent plusieurs sbires d\'un coup et cassent le freeze. Utilise le freeze surtout quand tu reviens de base face à une grosse vague — last-hit doucement sans rien push.</div>';
+  h+='</div>';
+
+  h+='<div style="padding:16px;background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.25);border-radius:12px;margin-bottom:10px">';
+  h+='<div style="font-family:Orbitron;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:1px">SLOW PUSH — Comment le faire concrètement</div>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:10px"><strong style="color:var(--text)">Ce que c\'est :</strong> tu accumules une grosse vague de sbires qui grossit lentement et qui va s\'écraser sous la tour ennemie. Pendant ce temps tu peux aller acheter tes items — à ton retour la vague t\'attend.</p>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:6px"><strong style="color:var(--text)">Comment faire concrètement — méthode 1 :</strong> tu tues les sbires ennemis MÊLÉS (les gros) et tu laisses les sbires CASTERS (les petits à distance) en vie. Ta wave pousse lentement car elle a plus de sbires.</p>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:6px"><strong style="color:var(--text)">Méthode 2 encore plus simple :</strong> laisse traîner 1 seul sbire caster ennemi en vie pendant que la vague suivante arrive. Les deux vagues se combinent côté toi, et cette grosse vague pousse lentement.</p>';
+  h+='<div style="padding:8px 12px;background:rgba(0,0,0,.2);border-radius:6px;font-size:12px;color:var(--text-dim)">✅ C\'est ton outil principal sur Syndra. Avant chaque recall : slow push → base → reviens → la grosse vague s\'écrase sous leur tour sans que tu perdes de CS.</div>';
+  h+='</div>';
+
+  h+='<div style="padding:16px;background:rgba(34,211,238,.05);border:1px solid rgba(34,211,238,.25);border-radius:12px;margin-bottom:10px">';
+  h+='<div style="font-family:Orbitron;font-size:11px;font-weight:700;color:var(--cyan);margin-bottom:10px;letter-spacing:1px">FAST PUSH — Comment le faire</div>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6;margin-bottom:6px"><strong style="color:var(--text)">Ce que c\'est :</strong> tu exploites tous tes sorts pour tuer la wave le plus vite possible.</p>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.6"><strong style="color:var(--text)">Quand :</strong> objectif imminent (Dragon dans 30s), punir un roam adverse, ou te libérer avant de grouper avec ta team.</p>';
+  h+='</div>';
+
+  h+='<div class="flashcard"><div class="flashcard-badge badge-cyan">S26</div><div class="flashcard-text"><strong>Home Guards S26 :</strong> Rebase AVANT ton adversaire. Les guards te ramènent vite — tu peux tenir ou slow push la wave avant qu\'il revienne. Ca retourne des lanes entières.</div></div></div>';
+  h+='<div class="card mt-16" style="border-color:rgba(168,85,247,.4)">';
+  h+='<div class="card-title" style="font-size:14px">TON PROBLEME EXACT — QUE FAIRE APRES LA TOUR MID ?</div>';
+  h+='<p style="font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:14px">Tu as pris la tour mid. Plus d\'espace. Tes allies avancent sans vision. Des objectifs partout. Tu es perdu. Voila le plan precis.</p>';
+  h+='<div class="timeline" style="padding-left:32px">';
+  h+='<div class="tl-item"><div class="tl-dot red">1</div><div class="tl-label red">IMMEDIAT</div><div class="tl-title">Slow push mid et rebase</div><div class="tl-body">La tour vient de tomber. Slow push ta wave, puis rebase si 1300+ gold. Items + HP = tu peux jouer la suite. Ne suis PAS tes allies immediatement — ils vont souvent dans le vide.</div></div>';
+  h+='<div class="tl-item"><div class="tl-dot gold">2</div><div class="tl-label gold">APRES LE RECALL</div><div class="tl-title">Side lane OU rester mid ?</div><div class="tl-body">Regarde la minimap. Deux options :</div>';
+  h+='<div class="do-dont" style="margin-top:8px">';
+  h+='<div class="do-card"><div class="label">OPTION A — SIDE LANE</div><ul><li>Une wave bot ou top est prete</li><li>Pose un ward dans la jungle adjacente d\'abord</li><li>Push la wave jusqu\'a la tour ennemie</li><li>Prends les 6-8 sbires en or + XP</li><li>RETOUR MID des que la wave crash (20s max)</li></ul></div>';
+  h+='<div class="do-card" style="border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.05)"><div class="label" style="color:var(--accent)">OPTION B — GROUPER</div><ul><li>Ton jungle joue Dragon/Baron bientot</li><li>Fast push mid — ton adversaire doit rester</li><li>Il ne peut pas contester l\'objectif</li><li>Regle : jungle visible et actif = groupe</li></ul></div>';
+  h+='</div></div>';
+  h+='<div class="tl-item"><div class="tl-dot">3</div><div class="tl-label">OBJECTIFS</div><div class="tl-title">Lesquels faire ou pas ?</div><div class="tl-body"></div>';
+  h+='<div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-green">OUI</div><div class="flashcard-text"><strong>Dragon/Baron si :</strong> 5 personnes proches + vision de l\'objectif + jungle ennemi visible ailleurs. R+E stun tout ce qui conteste.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-green">OUI</div><div class="flashcard-text"><strong>Tour side lane si :</strong> tu as pousse l\'ennemi, jungle ennemi visible ailleurs. Ward avant d\'y aller. 20 secondes max puis retour mid.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-red">NON</div><div class="flashcard-text"><strong>Ne suis PAS tes allies dans la jungle sans vision.</strong> Syndra = zero mobilite. Tu te fais catch = tu es morte. Bush lateral avec spheres pre-placees.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-red">NON</div><div class="flashcard-text"><strong>Ne pousse PAS seule si jungle ennemi invisible depuis 30+ secondes.</strong> Pose un ward. Pas de ward = pas de move solo.</div></div>';
+  h+='</div></div>';
+  h+='<div class="tl-item"><div class="tl-dot green">4</div><div class="tl-label green">TON ROLE EN MID-GAME (Source : Chambles GM FR)</div><div class="tl-title">Sniper de carries, pas initiateur</div>';
+  h+='<div class="tl-body">Syndra n\'a pas de dash. Elle ne peut pas engage comme Ahri. Son role : 2e ligne, Q pre-places, one-shot le carry qui s\'expose.</div>';
+  h+='<div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-purple">POS</div><div class="flashcard-text"><strong>Positionnement :</strong> Bush lateral AVANT le fight. Spam Q pour 5-6 spheres pretes. Quand quelqu\'un s\'expose : R+E (stun zone) -> combo.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-cyan">SYNC</div><div class="flashcard-text"><strong>Synchronise avec ton jungle (Source : Faker wave sync, Skill-Capped) :</strong> quand il va jouer un objectif, push ta wave mid d\'abord. Ton adversaire doit rester mid = il ne conteste pas.</div></div>';
+  h+='<div class="flashcard"><div class="flashcard-badge badge-gold">E</div><div class="flashcard-text"><strong>Garde ton E pour te defendre.</strong> En Bronze, les gens plongent aleatoirement. E utilise pour engager = sans defense 17 secondes. Attends qu\'ils engage sur toi.</div></div>';
+  h+='</div></div>';
+  h+='<div class="tl-item"><div class="tl-dot gold">5</div><div class="tl-label gold">VISION</div><div class="tl-title">Toujours 2 wards sur toi</div>';
+  h+='<div class="tl-body">Avant d\'aller en side lane : ward dans la jungle adjacente. La majorite des morts en mid-game en Bronze = jungle sans vision.</div>';
+  h+='<div class="flashcard" style="margin-top:8px"><div class="flashcard-badge badge-purple">W</div><div class="flashcard-text"><strong>Positions cles :</strong> Riviere mid (pixel bush) + entree jungle adverse. Oracle Lens apres la tour mid. Change tes wards a 3:00, 6:00, 9:00.</div></div>';
+  h+='</div></div></div>';
+  h+='<div class="card mt-16" style="border-color:rgba(34,197,94,.3)">';
+  h+='<div class="card-title" style="color:var(--green)">RESUME — CE QUE TU DOIS FAIRE A CHAQUE GAME</div>';
+  h+='<div style="display:flex;flex-direction:column;gap:8px">';
+  h+='<div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--card);border-radius:8px"><div style="width:28px;height:28px;border-radius:50%;background:rgba(239,68,68,.15);border:1px solid var(--red);display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:11px;font-weight:700;color:var(--red);flex-shrink:0">1</div><div style="font-size:13px;color:var(--text-mid)"><strong style="color:var(--text)">Early (0-10 min) :</strong> Farm seulement. Poke quand l\'ennemi last-hit. Objectif = 8 CS/min, 0 mort, flash conserve.</div></div>';
+  h+='<div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--card);border-radius:8px"><div style="width:28px;height:28px;border-radius:50%;background:rgba(251,191,36,.15);border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:11px;font-weight:700;color:var(--gold);flex-shrink:0">2</div><div style="font-size:13px;color:var(--text-mid)"><strong style="color:var(--text)">Tour mid prise :</strong> Slow push -> recall -> items -> decision : side (ward d\'abord) OU groupe si objectif imminent.</div></div>';
+  h+='<div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--card);border-radius:8px"><div style="width:28px;height:28px;border-radius:50%;background:rgba(168,85,247,.15);border:1px solid var(--accent);display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:11px;font-weight:700;color:var(--accent);flex-shrink:0">3</div><div style="font-size:13px;color:var(--text-mid)"><strong style="color:var(--text)">Side lane :</strong> Ward -> push -> crash tour -> retour mid. 20 secondes MAX. Jamais si jungle ennemi invisible.</div></div>';
+  h+='<div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--card);border-radius:8px"><div style="width:28px;height:28px;border-radius:50%;background:rgba(34,211,238,.15);border:1px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:11px;font-weight:700;color:var(--cyan);flex-shrink:0">4</div><div style="font-size:13px;color:var(--text-mid)"><strong style="color:var(--text)">Teamfight :</strong> Bush lateral, Q pre-places, attends qu\'un carry s\'expose, R+E -> combo. E garde pour te defendre.</div></div>';
+  h+='<div style="display:flex;gap:10px;align-items:flex-start;padding:10px;background:var(--card);border-radius:8px"><div style="width:28px;height:28px;border-radius:50%;background:rgba(34,197,94,.15);border:1px solid var(--green);display:flex;align-items:center;justify-content:center;font-family:Orbitron;font-size:11px;font-weight:700;color:var(--green);flex-shrink:0">5</div><div style="font-size:13px;color:var(--text-mid)"><strong style="color:var(--text)">Entre les fights :</strong> Farm side lanes, renew wards, rebase si 1300+ gold. Jamais 0 mana a ne rien faire.</div></div>';
+  h+='</div>';
+  h+='<div class="flashcard" style="margin-top:12px"><div class="flashcard-badge badge-gold">SRC</div><div class="flashcard-text">Sources : Chreak (Challenger FR, wave management) · Young (Challenger EUW, 3 ans pro) · Skill-Capped "5 Fundamentals" Challenger EUW · "Why you suck at mid" (5000+ sessions coaching) · "7 min laning" · Rule of 33 · Season 16 laning guide · Chambles (Grand Master FR Syndra).</div></div>';
+  h+='</div>';
+  el.innerHTML=h;
+}
+
 
 // LAUNCH
 init();
